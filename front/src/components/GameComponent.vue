@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
     <hr>
-    <h2>{{ game.name }}</h2>
+    <h2><RouterLink :to="{name:'gameDetail', params: {id: game.id}}">{{ game.name }}</RouterLink></h2>
     <p><i>Published by </i> {{ game.publisher }}</p>
     <p>Average note : {{ game.averageNote }}</p>
 </template>
