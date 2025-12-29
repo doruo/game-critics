@@ -4,12 +4,14 @@ import type { Game } from '../types.ts';
 import { apiStore } from '@/util/apiStore.ts';
 import GameComponent from '@/components/GameComponent.vue';
 
-const gameList: Ref<Array<Game>> = ref([]);
+const gameList: Ref<Array<Game> | 'loading' | 'failed'> = ref('loading');
 
 apiStore.getAll('games')
-.then((data) => gameList.value = data as Array<Game>);
+.then((data) => gameList.value = data as Array<Game>)
+.catch(() => gameList.value = 'failed');
 
 // TODO : A supprimer une fois cette partie de l'api complété
+/*
 gameList.value = [
   {
     id: 1,
@@ -24,11 +26,14 @@ gameList.value = [
     averageNote: 1.3,
   },
 ]
+*/
 
 </script>
 
 <template>
   <main>
-    <GameComponent v-for="game in gameList" :game="game" />
+    <p v-if="gameList == 'loading'"><i>Fetching critics for this Game</i></p>
+    <p v-else-if="gameList == 'failed'"><i>Game critics could not be loaded</i></p>
+    <GameComponent v-for="game in gameList" :game="game" v-else />
   </main>
 </template>
