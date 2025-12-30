@@ -142,18 +142,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getProfilePictureName(): ?string
-    {
-        return $this->profilePictureName;
-    }
-
-    public function setProfilePictureName(?string $profilePictureName): static
-    {
-        $this->profilePictureName = $profilePictureName;
-
-        return $this;
-    }
-
     public function getHashedEmail(): ?string
     {
         if ($this->adresseEmail === null) {
@@ -166,18 +154,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setHashedEmail(string $email): static
     {
         $this->hashedEmail = $email;
-
-        return $this;
-    }
-
-    public function getIsPictureMasked(): ?bool
-    {
-        return $this->isPictureMasked;
-    }
-
-    public function setIsPictureMasked(bool $bool): static
-    {
-        $this->isPictureMasked = $bool;
 
         return $this;
     }

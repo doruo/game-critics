@@ -6,12 +6,26 @@ use App\Repository\CriticRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 
-
-#[ORM\Entity(repositoryClass: CriticRepository::class)]
 /**
  * Critic of a game.
  */
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Get(),
+        new Post(),
+        new Put(),
+        new Delete(),
+    ]
+)]
+#[ORM\Entity(repositoryClass: CriticRepository::class)]
 class Critic
 {
     #[ORM\Id]
@@ -22,25 +36,25 @@ class Critic
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Length(min: 20, max: 500, minMessage: 'Le message doit faire au minimum 20 caractères', maxMessage: 'Le login doit faire au maximum 500 caractères')]
+    #[Assert\Length(min: 20, max: 500, minMessage: 'Le message général doit faire au minimum 20 caractères', maxMessage: 'Le message général doit faire au maximum 500 caractères')]
     private ?string $generalMessage = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Length(min: 20, max: 500, minMessage: 'Le message doit faire au minimum 20 caractères', maxMessage: 'Le login doit faire au maximum 500 caractères')]
+    #[Assert\Length(min: 20, max: 500, minMessage: 'La critique des graphismes doit faire au minimum 20 caractères', maxMessage: 'La critique des graphismes doit faire au maximum 500 caractères')]
     private ?string $visualMessage = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Length(min: 20, max: 500, minMessage: 'Le message doit faire au minimum 20 caractères', maxMessage: 'Le login doit faire au maximum 500 caractères')]
+    #[Assert\Length(min: 20, max: 500, minMessage: 'La critique de la musique doit faire au minimum 20 caractères', maxMessage: 'La critique de la musique doit faire au maximum 500 caractères')]
     private ?string $soundtrackMessage = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Length(min: 20, max: 500, minMessage: 'Le message doit faire au minimum 20 caractères', maxMessage: 'Le login doit faire au maximum 500 caractères')]
+    #[Assert\Length(min: 20, max: 500, minMessage: 'La critique du scénario doit faire au minimum 20 caractères', maxMessage: 'La critique du scénario doit faire au maximum 500 caractères')]
     private ?string $scenarioMessage = null;
 
     #[ORM\Column(length: 180)]
@@ -51,7 +65,7 @@ class Critic
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?User $creator = null;
+    private ?User $author = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]

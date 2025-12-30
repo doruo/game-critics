@@ -1,16 +1,30 @@
 <?php
 
 namespace App\Entity;
-
 use App\Repository\GameRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 
-#[ORM\Entity(repositoryClass: GameRepository::class)]
 /**
  * Criticable game object.
  */
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Get(),
+        new Post(),
+        new Put(),
+        new Delete(),
+    ]
+)]
+#[ORM\Entity(repositoryClass: GameRepository::class)]
 class Game
 {
     #[ORM\Id]
@@ -22,58 +36,60 @@ class Game
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 4, max: 40, minMessage: 'Le nom doit faire au minimum 4 caractères', maxMessage: 'Le nom doit faire au maximum 40 caractères')]
-    private ?string $name;
+    private ?string $name = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Length(min: 4, max: 500, minMessage: 'Le login doit faire au minimum 4 caractères', maxMessage: 'Le login doit faire au maximum 500 caractères')]
-    private ?string $description;
+    #[Assert\Length(min: 4, max: 500, minMessage: 'La description doit faire au minimum 4 caractères', maxMessage: 'La description doit faire au maximum 500 caractères')]
+    private ?string $description = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\DateTime]
-    #[Assert\LessThanOrEqual("today", message: 'Le jeu doit être sortie')]
-    private ?DateTime $releaseDate;
+    #[Assert\LessThanOrEqual(value: "today", message: 'Le jeu doit être sortie')]
+    private ?DateTime $releaseDate = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Length(min: 4, max: 20, minMessage: '', maxMessage: '')]
-    private ?string $publisher;
+    #[Assert\Length(min: 1, max: 60, minMessage: 'Le nom du studio de développement doit faire au minimum 1 caractère', maxMessage: 'Le nom du studio de développement doit faire au maximum 60 caractères')]
+    private ?string $developper = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $developper;
+    #[Assert\Length(min: 1, max: 60, minMessage: 'Le nom de l\'éditeur doit faire au minimum 1 caractère', maxMessage: 'Le nom de l\'éditeur doit faire au maximum 60 caractères')]
+    private ?string $publisher = null;
 
     #[ORM\Column(length: 180, nullable: true)]
-    private ?float $avgNote;
+    private ?float $avgNote = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $gameMode;
+    private ?string $gameMode = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?int $targetAge;
+    private ?int $targetAge = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    #[Assert\Length(min: 3, max: 50, minMessage: 'Le login doit faire au minimum 3 caractères', maxMessage: 'Le login doit faire au maximum 50 caractères')]
-    private ?string $genre;
+    #[Assert\Length(min: 3, max: 50, minMessage: 'Le genre doit faire au minimum 3 caractères', maxMessage: 'Le genre doit faire au maximum 50 caractères')]
+    private ?string $genre = null;
 
     #[ORM\Column(length: 180, nullable: true)]
-    private ?string $licence;
+    #[Assert\Length(min: 3, max: 50, minMessage: 'La licence doit faire au minimum 3 caractères', maxMessage: 'La licence doit faire au maximum 50 caractères')]
+    private ?string $licence = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?int $price;
+    private ?float $price = null;
 
     /**
      * @var list<string>
@@ -81,7 +97,7 @@ class Game
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?array $plateform;
+    private ?array $plateform = null;
 
     /**
      * @var list<string> images and screenshots
@@ -89,15 +105,18 @@ class Game
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?array $images;
+    private ?array $images = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?string $pochette;
+    /**
+     * Image path of the pochette
+     */
+    private ?string $pochette = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?bool $approved;
+    private ?bool $approved = null;
 }
