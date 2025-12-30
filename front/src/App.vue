@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import AuthComponent from './components/AuthComponent.vue';
+import { ref } from 'vue';
+
+const displayAuth = ref(false);
 </script>
 
 <template>
+  <AuthComponent @hide-auth="displayAuth = false" :is-logged-in="false" :is-displayed="displayAuth"/>
   <header>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/games">Games</RouterLink>
         <RouterLink to="/game/0">Game of id 0</RouterLink>
+        <button @click="displayAuth = true"> Login</button>
       </nav>
   </header>
 

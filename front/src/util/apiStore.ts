@@ -19,5 +19,14 @@ export const apiStore = {
         .then(reponsehttp => reponsehttp.json())
         .then (data => data.member);
     },
+
+    login(login: string, password: string): Promise<unknown> {
+        return fetch(this.apiUrl + "api/auth", {
+            method: "POST",  
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+            body: JSON.stringify({login: login, password: password}),
+        })
+    }
     //à compléter plus tard avec les autres appels à l'API
 }
