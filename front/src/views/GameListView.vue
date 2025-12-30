@@ -3,8 +3,10 @@ import { ref, type Ref } from 'vue';
 import type { Game } from '../types.ts';
 import { apiStore } from '@/util/apiStore.ts';
 import GameComponent from '@/components/GameComponent.vue';
+import CriticList from '@/components/CriticList.vue';
 
 const gameList: Ref<Array<Game> | 'loading' | 'failed'> = ref('loading');
+const selectedGame: Ref<Game | null> = ref(null);
 
 apiStore.getAll('games')
 .then((data) => gameList.value = data as Array<Game>)
@@ -28,12 +30,35 @@ gameList.value = [
 ]
 */
 
+function selectGame(game: Game) {
+  if (selectedGame.value !== game)
+    selectedGame.value = game;
+  else
+    selectedGame.value = null;
+}
 </script>
 
 <template>
   <main>
-    <p v-if="gameList == 'loading'"><i>Fetching critics for this Game</i></p>
-    <p v-else-if="gameList == 'failed'"><i>Game critics could not be loaded</i></p>
-    <GameComponent v-for="game in gameList" :game="game" v-else />
+    <div class="game-list">
+      <p v-if="gameList == 'loading'"><i>Fetching critics for this Game</i></p>
+      <p v-else-if="gameList == 'failed'"><i>Game critics could not be loaded</i></p>
+      <GameComponent v-for="game in gameList" :game="game" @select-game="(gameToSelect) => selectGame(gameToSelect)" v-else />
+    </div>
+
+    <div class="critic-list" v-if="selectedGame">
+      <CriticList :game-id="(selectedGame.id as string)"/>
+    </div>
   </main>
 </template>
+
+<style scoped>
+  main {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .game-list, .critic-list {
+    flex: 1;
+  }
+</style>
