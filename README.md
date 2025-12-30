@@ -2,6 +2,12 @@
 
 Site de critiques de jeux vidéos.
 
+## Accès principaux
+
+- Front VueJS : http://localhost/front/
+
+- API Platform : http://localhost/api/public/api/
+
 ## Dépendances
 
 - php >=8.1 
@@ -13,7 +19,7 @@ Site de critiques de jeux vidéos.
 - doctrine-orm >= 4.2
 
 ## Mise en place
-
+http://localhost/api/public/api
 ```bash
 cd ~/gamecritics/api
 composer install
@@ -28,14 +34,6 @@ docker compose up -d
 ```
 
 ## API - Routes
-
-### Accès principaux
-
-- Front VueJS : http://localhost/front/
-
-- API Plateform : http://localhost/api/public/
-
-##
 
 ### Authentification
 
