@@ -56,6 +56,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profilePictureName = null;
 
+    #[ORM\Column(length: 180)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    /**
+     * @var list<Game> list of favorite games
+     */
+    private ?array $favorites;
+
+
     public function getLogin(): ?string
     {
         return $this->login;
