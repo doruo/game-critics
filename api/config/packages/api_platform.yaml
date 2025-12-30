@@ -1,5 +1,5 @@
 api_platform:
-    title: GametCritics API
+    title: GameCritics API
     version: 1.0.0
     defaults:
         cache_headers:
