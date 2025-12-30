@@ -27,6 +27,15 @@ export const apiStore = {
             credentials: 'include',
             body: JSON.stringify({login: login, password: password}),
         })
-    }
+    },
+
+    logout(): Promise<unknown> {
+        return fetch(this.apiUrl + "api/token/invalidate", {
+            method: "POST",  
+            // headers: {'Content-Type': 'application/json'},
+            // credentials: 'include',
+            // body: JSON.stringify({login: login, password: password}),
+        })
+    },
     //à compléter plus tard avec les autres appels à l'API
 }

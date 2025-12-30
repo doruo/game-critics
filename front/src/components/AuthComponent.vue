@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue';
 import AuthLoginComponent from './Auth/AuthLoginComponent.vue';
+import AuthLogoutComponent from './Auth/AuthLogoutComponent.vue';
   const props = defineProps<{
     isDisplayed: boolean,
     isLoggedIn: boolean,
@@ -15,12 +16,13 @@ import AuthLoginComponent from './Auth/AuthLoginComponent.vue';
   <div class="background-auth" @click="$emit('hideAuth')" v-if="isDisplayed">
     <div class="auth" @click.stop>
   
-      <div class="choices" v-if="!isLoggedIn">
+      <div class="choices" v-if="isLoggedIn">
         <button @click="displayedPage = 'login'">Login</button>
         <button @click="displayedPage = 'create-account'">Create Account</button>
       </div>
 
-      <AuthLoginComponent />
+      <AuthLogoutComponent v-if="!isLoggedIn"/>
+      <AuthLoginComponent v-else-if="displayedPage == 'login'"/>
   
     </div>
   </div>
