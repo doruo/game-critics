@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { apiStore } from '@/util/apiStore';
+import type { User } from '@/types';
 
 const connectingUser = ref({login: '', password: ''});
+  const emit = defineEmits<{
+    login: [user: User],
+    loginError: [message: string],
+  }>();
 
 function connect(): void {
-  apiStore.login(connectingUser.value.login, connectingUser.value.password);
+  apiStore.login(connectingUser.value.login, connectingUser.value.password)
+  .then((data) => {
+    if (data.success && data.user)
+      emit('login', data.user);
+    else if (data.error)
+      emit('loginError', data.error);
+  });
 }
 </script>
 

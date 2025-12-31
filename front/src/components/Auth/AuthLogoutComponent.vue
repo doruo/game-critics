@@ -1,8 +1,19 @@
 <script setup lang="ts">
 import { apiStore } from '@/util/apiStore';
 
+const emit = defineEmits<{
+  logout: [],
+  logoutError: [message: string],
+}>();
+
 function disconnect(): void {
-  apiStore.logout();
+  apiStore.logout()
+  .then((data) => {
+    if (data.success)
+      emit('logout');
+    else if (data.error)
+      emit('logoutError', data.error);
+  });
 }
 </script>
 

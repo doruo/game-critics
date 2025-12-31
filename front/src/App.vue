@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import AuthComponent from './components/AuthComponent.vue';
-import { ref } from 'vue';
+import { ref, type Ref } from 'vue';
+import type { User } from './types';
 
 const displayAuth = ref(false);
+const loggedInUser: Ref<User | null> = ref(null); // A changer en appellant la route de rafraichiissement
 </script>
 
 <template>
-  <AuthComponent @hide-auth="displayAuth = false" :is-logged-in="false" :is-displayed="displayAuth"/>
+  <AuthComponent @hide-auth="displayAuth = false" @change-user="(user) => loggedInUser = user" :logged-in-user="loggedInUser" :is-displayed="displayAuth"/>
   <header>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/games">Games</RouterLink>
         <RouterLink to="/game/0">Game of id 0</RouterLink>
         <button @click="displayAuth = true"> Login</button>
+        <span> Logged in User: {{ loggedInUser ? loggedInUser.login : 'User not logged in' }}</span>
       </nav>
   </header>
 
