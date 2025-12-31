@@ -25,5 +25,5 @@ if (!props.passedGame) {
 
     <br>
     <h2> Avis :</h2>
-    <CriticList :game-id="(props.passedGame ? props.passedGame.value.id as string : route.params.id as string)"/>
+    <CriticList :id-type="('game')" :id="(props.passedGame ? props.passedGame.value.id as string : route.params.id as string)"/>
 </template>

@@ -47,7 +47,7 @@ function selectGame(game: Game) {
     </div>
 
     <div class="critic-list" v-if="selectedGame">
-      <CriticList :game-id="(selectedGame.id as string)"/>
+      <CriticList :id="(selectedGame.id as string)"/>
     </div>
   </main>
 </template>
