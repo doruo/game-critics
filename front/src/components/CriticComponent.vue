@@ -41,7 +41,7 @@ function cancelEdit() : void {
 </script>
 
 <template>
-  <div class="user-critic critic" v-if="displayFor === 'user'">
+  <div :class="(`${displayFor}-critic critic`)">
     <hr>
 
     <button v-if="userIsAuthor && !isBeingEdited" @click="isBeingEdited = true"> Edit Critic</button>
@@ -52,23 +52,8 @@ function cancelEdit() : void {
     <p v-if="!isBeingEdited">{{ critic.message }}</p>
     <textarea v-else v-model="editedCritic.message" ></textarea>
 
-    <p><i>Published by </i> <RouterLink :to="`/users/${critic.author.id}`"> {{ critic.author.login }}</RouterLink> at {{ (new Date(critic.date)).toLocaleString("fr") }}</p>
-
-    <p v-if="!isBeingEdited">Note : {{ critic.note }} Stars</p>
-    <p v-else>Note : <input v-model="editedCritic.note" type="number"> Stars</p>
-  </div>
-
-  <div class="game-critic critic" v-else-if="displayFor === 'game'">
-    <hr>
-    <button v-if="userIsAuthor && !isBeingEdited" @click="isBeingEdited = true"> Edit Critic</button>
-    <button v-if="isBeingEdited" @click="saveEditedCritic"> Save</button>
-    <button v-if="isBeingEdited" @click="cancelEdit"> Cancel</button>
-    <button v-if="userIsAuthor" @click="deleteCrtic"> Delete Critic</button>
-
-    <p v-if="!isBeingEdited">{{ critic.message }}</p>
-    <textarea v-else v-model="editedCritic.message" ></textarea>
-
-    <p><i>For the game : </i> <RouterLink :to="`/games/${critic.game.id}`"> {{ critic.game.name }}</RouterLink> at {{ (new Date(critic.date)).toLocaleString("fr") }}</p>
+    <p v-if="displayFor === 'game'"><i>Published by </i> <RouterLink :to="`/user/${critic.author.id}`"> {{ critic.author.login }}</RouterLink> at {{ (new Date(critic.date)).toLocaleString("fr") }}</p>
+    <p v-else><i>For the game : </i> <RouterLink :to="`/game/${critic.game.id}`"> {{ critic.game.name }}</RouterLink> at {{ (new Date(critic.date)).toLocaleString("fr") }}</p>
 
     <p v-if="!isBeingEdited">Note : {{ critic.note }} Stars</p>
     <p v-else>Note : <input v-model="editedCritic.note" type="number"> Stars</p>
