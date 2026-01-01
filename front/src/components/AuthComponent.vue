@@ -2,15 +2,14 @@
 import { ref, type Ref } from 'vue';
 import AuthLoginComponent from './Auth/AuthLoginComponent.vue';
 import AuthLogoutComponent from './Auth/AuthLogoutComponent.vue';
-import type { User } from '@/types';
+import { loggedInUser } from '@/util/apiStore';
+import AuthCreateComponent from './Auth/AuthCreateComponent.vue';
   const props = defineProps<{
     isDisplayed: boolean,
-    loggedInUser: User | null,
   }>();
 
   const emits = defineEmits<{
     hideAuth: [],
-    changeUser: [user: User | null],
   }>();
 
   const displayedPage: Ref<'login' | 'create-account'> = ref('login');
@@ -28,8 +27,9 @@ import type { User } from '@/types';
 
       <p style="color: red;" v-if="error"> Error : {{ error }}</p>
 
-      <AuthLogoutComponent @logout-error="(message) => error = message" @logout="$emit('changeUser', null)" v-if="loggedInUser"/>
-      <AuthLoginComponent @login-error="(message) => error = message" @login="(user) => $emit('changeUser', user)" v-else-if="displayedPage == 'login'"/>
+      <AuthLogoutComponent @logout-error="(message) => error = message" v-if="loggedInUser"/>
+      <AuthLoginComponent @login-error="(message) => error = message" v-else-if="displayedPage === 'login'"/>
+      <AuthCreateComponent @create-error="(message) => error = message" v-else-if="displayedPage === 'create-account'" />
   
     </div>
   </div>

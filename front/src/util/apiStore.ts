@@ -1,4 +1,7 @@
 import type { User } from "@/types";
+import { ref, type Ref } from "vue";
+
+export const loggedInUser: Ref<User | null> = ref(null);
 
 export const apiStore = {
     apiUrl: "http://localhost/the_feed_api/public/api/", // To change in production
@@ -22,7 +25,7 @@ export const apiStore = {
         .then (data => data.member);
     },
 
-    login(login: string, password: string): Promise<{ success: boolean, error?: string, user?: User }> {
+    login(login: string, password: string): Promise<{ success: boolean, error?: string }> {
         return fetch(this.apiUrl + "auth", {
             method: "POST",  
             headers: {'Content-Type': 'application/json'},
@@ -38,7 +41,8 @@ export const apiStore = {
             } else {
                 return reponsehttp.json()
                 .then(reponseJSON => {
-                    return {success: true, user: reponseJSON as User};
+                    loggedInUser.value = reponseJSON as User;
+                    return {success: true};
                 })
             }
         })
@@ -59,10 +63,63 @@ export const apiStore = {
             } else {
                 return reponsehttp.json()
                 .then(() => {
+                    loggedInUser.value = null;
                     return {success: true};
                 })
             }
         })
     },
+
+    refresh(): Promise<{ success: boolean, error?: string }> {
+        return fetch(this.apiUrl + "token/refresh", {
+            method: "POST",  
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+        })
+        .then(reponsehttp => {
+            if (!reponsehttp.ok) {
+                return reponsehttp.json()
+                .then(reponseJSON => {
+                    return {success: false, error: reponseJSON.message};
+                })
+            } else {
+                return reponsehttp.json()
+                .then(reponseJSON => {
+                    loggedInUser.value = reponseJSON as User;
+                    return {success: true};
+                })
+            }
+        })
+    },
+
+    createRessource(resource: string, data: unknown, refreshAllowed = true): Promise<{ success: boolean, error?: string }> {
+        return fetch(this.apiUrl + resource, {
+            method: "POST",  
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+            body: JSON.stringify(data),
+        })
+        .then(reponsehttp => {
+            if (reponsehttp.ok) {
+                return reponsehttp.json()
+                .then(() => {
+                    return {success: true};
+                });
+            } else if (reponsehttp.status == 401 && refreshAllowed) {
+                return this.refresh()
+                .then(refresh => {
+                    if (refresh.success)
+                        return this.createRessource(resource, data, false);
+                    else
+                        return {success: false, error: 'unauthorized, failure to refresh token.'}
+                });
+            } else {
+                return reponsehttp.json()
+                .then(reponseJSON => {
+                    return {success: false, error: reponseJSON.message};
+                });
+            }
+        })
+    }
     //à compléter plus tard avec les autres appels à l'API
-}
+};
