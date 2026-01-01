@@ -3,6 +3,7 @@ import { ref, type Ref } from 'vue';
 import AuthLoginComponent from './Auth/AuthLoginComponent.vue';
 import AuthLogoutComponent from './Auth/AuthLogoutComponent.vue';
 import { loggedInUser } from '@/util/apiStore';
+import AuthCreateComponent from './Auth/AuthCreateComponent.vue';
   const props = defineProps<{
     isDisplayed: boolean,
   }>();
@@ -28,6 +29,7 @@ import { loggedInUser } from '@/util/apiStore';
 
       <AuthLogoutComponent @logout-error="(message) => error = message" v-if="loggedInUser"/>
       <AuthLoginComponent @login-error="(message) => error = message" v-else-if="displayedPage === 'login'"/>
+      <AuthCreateComponent @create-error="(message) => error = message" v-else-if="displayedPage === 'create-account'" />
   
     </div>
   </div>
