@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import AuthComponent from './components/AuthComponent.vue';
-import { ref, type Ref } from 'vue';
-import type { User } from './types';
+import { ref } from 'vue';
+import { apiStore, loggedInUser } from './util/apiStore';
 
 const displayAuth = ref(false);
-const loggedInUser: Ref<User | null> = ref(null); // A changer en appellant la route de rafraichiissement
+
+apiStore.refresh();
 </script>
 
 <template>
-  <AuthComponent @hide-auth="displayAuth = false" @change-user="(user) => loggedInUser = user" :logged-in-user="loggedInUser" :is-displayed="displayAuth"/>
+  <AuthComponent @hide-auth="displayAuth = false" :is-displayed="displayAuth"/>
   <header>
       <nav>
         <RouterLink to="/">Home</RouterLink>

@@ -2,16 +2,13 @@
 import { apiStore } from '@/util/apiStore';
 
 const emit = defineEmits<{
-  logout: [],
   logoutError: [message: string],
 }>();
 
 function disconnect(): void {
   apiStore.logout()
   .then((data) => {
-    if (data.success)
-      emit('logout');
-    else if (data.error)
+    if (data.error)
       emit('logoutError', data.error);
   });
 }
