@@ -120,6 +120,51 @@ export const apiStore = {
                 });
             }
         })
-    }
+    },
+
+    deleteResource(resource: string, id: string): Promise<{ success: boolean, error?: string }> {
+        return fetch(this.apiUrl + resource + '/' + id, {
+            method: "DELETE",  
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+        })
+        .then(reponsehttp => {
+            if (reponsehttp.ok) {
+                return reponsehttp.json()
+                .then(() => {
+                    return {success: true};
+                });
+            }
+            else {
+                return reponsehttp.json()
+                .then(reponseJSON => {
+                    return {success: false, error: reponseJSON.message};
+                });
+            }
+        })
+    },
+
+    patchResource(resource: string, id: string, data: unknown): Promise<{ success: boolean, error?: string }> {
+        return fetch(this.apiUrl + resource + '/' + id, {
+            method: "PATCH",  
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+            body: JSON.stringify(data),
+        })
+        .then(reponsehttp => {
+            if (reponsehttp.ok) {
+                return reponsehttp.json()
+                .then(() => {
+                    return {success: true};
+                });
+            }
+            else {
+                return reponsehttp.json()
+                .then(reponseJSON => {
+                    return {success: false, error: reponseJSON.message};
+                });
+            }
+        })
+    },
     //à compléter plus tard avec les autres appels à l'API
 };
