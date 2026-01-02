@@ -38,7 +38,7 @@ use App\Entity\Game;
         new Patch(),
         new Delete(),
     ],
-    order: ["date" => "DESC"],
+    order: ["publicationDate" => "DESC"],
     normalizationContext: ["groups" => ["serialization:critic:read", "serialization:user:read", "serialization:game:read"]],
 )]
 #[ORM\Entity(repositoryClass: CriticRepository::class)]
@@ -87,10 +87,10 @@ class Critic
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
-    private ?DateTime $date = null;
+    private ?DateTime $publicationDate = null;
 
     #[ORM\PrePersist]
     public function prePersistDatePublication() : void {
-        $this->date = new \DateTime();
+        $this->publicationDate = new \DateTime();
     }
 }
