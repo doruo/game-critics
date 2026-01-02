@@ -16,6 +16,8 @@ import { apiStore, loggedInUser } from '@/util/apiStore.ts';
     newUser.value.email = loggedInUser.value?.email;
   })
 
+  const confirmDelete = ref(false);
+
   function saveNewUserInfos() : void {
     const data = {
       login: !newUser.value.login || newUser.value.login === loggedInUser.value?.login ? undefined : newUser.value.login,
@@ -24,6 +26,15 @@ import { apiStore, loggedInUser } from '@/util/apiStore.ts';
     };
 
     apiStore.patchResource('users', loggedInUser.value?.id as string, data);
+    // TODO: Message d'erreur et de succés
+  }
+
+  function deleteAccount() {
+    apiStore.deleteResource('users', loggedInUser.value?.id as string)
+    .then((res) => {
+      if (res.success)
+        apiStore.logout();
+    });
     // TODO: Message d'erreur et de succés
   }
 </script>
@@ -37,4 +48,8 @@ import { apiStore, loggedInUser } from '@/util/apiStore.ts';
 
     <button type="submit">Save</button>
   </form>
+
+  <button v-if="!confirmDelete" @click="confirmDelete = true"> Delete Account</button>
+  <button v-if="confirmDelete" @click="confirmDelete = false"> No, do NOT Delete My Account.</button>
+  <button v-if="confirmDelete" @click="deleteAccount"> Yes, Delete My Account.</button>
 </template>
