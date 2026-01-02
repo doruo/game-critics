@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { ref, watch, watchEffect } from 'vue';
+import { ref, watch } from 'vue';
 import { apiStore, loggedInUser } from '@/util/apiStore.ts';
 
-  console.log(loggedInUser.value?.login);
-  console.log(loggedInUser.value?.email);
-  
   const newUser = ref({
     login: loggedInUser.value?.login,
     email: loggedInUser.value?.email,
