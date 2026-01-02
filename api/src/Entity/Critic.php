@@ -11,7 +11,11 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Link;
+use App\Entity\User;
+use App\Entity\Game;
 
 /**
  * Critic of a game.
@@ -19,13 +23,26 @@ use ApiPlatform\Metadata\Delete;
 #[ApiResource(
     operations: [
         new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/games/{id}/critics',
+            uriVariables: [
+                'idGroupe' => new Link(
+                    fromProperty: 'crtics',
+                    fromClass: Game::class
+                )
+            ],
+        ),
         new Get(),
         new Post(),
         new Put(),
+        new Patch(),
         new Delete(),
-    ]
+    ],
+    order: ["date" => "DESC"],
+    normalizationContext: ["groups" => ["serialization:critic:read", "serialization:user:read", "serialization:game:read"]],
 )]
 #[ORM\Entity(repositoryClass: CriticRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Critic
 {
     #[ORM\Id]
@@ -71,4 +88,9 @@ class Critic
     #[Assert\NotBlank]
     #[Assert\NotNull]
     private ?DateTime $date = null;
+
+    #[ORM\PrePersist]
+    public function prePersistDatePublication() : void {
+        $this->date = new \DateTime();
+    }
 }
