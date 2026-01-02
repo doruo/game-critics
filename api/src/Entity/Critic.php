@@ -61,14 +61,26 @@ class Critic
     #[Assert\NotBlank]
     #[Assert\NotNull]
     private ?Game $game = null;
-
-    #[ORM\Column(length: 180)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
-    private ?User $author = null;
+    
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     private ?DateTime $date = null;
+
+    #[ORM\ManyToOne(inversedBy: 'critics')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
 }
