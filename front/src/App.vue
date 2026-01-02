@@ -18,6 +18,7 @@ apiStore.refresh();
         <RouterLink to="/game/0">Game of id 0</RouterLink>
         <button @click="displayAuth = true"> Login</button>
         <span> Logged in User: {{ loggedInUser ? loggedInUser.login : 'User not logged in' }}</span>
+        <RouterLink v-if="loggedInUser" to="/account"> My Account</RouterLink>
       </nav>
   </header>
 
