@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import AuthComponent from './components/AuthComponent.vue';
 import { ref } from 'vue';
 import { apiStore, loggedInUser } from './util/apiStore';
+import NotifList from './components/NotifList.vue';
 
 const displayAuth = ref(false);
 
@@ -10,6 +11,7 @@ apiStore.refresh();
 </script>
 
 <template>
+  <NotifList />
   <AuthComponent @hide-auth="displayAuth = false" :is-displayed="displayAuth"/>
   <header>
       <nav>
