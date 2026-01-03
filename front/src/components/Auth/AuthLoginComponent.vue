@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { apiStore } from '@/util/apiStore';
+import { addNotif } from '@/util/notifStore';
 
 const connectingUser = ref({login: '', password: ''});
   const emit = defineEmits<{
@@ -10,8 +11,13 @@ const connectingUser = ref({login: '', password: ''});
 function connect(): void {
   apiStore.login(connectingUser.value.login, connectingUser.value.password)
   .then((data) => {
-    if (data.error)
-      emit('loginError', data.error);
+    if (data.success) {
+      addNotif({autoRemoved: true, type: 'success', message: "You are now logged in as " + connectingUser.value.login});
+    }
+    else {
+      addNotif({autoRemoved: false, type: 'error', message: "Failed to log you in : " + data.error});
+      emit('loginError', data.error as string);
+    }
   });
 }
 </script>

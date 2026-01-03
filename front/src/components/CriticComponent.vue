@@ -48,7 +48,7 @@ function saveEditedCritic() : void {
       addNotif({autoRemoved: true, type: 'success', message: "The Critic has been edited"});
     }
     else {
-      addNotif({autoRemoved: true, type: 'error', message: "The Critic could not be edited : " + res.error});
+      addNotif({autoRemoved: false, type: 'error', message: "The Critic could not be edited : " + res.error});
     }
   });
 }
