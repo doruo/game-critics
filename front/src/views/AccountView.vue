@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { apiStore, loggedInUser } from '@/util/apiStore.ts';
+import { addNotif } from '@/util/notifStore';
 
   const newUser = ref({
     login: loggedInUser.value?.login,
@@ -22,17 +23,25 @@ import { apiStore, loggedInUser } from '@/util/apiStore.ts';
       plainPassword: !newUser.value.plainPassword ? undefined : newUser.value.plainPassword,
     };
 
-    apiStore.patchResource('users', loggedInUser.value?.id as string, data);
-    // TODO: Message d'erreur et de succés
+    apiStore.patchResource('users', loggedInUser.value?.id as string, data)
+    .then((data) => {
+      if (data.success)
+        addNotif({autoRemoved: true, type: 'success', message: "The changes have been applied"});
+      else
+        addNotif({autoRemoved: false, type: 'error', message: "The changes could not be applied : " + data.error});
+    });
   }
 
   function deleteAccount() {
     apiStore.deleteResource('users', loggedInUser.value?.id as string)
     .then((res) => {
-      if (res.success)
+      if (res.success) {
+        addNotif({autoRemoved: true, type: 'success', message: "Your account has successfully been deleted, logging you out"});
         apiStore.logout();
+      }
+      else
+        addNotif({autoRemoved: false, type: 'error', message: "Your account could not be deleted : " + res.error});
     });
-    // TODO: Message d'erreur et de succés
   }
 </script>
 
