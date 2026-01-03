@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { apiStore } from '@/util/apiStore';
+import { addNotif } from '@/util/notifStore';
 
   const newUser = ref({login: '', email: '', plainPassword: ''});
   const emit = defineEmits<{
@@ -8,10 +9,16 @@ import { apiStore } from '@/util/apiStore';
   }>();
 
 function connect(): void {
-  apiStore.createRessource('users', newUser.value)
+  apiStore.createRessource('utilisateurs', newUser.value)
   .then((data) => {
-    if (data.error) // TODO fix le message d'erreur qui ne s'affiche pas
-      emit('createError', data.error);
+    if (data.success) {
+      addNotif({autoRemoved: true, type: 'success', message: "New user of login " + newUser.value.login + " has been created"});
+    }
+    else {
+      // TODO fix le message d'erreur qui ne s'affiche pas correctement
+      addNotif({autoRemoved: false, type: 'error', message: "New user could not be created : " + data.error});
+      emit('createError', data.error as string);
+    }
   });
 }
 </script>

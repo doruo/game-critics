@@ -35,3 +35,10 @@ export interface Critic {
     note: number;
     publicationDate: string;
 }
+
+export interface Notif {
+    id?: number; // inutile de le preciser
+    message: string;
+    type: 'error' | 'success' | 'warning';
+    autoRemoved: boolean; // est ce que la notification se supprimera automatiquement aprés un certain temps ?
+}
