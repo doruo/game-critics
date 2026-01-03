@@ -55,12 +55,20 @@ criticList.value = [
   },
 ]
 */
+
+function removeCritic(criticToRemove: Critic) : void {
+  if (criticList.value === 'failed' || criticList.value === 'loading')
+    return;
+  criticList.value = criticList.value.filter((critic) => 
+    critic.id !== criticToRemove.id
+  )
+}
 </script>
 
 <template>
   <p v-if="criticList == 'loading'"><i>Fetching critics for this Game</i></p>
   <p v-else-if="criticList == 'failed'"><i>Game critics could not be loaded</i></p>
-  <CriticComponent v-for="critic in criticList" :critic="critic" :display-for="props.idType" v-else/>
+  <CriticComponent v-for="critic in criticList" :critic="critic" :display-for="props.idType" @remove-critic="removeCritic" v-else/>
 </template>
 
 <style scoped>

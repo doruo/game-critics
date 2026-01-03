@@ -2,10 +2,15 @@
 import { computed, ref, type Ref } from 'vue';
 import type { Critic } from '../types.ts';
 import { apiStore, loggedInUser } from '@/util/apiStore.ts';
+import { addNotif } from '@/util/notifStore.ts';
 
 const props = defineProps<{
   critic: Critic,
   displayFor: 'game' | 'user',
+}>();
+
+const emit = defineEmits<{
+  removeCritic: [criticToRemove: Critic],
 }>();
 
 const userIsAuthor: Ref<boolean> = computed(() =>
@@ -24,15 +29,27 @@ const isBeingEdited: Ref<boolean> = ref(false);
 
 function deleteCrtic() : void {
   apiStore.deleteResource('critics', props.critic.id as string)
-  // TODO : message de succès ou d'erreur et emit pour être suppr de la liste des critiques
+  .then((res) => {
+    if (res.success) {
+      addNotif({autoRemoved: true, type: 'success', message: "The Critic has been deleted"});
+      emit('removeCritic', props.critic);
+    }
+    else {
+      addNotif({autoRemoved: false, type: 'error', message: "The Critic could not be deleted: " + res.error});
+    }
+  })
 }
 
 function saveEditedCritic() : void {
   apiStore.patchResource('critics', props.critic.id as string, editedCritic.value)
   .then(res => {
-    if (res.success)
+    if (res.success) {
       isBeingEdited.value = false;
-    // TODO : message de succès ou d'erreur
+      addNotif({autoRemoved: true, type: 'success', message: "The Critic has been edited"});
+    }
+    else {
+      addNotif({autoRemoved: true, type: 'error', message: "The Critic could not be edited : " + res.error});
+    }
   });
 }
 
