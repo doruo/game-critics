@@ -26,8 +26,8 @@ use App\Entity\Game;
         new GetCollection(
             uriTemplate: '/games/{id}/critics',
             uriVariables: [
-                'idGroupe' => new Link(
-                    fromProperty: 'crtics',
+                'idGameCritics' => new Link(
+                    fromProperty: 'critics',
                     fromClass: Game::class
                 )
             ],
@@ -49,6 +49,11 @@ class Critic
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id;
+
+    #[ORM\Column(length: 180)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    private ?int $note = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
