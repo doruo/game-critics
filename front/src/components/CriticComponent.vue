@@ -13,7 +13,10 @@ const userIsAuthor: Ref<boolean> = computed(() =>
 );
 
 const editedCritic = ref({
-  message: props.critic.message,
+  generalMessage: props.critic.generalMessage,
+  visualMessage: props.critic.visualMessage,
+  soundtrackMessage: props.critic.soundtrackMessage,
+  scenarioMessage: props.critic.scenarioMessage,
   note: props.critic.note,
 })
 
@@ -35,7 +38,12 @@ function saveEditedCritic() : void {
 
 function cancelEdit() : void {
   isBeingEdited.value = false;
-  editedCritic.value.message = props.critic.message;
+
+  editedCritic.value.generalMessage = props.critic.generalMessage;
+  editedCritic.value.visualMessage = props.critic.visualMessage;
+  editedCritic.value.soundtrackMessage = props.critic.soundtrackMessage;
+  editedCritic.value.scenarioMessage = props.critic.scenarioMessage;
+
   editedCritic.value.note = props.critic.note;
 }
 </script>
@@ -47,13 +55,27 @@ function cancelEdit() : void {
     <button v-if="userIsAuthor && !isBeingEdited" @click="isBeingEdited = true"> Edit Critic</button>
     <button v-if="isBeingEdited" @click="saveEditedCritic"> Save</button>
     <button v-if="isBeingEdited" @click="cancelEdit"> Cancel</button>
-    <button v-if="userIsAuthor" @click="deleteCrtic"> Delete Critic</button>
+    <!-- TODO : s'assurer que le role soit bien 'ADMIN' et pas autre chose -->
+    <button v-if="userIsAuthor || loggedInUser?.roles.includes('ADMIN')" @click="deleteCrtic"> Delete Critic</button>
 
-    <p v-if="!isBeingEdited">{{ critic.message }}</p>
-    <textarea v-else v-model="editedCritic.message" ></textarea>
+    <p><b> General Critic :</b></p>
+    <p v-if="!isBeingEdited">{{ critic.generalMessage }}</p>
+    <textarea v-else v-model="editedCritic.generalMessage" ></textarea>
 
-    <p v-if="displayFor === 'game'"><i>Published by </i> <RouterLink :to="`/user/${critic.author.id}`"> {{ critic.author.login }}</RouterLink> at {{ (new Date(critic.date)).toLocaleString("fr") }}</p>
-    <p v-else><i>For the game : </i> <RouterLink :to="`/game/${critic.game.id}`"> {{ critic.game.name }}</RouterLink> at {{ (new Date(critic.date)).toLocaleString("fr") }}</p>
+    <p><b> Visuals Critic :</b></p>
+    <p v-if="!isBeingEdited">{{ critic.visualMessage }}</p>
+    <textarea v-else v-model="editedCritic.visualMessage" ></textarea>
+
+    <p><b> Soundtrack's Critic :</b></p>
+    <p v-if="!isBeingEdited">{{ critic.soundtrackMessage }}</p>
+    <textarea v-else v-model="editedCritic.soundtrackMessage" ></textarea>
+
+    <p><b> Scenario's Critic :</b></p>
+    <p v-if="!isBeingEdited">{{ critic.scenarioMessage }}</p>
+    <textarea v-else v-model="editedCritic.scenarioMessage" ></textarea>
+
+    <p v-if="displayFor === 'game'"><i>Published by </i> <RouterLink :to="`/user/${critic.author.id}`"> {{ critic.author.login }}</RouterLink> at {{ (new Date(critic.publicationDate)).toLocaleString("fr") }}</p>
+    <p v-else><i>For the game : </i> <RouterLink :to="`/game/${critic.game.id}`"> {{ critic.game.name }}</RouterLink> at {{ (new Date(critic.publicationDate)).toLocaleString("fr") }}</p>
 
     <p v-if="!isBeingEdited">Note : {{ critic.note }} Stars</p>
     <p v-else>Note : <input v-model="editedCritic.note" type="number"> Stars</p>
