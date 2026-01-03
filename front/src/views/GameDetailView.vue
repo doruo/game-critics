@@ -21,7 +21,29 @@ if (!props.passedGame) {
 <template>
     <p v-if="game == 'loading'"><i>Fetching Game Details</i></p>
     <p v-else-if="game == 'failed'"><i>Game Details could not be loaded</i></p>
-    <GameComponent :game="game" v-else />
+    <div v-else>
+        <h2> {{ game.name }}</h2>
+        <p> Published by <b> {{ game.publisher }}</b></p>
+        <p> Developed by <b> {{ game.developer }}</b></p>
+
+        <hr>
+        <blockquote> {{ game.description }}</blockquote>
+        <ul> Playable on :
+            <li v-for="platform in game.platform"> {{ platform }}</li>
+        </ul>
+        <p>Available for {{ game.price }} $</p>
+
+        <div class="additional-info">
+            <p>Additional info :</p>
+            <ul>
+                <li>Genre : {{ game.genre }}</li>
+                <li>Gamemode : {{ game.gameMode }}</li>
+                <li>Pegi {{ game.targetAge }}</li>
+                <li>Licence : {{ game.license ? game.license : 'None' }}</li>
+                <li>Released on {{ new Date(game.releaseDate).toLocaleDateString() }}</li>
+            </ul>
+        </div>
+    </div>
 
     <br>
     <h2> Avis :</h2>
