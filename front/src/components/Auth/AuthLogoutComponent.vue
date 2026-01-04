@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { apiStore } from '@/util/apiStore';
+import { isAuthDiplayed } from '@/util/authDisplayedStore';
 import { addNotif } from '@/util/notifStore';
 
 const emit = defineEmits<{
-  logoutError: [message: string],
+  logoutError: [messages: Array<string>],
 }>();
 
 function disconnect(): void {
@@ -11,10 +12,12 @@ function disconnect(): void {
   .then((data) => {
     if (data.success) {
       addNotif({autoRemoved: true, type: 'success', message: "You have successfully been logged out"});
+      isAuthDiplayed.value = false;
     }
     else {
       addNotif({autoRemoved: false, type: 'error', message: "Logging out has failed : " + data.error});
-      emit('logoutError', data.error as string);
+      const errorMess = data.error?.split('\n');
+      emit('logoutError', errorMess as Array<string>);
     }
   });
 }

@@ -1,24 +1,22 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import AuthComponent from './components/AuthComponent.vue';
-import { ref } from 'vue';
 import { apiStore, loggedInUser } from './util/apiStore';
 import NotifList from './components/NotifList.vue';
-
-const displayAuth = ref(false);
+import { isAuthDiplayed } from './util/authDisplayedStore';
 
 apiStore.refresh();
 </script>
 
 <template>
+  <AuthComponent />
   <NotifList />
-  <AuthComponent @hide-auth="displayAuth = false" :is-displayed="displayAuth"/>
   <header>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/games">Games</RouterLink>
         <RouterLink to="/game/0">Game of id 0</RouterLink>
-        <button @click="displayAuth = true"> Login</button>
+        <button @click="isAuthDiplayed = true"> Login</button>
         <span> Logged in User: {{ loggedInUser ? loggedInUser.login : 'User not logged in' }}</span>
         <RouterLink v-if="loggedInUser" to="/account"> My Account</RouterLink>
       </nav>
