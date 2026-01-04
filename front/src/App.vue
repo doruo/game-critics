@@ -11,8 +11,8 @@ apiStore.refresh();
 </script>
 
 <template>
-  <NotifList />
   <AuthComponent @hide-auth="displayAuth = false" :is-displayed="displayAuth"/>
+  <NotifList />
   <header>
       <nav>
         <RouterLink to="/">Home</RouterLink>
