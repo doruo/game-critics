@@ -5,7 +5,7 @@ import { addNotif } from '@/util/notifStore';
 
 const connectingUser = ref({login: '', password: ''});
   const emit = defineEmits<{
-    loginError: [message: string],
+    loginError: [messages: Array<string>],
   }>();
 
 function connect(): void {
@@ -16,7 +16,8 @@ function connect(): void {
     }
     else {
       addNotif({autoRemoved: false, type: 'error', message: "Failed to log you in : " + data.error});
-      emit('loginError', data.error as string);
+      const errorMess = data.error?.split('\n');
+      emit('loginError', errorMess as Array<string>);
     }
   });
 }

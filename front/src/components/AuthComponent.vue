@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue';
+import { ref, watch, type Ref } from 'vue';
 import AuthLoginComponent from './Auth/AuthLoginComponent.vue';
 import AuthLogoutComponent from './Auth/AuthLogoutComponent.vue';
 import { loggedInUser } from '@/util/apiStore';
@@ -13,7 +13,11 @@ import AuthCreateComponent from './Auth/AuthCreateComponent.vue';
   }>();
 
   const displayedPage: Ref<'login' | 'create-account'> = ref('login');
-  const error: Ref<string | null> = ref(null);
+  const errors: Ref<Array<string> | null> = ref(null);
+
+  watch([displayedPage, props.isDisplayed, loggedInUser], () => {
+    errors.value = null;
+  });
 </script>
 
 <template>
@@ -25,11 +29,13 @@ import AuthCreateComponent from './Auth/AuthCreateComponent.vue';
         <button @click="displayedPage = 'create-account'">Create Account</button>
       </div>
 
-      <p style="color: red;" v-if="error"> Error : {{ error }}</p>
+      <ul style="color: red;" v-if="errors"> 
+        <li v-for="error in errors"> {{ error }}</li>
+      </ul>
 
-      <AuthLogoutComponent @logout-error="(message) => error = message" v-if="loggedInUser"/>
-      <AuthLoginComponent @login-error="(message) => error = message" v-else-if="displayedPage === 'login'"/>
-      <AuthCreateComponent @create-error="(message) => error = message" v-else-if="displayedPage === 'create-account'" />
+      <AuthLogoutComponent @logout-error="(messages) => errors = messages" v-if="loggedInUser"/>
+      <AuthLoginComponent @login-error="(messages) => errors = messages" v-else-if="displayedPage === 'login'"/>
+      <AuthCreateComponent @create-error="(messages) => errors = messages" v-else-if="displayedPage === 'create-account'" />
   
     </div>
   </div>

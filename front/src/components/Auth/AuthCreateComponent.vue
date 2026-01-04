@@ -5,7 +5,7 @@ import { addNotif } from '@/util/notifStore';
 
   const newUser = ref({login: '', email: '', plainPassword: ''});
   const emit = defineEmits<{
-    createError: [message: string],
+    createError: [messages: Array<string>],
   }>();
 
 function connect(): void {
@@ -15,9 +15,9 @@ function connect(): void {
       addNotif({autoRemoved: true, type: 'success', message: "New user of login " + newUser.value.login + " has been created"});
     }
     else {
-      // TODO fix le message d'erreur qui ne s'affiche pas correctement
       addNotif({autoRemoved: false, type: 'error', message: "New user could not be created : " + data.error});
-      emit('createError', data.error as string);
+      const errorMess = data.error?.split('\n');
+      emit('createError', errorMess as Array<string>);
     }
   });
 }
