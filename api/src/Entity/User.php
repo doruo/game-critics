@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
+use App\State\UserProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,25 +22,27 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[UniqueEntity('login', message : "Un utilisateur ayant ce login existe déjà.")]
-#[UniqueEntity('adresseEmail', message : "Cette adresse mail est déjà utilisé par un utilisateur.")]
+#[UniqueEntity('email', message : "Cette adresse mail est déjà utilisé par un utilisateur.")]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['adresseEmail'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(operations: [
     new Get(),
+    new GetCollection(),
     new Delete(),
-    new Post(denormalizationContext: ["groups" => ["deserialization:user:create"]]),
+    new Post(denormalizationContext: ["groups" => ["deserialization:user:create"]], processor: UserProcessor::class),
     new Patch(denormalizationContext: ["groups" => ["deserialization:user:update"]]),
     new Put(denormalizationContext: ["groups" => ["deserialization:user:update"]]
-    ),
-]
+    ),],
+    normalizationContext: ["groups" => ["serialization:user:read"]]
 )]
-class User implements UserInterface//, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[ApiProperty(description: 'login',writable: false)]
+    #[ApiProperty(description: 'iri', readable: true, writable: false)]
+    #[Groups(['serialization:user:read'])]
     private ?int $id;
 
     #[ORM\Column(length: 180)]
@@ -47,7 +50,7 @@ class User implements UserInterface//, PasswordAuthenticatedUserInterface
     #[Assert\NotNull]
     #[Assert\Length(min: 4, max: 20, minMessage: 'Le login doit faire au minimum 4 caractères', maxMessage: 'Le login doit faire au maximum 20 caractères')]
     #[ApiProperty(description: 'login')]
-    #[Groups(['deserialization:user:create'])]
+    #[Groups(['deserialization:user:create',"serialization:user:read"])]
     private ?string $login = null;
 
     /**
@@ -60,36 +63,45 @@ class User implements UserInterface//, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    /*#[ORM\Column]
+    #[ORM\Column]
+    #[ApiProperty( readable: false, writable: false)]
     private ?string $password = null;
-    */
+
+    #[ApiProperty(description: 'password uncrypted of the user, never accesible only given', readable: false)]
+    #[Groups(['deserialization:user:create', 'deserialization:user:update'])]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(min: 8, max: 30, minMessage: 'Votre mot de passe doit faire au minimum 8 caractères', maxMessage: 'Votre mot de passe doit faire au maximum 30 caractères')]
+    #[Assert\Regex(pattern: '#^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}$#', message: 'Votre mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre')]
+    private ?string $plainPassword = null;
+
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Email(message: "Le format d'email n'est pas valide")]
-    #[ApiProperty(description: 'adresseEmail de l\'utilisateur ')]
-    #[Groups(['deserialization:user:create', 'deserialization:user:update'])]
-    private ?string $adresseEmail = null;
+    #[ApiProperty(description: 'email de l\'utilisateur ')]
+    #[Groups(['deserialization:user:create', 'deserialization:user:update',"serialization:user:read"])]
+    private ?string $email = null;
 
     /**
      * @var Collection<int, Game>
      */
     #[ORM\ManyToMany(targetEntity: Game::class)]
-    #[Groups(['deserialization:user:create', 'deserialization:user:update'])]
+    #[Groups(['deserialization:user:update'])]
     private Collection $favoritesGames;
 
     /**
      * @var Collection<int, Critic>
      */
     #[ORM\ManyToMany(targetEntity: Critic::class)]
-    #[Groups(['deserialization:user:create', 'deserialization:user:update'])]
+    #[Groups(['deserialization:user:update'])]
     private Collection $favoritesCritics;
 
     /**
      * @var Collection<int, Critic>
      */
     #[ORM\OneToMany(targetEntity: Critic::class, mappedBy: 'author')]
-    #[Groups(['deserialization:user:create', 'deserialization:user:update'])]
+    #[Groups(['deserialization:user:update'])]
     private Collection $critics;
 
 
@@ -163,17 +175,17 @@ class User implements UserInterface//, PasswordAuthenticatedUserInterface
     #[\Deprecated]
     public function eraseCredentials(): void
     {
-        // @deprecated, to be removed when upgrading to Symfony 8
+        $this->plainPassword= null;
     }
 
-    public function getAdresseEmail(): ?string
+    public function getemail(): ?string
     {
-        return $this->adresseEmail;
+        return $this->email;
     }
 
-    public function setAdresseEmail(string $email): static
+    public function setemail(string $email): static
     {
-        $this->adresseEmail = $email;
+        $this->email = $email;
 
         return $this;
     }
@@ -226,12 +238,12 @@ class User implements UserInterface//, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCritics(): ?Critic
+    public function getCritics(): ?Collection
     {
         return $this->critics;
     }
 
-    public function setCritics(Critic $critics): static
+    public function setCritics(Collection $critics): static
     {
         $this->critics = $critics;
 
@@ -258,5 +270,20 @@ class User implements UserInterface//, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 }
