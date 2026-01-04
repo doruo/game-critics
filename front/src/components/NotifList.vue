@@ -6,7 +6,7 @@ import { addNotif, notifList } from '@/util/notifStore';
 
 <template>
   <div class="notif-container">
-    <NotifComponent v-for="notif in notifList" :notif="notif" />
+    <NotifComponent v-for="notif in notifList" :key="notif.id" :notif="notif" />
   </div>
 </template>
 
