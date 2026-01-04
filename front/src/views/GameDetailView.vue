@@ -2,20 +2,40 @@
 import { ref, type Ref } from 'vue';
 import type { Game } from '../types.ts';
 import { apiStore } from '@/util/apiStore.ts';
-import GameComponent from '@/components/GameComponent.vue';
 import { useRoute } from 'vue-router';
 import CriticList from '@/components/CriticList.vue';
+import CriticFormComponent from '@/components/CriticFormComponent.vue';
 
 const route = useRoute();
 const props = defineProps<{passedGame: Ref<Game> | undefined}>();
 
 const game: Ref<Game | 'loading' | 'failed'> = props.passedGame ? props.passedGame : ref('loading');
+const criticFormDisplayed = ref(false);
 
 if (!props.passedGame) {
     apiStore.getById('games', route.params.id as string)
     .then((data) => game.value = data as Game)
     .catch(() => game.value = 'failed');
 }
+
+// game.value = {
+//     approved: true,
+//     averageNote: 4.3,
+//     description: 'Big game',
+//     developer: 'Supercell',
+//     gameMode: 'Singleplayer',
+//     genre: 'Adventure',
+//     id: 1,
+//     images: [],
+//     license: 'Assassin\'s creed',
+//     name: 'Brawl Stars',
+//     platform: ['Linux', 'Android'],
+//     pochette: '',
+//     price: 0,
+//     publisher: 'Matteo',
+//     releaseDate: "2021-09-15",
+//     targetAge: 7,
+// }
 </script>
 
 <template>
@@ -47,5 +67,8 @@ if (!props.passedGame) {
 
     <br>
     <h2> Avis :</h2>
+    <button v-if="!criticFormDisplayed" @click="criticFormDisplayed = true"> Write a critic</button>
+    <CriticFormComponent v-else :game="(game as Game)" @hide-form="criticFormDisplayed = false" />
+
     <CriticList :id-type="('game')" :id="(props.passedGame ? props.passedGame.value.id as string : route.params.id as string)"/>
 </template>
