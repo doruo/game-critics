@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { apiStore } from '@/util/apiStore';
 import { addNotif } from '@/util/notifStore';
+import { isAuthDiplayed } from '@/util/authDisplayedStore';
 
 const connectingUser = ref({login: '', password: ''});
   const emit = defineEmits<{
@@ -13,6 +14,7 @@ function connect(): void {
   .then((data) => {
     if (data.success) {
       addNotif({autoRemoved: true, type: 'success', message: "You are now logged in as " + connectingUser.value.login});
+      isAuthDiplayed.value = false;
     }
     else {
       addNotif({autoRemoved: false, type: 'error', message: "Failed to log you in : " + data.error});

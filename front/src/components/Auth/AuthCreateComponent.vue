@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { apiStore } from '@/util/apiStore';
 import { addNotif } from '@/util/notifStore';
+import { isAuthDiplayed } from '@/util/authDisplayedStore';
 
   const newUser = ref({login: '', email: '', plainPassword: ''});
   const emit = defineEmits<{
@@ -13,6 +14,7 @@ function connect(): void {
   .then((data) => {
     if (data.success) {
       addNotif({autoRemoved: true, type: 'success', message: "New user of login " + newUser.value.login + " has been created"});
+      isAuthDiplayed.value = false;
     }
     else {
       addNotif({autoRemoved: false, type: 'error', message: "New user could not be created : " + data.error});

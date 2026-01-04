@@ -4,24 +4,18 @@ import AuthLoginComponent from './Auth/AuthLoginComponent.vue';
 import AuthLogoutComponent from './Auth/AuthLogoutComponent.vue';
 import { loggedInUser } from '@/util/apiStore';
 import AuthCreateComponent from './Auth/AuthCreateComponent.vue';
-  const props = defineProps<{
-    isDisplayed: boolean,
-  }>();
-
-  const emits = defineEmits<{
-    hideAuth: [],
-  }>();
+import { isAuthDiplayed } from '@/util/authDisplayedStore';
 
   const displayedPage: Ref<'login' | 'create-account'> = ref('login');
   const errors: Ref<Array<string> | null> = ref(null);
 
-  watch([displayedPage, props.isDisplayed, loggedInUser], () => {
+  watch([displayedPage, isAuthDiplayed, loggedInUser], () => {
     errors.value = null;
   });
 </script>
 
 <template>
-  <div class="background-auth" @click="$emit('hideAuth')" v-if="isDisplayed">
+  <div class="background-auth" @click="$emit('hideAuth')" v-if="isAuthDiplayed">
     <div class="auth" @click.stop>
   
       <div class="choices" v-if="!loggedInUser">
