@@ -22,7 +22,7 @@ class AuthenticationSuccessListener
         $data = $event->getData();
         $user = $event->getUser();
 
-        $data['id'] = $user->getUserIdentifier();
+        $data['id'] = $user->getID();
         $data['login'] = $user->getLogin();
         $data['email'] = $user->getEmail();
         $data['roles'] = $user->getRoles();
