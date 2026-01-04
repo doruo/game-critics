@@ -4,13 +4,15 @@ import type { Game } from '../types.ts';
 import { apiStore } from '@/util/apiStore.ts';
 import GameComponent from '@/components/GameComponent.vue';
 import CriticList from '@/components/CriticList.vue';
+import GameFormComponent from '@/components/GameFormComponent.vue';
 
 const gameList: Ref<Array<Game> | 'loading' | 'failed'> = ref('loading');
 const selectedGame: Ref<Game | null> = ref(null);
+const gameFormDisplayed = ref(false);
 
 apiStore.getAll('games')
 .then((data) => gameList.value = data as Array<Game>)
-.catch(() => gameList.value = 'failed');
+// .catch(() => gameList.value = 'failed');
 
 // TODO : A supprimer une fois cette partie de l'api complété
 /*
@@ -39,6 +41,8 @@ function selectGame(game: Game) {
 </script>
 
 <template>
+  <button v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</button>
+  <GameFormComponent v-else @hide-form="gameFormDisplayed = false"/>
   <main>
     <div class="game-list">
       <p v-if="gameList == 'loading'"><i>Fetching critics for this Game</i></p>
