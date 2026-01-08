@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(operations: [
     new Get(),
     new GetCollection(),
-    new Delete(),
+    new Delete(security: "is_granted('USER_SELF_CONNECTED_OR_ADMIN_EXCEPT_ADMIN',object)"),
     new Post(denormalizationContext: ["groups" => ["deserialization:user:create"]], processor: UserProcessor::class),
     new Patch(denormalizationContext: ["groups" => ["deserialization:user:update"]]),
     new Put(denormalizationContext: ["groups" => ["deserialization:user:update"]]
