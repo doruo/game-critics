@@ -6,6 +6,7 @@ use App\Repository\CriticRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Attribute\Groups;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
@@ -22,7 +23,6 @@ use App\Entity\Game;
  */
 #[ApiResource(
     operations: [
-        new GetCollection(),
         new GetCollection(
             uriTemplate: '/games/{id}/critics',
             uriVariables: [
@@ -39,7 +39,7 @@ use App\Entity\Game;
         new Delete(),
     ],
     order: ["publicationDate" => "DESC"],
-    normalizationContext: ["groups" => ["serialization:critic:read", "serialization:user:read", "serialization:game:read"]],
+    normalizationContext: ["groups" => ["serialization:critic:read"]],
 )]
 #[ORM\Entity(repositoryClass: CriticRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -48,50 +48,59 @@ class Critic
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['serialization:critic:read'])]
     private ?int $id;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
+    #[Groups(['serialization:critic:read'])]
     private ?int $note = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 20, max: 500, minMessage: 'Le message général doit faire au minimum 20 caractères', maxMessage: 'Le message général doit faire au maximum 500 caractères')]
+    #[Groups(['serialization:critic:read'])]
     private ?string $generalMessage = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 20, max: 500, minMessage: 'La critique des graphismes doit faire au minimum 20 caractères', maxMessage: 'La critique des graphismes doit faire au maximum 500 caractères')]
+    #[Groups(['serialization:critic:read'])]
     private ?string $visualMessage = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 20, max: 500, minMessage: 'La critique de la musique doit faire au minimum 20 caractères', maxMessage: 'La critique de la musique doit faire au maximum 500 caractères')]
+    #[Groups(['serialization:critic:read'])]
     private ?string $soundtrackMessage = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 20, max: 500, minMessage: 'La critique du scénario doit faire au minimum 20 caractères', maxMessage: 'La critique du scénario doit faire au maximum 500 caractères')]
+    #[Groups(['serialization:critic:read'])]
     private ?string $scenarioMessage = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
+    #[Groups(['serialization:critic:read'])]
     private ?Game $game = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
+    #[Groups(['serialization:critic:read'])]
     private ?User $author = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
+    #[Groups(['serialization:critic:read'])]
     private ?DateTime $publicationDate = null;
 
     #[ORM\PrePersist]
