@@ -15,7 +15,7 @@ import { isAuthDiplayed } from '@/util/authDisplayedStore';
 </script>
 
 <template>
-  <div class="background-auth" @click="$emit('hideAuth')" v-if="isAuthDiplayed">
+  <div class="background-auth" @click="isAuthDiplayed = false" v-if="isAuthDiplayed">
     <div class="auth" @click.stop>
   
       <div class="choices" v-if="!loggedInUser">
