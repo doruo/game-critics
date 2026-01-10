@@ -40,7 +40,7 @@
       height: 3px;
       width: 0%;
     }
-    nav .nav-button:hover .bar {
+    .nav-button:hover .bar {
       animation: nav-button-hover 1s linear both;
     }
 
