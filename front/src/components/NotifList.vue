@@ -15,5 +15,6 @@ import { addNotif, notifList } from '@/util/notifStore';
     position: fixed;
     right: 0;
     top: 0;
+    width: 300px;
   }
 </style>

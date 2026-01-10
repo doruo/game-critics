@@ -19,8 +19,11 @@ const props = defineProps<{
 
 <style scoped>
   .notification {
-    border: 2px solid black;
+    border: 10px solid black;
+    border-radius: 15px;
     width: 100%;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
   }
 
     .notification.success {
