@@ -7,10 +7,12 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
+use App\State\AdminProcessor;
 use App\State\UserProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,13 +29,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(operations: [
-    new Get(),
-    new GetCollection(),
+    new Get(normalizationContext: ["groups" => ["serialization:user:read"]], security: "is_granted('USER_SELF_CONNECTED_OR_ADMIN',object)"),
+    new GetCollection(normalizationContext: ["groups" => ["serialization:user:read"]],security: "is_granted('AUTH_ADMIN',object)"),
     new Delete(security: "is_granted('USER_SELF_CONNECTED_OR_ADMIN_EXCEPT_ADMIN',object)"),
-    new Post(denormalizationContext: ["groups" => ["deserialization:user:create"]], processor: UserProcessor::class),
-    new Patch(denormalizationContext: ["groups" => ["deserialization:user:update"]]),
-    new Put(denormalizationContext: ["groups" => ["deserialization:user:update"]]
-    ),],
+    // no security for post otherwise you would need an anccount to create one
+    new Post(denormalizationContext: ["groups" => ["deserialization:user:create"]], validationContext: ["groups" => ["Default", "validation:user:create"]], processor: UserProcessor::class),
+    new Patch(denormalizationContext: ["groups" => ["deserialization:user:update"]], security: "is_granted('USER_SELF_CONNECTED_OR_ADMIN_EXCEPT_ADMIN',object)", validationContext: ["groups" => ["Default", "validation:user:update"]], processor: UserProcessor::class),
+
+    new Patch(
+        uriTemplate: '/users/{id}/promoteAdmin',
+        security: "is_granted('AUTH_ADMIN',object)",
+        deserialize: false, // no need to have a body , not a single change is accepted in this route
+        processor: AdminProcessor::class,
+    ),
+
+    new Put(denormalizationContext: ["groups" => ["deserialization:user:update"]],security: "is_granted('USER_SELF_CONNECTED_OR_ADMIN_EXCEPT_ADMIN',object)",validationContext: ["groups" => ["Default", "validation:user:update"]],processor: UserProcessor::class),
+    ],
     normalizationContext: ["groups" => ["serialization:user:read"]]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -46,8 +57,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id;
 
     #[ORM\Column(length: 180)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
+    #[Assert\NotBlank(groups: ["validation:user:create"])]
+    #[Assert\NotNull(groups: ["validation:user:create"])]
     #[Assert\Length(min: 4, max: 20, minMessage: 'Le login doit faire au minimum 4 caractères', maxMessage: 'Le login doit faire au maximum 20 caractères')]
     #[ApiProperty(description: 'login')]
     #[Groups(['deserialization:user:create',"serialization:user:read"])]
@@ -69,15 +80,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ApiProperty(description: 'password uncrypted of the user, never accesible only given', readable: false)]
     #[Groups(['deserialization:user:create', 'deserialization:user:update'])]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
+    #[Assert\NotBlank(groups: ["validation:user:create"])]
+    #[Assert\NotNull(groups: ["validation:user:create"])]
     #[Assert\Length(min: 8, max: 30, minMessage: 'Votre mot de passe doit faire au minimum 8 caractères', maxMessage: 'Votre mot de passe doit faire au maximum 30 caractères')]
     #[Assert\Regex(pattern: '#^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}$#', message: 'Votre mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre')]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\NotNull]
+    #[Assert\NotBlank(groups: ["validation:user:create"])]
+    #[Assert\NotNull(groups: ["validation:user:create"])]
     #[Assert\Email(message: "Le format d'email n'est pas valide")]
     #[ApiProperty(description: 'email de l\'utilisateur ')]
     #[Groups(['deserialization:user:create', 'deserialization:user:update',"serialization:user:read"])]
@@ -93,13 +104,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Critic>
      */
-    #[ORM\ManyToMany(targetEntity: Critic::class)]
-    #[Groups(['deserialization:user:update'])]
-    private Collection $favoritesCritics;
-
-    /**
-     * @var Collection<int, Critic>
-     */
     #[ORM\OneToMany(targetEntity: Critic::class, mappedBy: 'author')]
     #[Groups(['deserialization:user:update'])]
     private Collection $critics;
@@ -108,7 +112,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->favoritesGames = new ArrayCollection();
-        $this->favoritesCritics = new ArrayCollection();
         $this->critics = new ArrayCollection();
     }
 
@@ -210,30 +213,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFavoritesGame(Game $favoritesGame): static
     {
         $this->favoritesGames->removeElement($favoritesGame);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Critic>
-     */
-    public function getFavoritesCritics(): Collection
-    {
-        return $this->favoritesCritics;
-    }
-
-    public function addFavoritesCritic(Critic $favoritesCritic): static
-    {
-        if (!$this->favoritesCritics->contains($favoritesCritic)) {
-            $this->favoritesCritics->add($favoritesCritic);
-        }
-
-        return $this;
-    }
-
-    public function removeFavoritesCritic(Critic $favoritesCritic): static
-    {
-        $this->favoritesCritics->removeElement($favoritesCritic);
 
         return $this;
     }

@@ -17,9 +17,11 @@ class UserProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        $hashed = $this->passwordHasher->hashPassword($data, $data->getPlainPassword());
-        $data->setPassword($hashed);
-        $data->eraseCredentials();
+        if($data->getPlainPassword()!=null){
+            $hashed = $this->passwordHasher->hashPassword($data, $data->getPlainPassword());
+            $data->setPassword($hashed);
+            $data->eraseCredentials();
+        }
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }
