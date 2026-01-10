@@ -26,11 +26,11 @@ if (!props.passedGame) {
 //     gameMode: 'Singleplayer',
 //     genre: 'Adventure',
 //     id: 1,
-//     images: [],
+//     images: ['https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg', 'https://www.androidpolice.com/wp-content/uploads/2018/06/unnamed-1-7.png', 'https://image.winudf.com/v2/image1/Y29tLnN1cGVyY2VsbC5icmF3bHN0YXJzX3NjcmVlbl8xM18xNTY3MTg5NzczXzA4NA/screen-13.jpg?fakeurl=1&type=.jpg'],
 //     license: 'Assassin\'s creed',
 //     name: 'Brawl Stars',
 //     platform: ['Linux', 'Android'],
-//     pochette: '',
+//     pochette: 'https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg',
 //     price: 0,
 //     publisher: 'Matteo',
 //     releaseDate: "2021-09-15",
@@ -43,6 +43,7 @@ if (!props.passedGame) {
     <p v-else-if="game == 'failed'"><i>Game Details could not be loaded</i></p>
     <div v-else>
         <h2> {{ game.name }}</h2>
+        <img class="pochette" :src="game.pochette" height="150" :alt="('Pochette du jeu ' + game.name)" v-if="game.pochette">
         <p> Published by <b> {{ game.publisher }}</b></p>
         <p> Developed by <b> {{ game.developer }}</b></p>
 
@@ -62,6 +63,10 @@ if (!props.passedGame) {
                 <li>Licence : {{ game.license ? game.license : 'None' }}</li>
                 <li>Released on {{ new Date(game.releaseDate).toLocaleDateString() }}</li>
             </ul>
+        </div>
+    
+        <div class="image-list" v-if="game.images">
+            <img v-for="image, index in game.images" :src="image" height="150" :alt="('image n°' + index)">
         </div>
     </div>
 
