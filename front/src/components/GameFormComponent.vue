@@ -88,7 +88,7 @@ function removeImage(indexToRemove: number) {
     <p><b> Additional images :</b></p>
     <ul>
       <li v-for="(_, index) in newGame.images" >
-        <input v-model="newGame.images[index]"> <button @click="removePlatform(index)">remove</button>
+        <input v-model="newGame.images[index]"> <button @click="removeImage(index)">remove</button>
         <span> Preview: </span>
         <img :src="newGame.images[index]" height="100" alt="L'image n'a pas pu être récupérée">
       </li>
