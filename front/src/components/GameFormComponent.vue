@@ -42,12 +42,21 @@ function uploadCritic() : void {
 function removePlatform(indexToRemove: number) {
   newGame.value.platform = newGame.value.platform.filter((_, index) => index !== indexToRemove);
 }
+
+function removeImage(indexToRemove: number) {
+  newGame.value.images = newGame.value.images.filter((_, index) => index !== indexToRemove);
+}
 </script>
 
 <template>
   <form @submit.prevent="uploadCritic" class="critic-form">
     <p><b> Name :</b></p>
     <input v-model="newGame.name" ></input>
+
+    <p><b> Pochette Link :</b></p>
+    <input v-model="newGame.pochette" ></input>
+    <span>Preview :</span>
+    <img :src="newGame.pochette" height="100" alt="L'image n'a pas pu être récupérée">
 
     <p><b> Publisher :</b></p>
     <input v-model="newGame.publisher" ></input>
@@ -74,6 +83,16 @@ function removePlatform(indexToRemove: number) {
     <ul>
       <li v-for="(_, index) in newGame.platform" > <input v-model="newGame.platform[index]"> <button @click="removePlatform(index)">remove</button></li>
       <li><button @click="newGame.platform.push('')">Add platform</button></li>
+    </ul>
+
+    <p><b> Additional images :</b></p>
+    <ul>
+      <li v-for="(_, index) in newGame.images" >
+        <input v-model="newGame.images[index]"> <button @click="removeImage(index)">remove</button>
+        <span> Preview: </span>
+        <img :src="newGame.images[index]" height="100" alt="L'image n'a pas pu être récupérée">
+      </li>
+      <li><button @click="newGame.images.push('')">Add image link</button></li>
     </ul>
 
     <button @click="$emit('hideForm')"> Cancel</button>
