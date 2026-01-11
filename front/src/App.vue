@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import AuthComponent from './components/AuthComponent.vue';
 import { apiStore, loggedInUser } from './util/apiStore';
 import NotifList from './components/NotifList.vue';
@@ -15,7 +15,7 @@ apiStore.refresh();
   <header>
       <nav>
         <NavButton to="/games"> Games</NavButton>
-        <NavButton to="/games/0"> Game of id 0</NavButton>
+        <NavButton to="/game/0"> Game of id 0</NavButton>
         <NavButton @click="isAuthDiplayed = true"> {{ loggedInUser ? 'Logout' : 'Login' }}</NavButton>
         <span v-if="loggedInUser"> Logged in User: <b>{{ loggedInUser.login }}</b></span>
         <NavButton v-if="loggedInUser" to="/account"> My Account</NavButton>
