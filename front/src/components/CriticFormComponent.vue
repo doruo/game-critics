@@ -51,7 +51,7 @@ function uploadCritic() : void {
 
     <p> Your Note : <input v-model="newCritic.note" type="number"> Stars</p>
 
-    <button @click="$emit('hideForm')"> Cancel</button>
+    <button type="button" @click="$emit('hideForm')"> Cancel</button>
     <button type="submit"> Upload</button>
   </form>
 </template>

@@ -81,21 +81,21 @@ function removeImage(indexToRemove: number) {
     <p> Release date : <input v-model="newGame.releaseDate" type="date"></p>
     <p><b> Platforms :</b></p>
     <ul>
-      <li v-for="(_, index) in newGame.platform" > <input v-model="newGame.platform[index]"> <button @click="removePlatform(index)">remove</button></li>
-      <li><button @click="newGame.platform.push('')">Add platform</button></li>
+      <li v-for="(_, index) in newGame.platform" > <input v-model="newGame.platform[index]"> <button type="button" @click="removePlatform(index)">remove</button></li>
+      <li><button type="button" @click="newGame.platform.push('')">Add platform</button></li>
     </ul>
 
     <p><b> Additional images :</b></p>
     <ul>
       <li v-for="(_, index) in newGame.images" >
-        <input v-model="newGame.images[index]"> <button @click="removeImage(index)">remove</button>
+        <input v-model="newGame.images[index]"> <button type="button" @click="removeImage(index)">remove</button>
         <span> Preview: </span>
         <img :src="newGame.images[index]" height="100" alt="L'image n'a pas pu être récupérée">
       </li>
-      <li><button @click="newGame.images.push('')">Add image link</button></li>
+      <li><button type="button" @click="newGame.images.push('')">Add image link</button></li>
     </ul>
 
-    <button @click="$emit('hideForm')"> Cancel</button>
+    <button type="button" @click="$emit('hideForm')"> Cancel</button>
     <button type="submit"> Upload</button>
   </form>
 </template>

@@ -12,7 +12,7 @@ const gameFormDisplayed = ref(false);
 
 apiStore.getAll('games')
 .then((data) => gameList.value = data as Array<Game>)
-// .catch(() => gameList.value = 'failed');
+.catch(() => gameList.value = 'failed');
 
 // TODO : A supprimer une fois cette partie de l'api complété
 /*
@@ -45,9 +45,9 @@ function selectGame(game: Game) {
   <GameFormComponent v-else @hide-form="gameFormDisplayed = false"/>
   <main>
     <div class="game-list">
-      <p v-if="gameList == 'loading'"><i>Fetching critics for this Game</i></p>
-      <p v-else-if="gameList == 'failed'"><i>Game critics could not be loaded</i></p>
-      <GameComponent v-for="game in gameList" :game="game" @select-game="(gameToSelect) => selectGame(gameToSelect)" v-else />
+      <p v-if="gameList == 'loading'"><i>Fetching Game List</i></p>
+      <p v-else-if="gameList == 'failed'"><i>Game List could not be loaded</i></p>
+      <GameComponent v-for="game in gameList" :is-selected="selectedGame === game" :game="game" @select-game="(gameToSelect) => selectGame(gameToSelect)" v-else />
     </div>
 
     <div class="critic-list" v-if="selectedGame">
@@ -64,5 +64,13 @@ function selectGame(game: Game) {
 
   .game-list, .critic-list {
     flex: 1;
+  }
+  .critic-list {
+    border-left: 3px solid rgb(0, 204, 255);
+  }
+  .game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
   }
 </style>
