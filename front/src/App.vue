@@ -16,6 +16,7 @@ apiStore.refresh();
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/games">Games</RouterLink>
         <RouterLink to="/game/0">Game of id 0</RouterLink>
+        <RouterLink to="/admin">Admin</RouterLink>
         <button @click="isAuthDiplayed = true"> Login</button>
         <span> Logged in User: {{ loggedInUser ? loggedInUser.login : 'User not logged in' }}</span>
         <RouterLink v-if="loggedInUser" to="/account"> My Account</RouterLink>
@@ -26,7 +27,7 @@ apiStore.refresh();
 </template>
 
 <style scoped>
-/*
+
 header {
   line-height: 1.5;
   max-height: 100vh;
@@ -88,5 +89,5 @@ nav a:first-of-type {
     margin-top: 1rem;
   }
 }
-*/
+
 </style>

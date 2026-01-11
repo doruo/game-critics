@@ -5,7 +5,7 @@ import { apiStore, loggedInUser } from '@/util/apiStore.ts';
 import { addNotif } from '@/util/notifStore.ts';
 
 const emit = defineEmits<{
-  hideForm: [],
+  œ: [],
 }>();
 
 const props = defineProps<{

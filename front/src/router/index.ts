@@ -3,11 +3,13 @@ import GameListView from '@/views/GameListView.vue'
 import GameDetailView from '@/views/GameDetailView.vue'
 import UserDetailView from '@/views/UserDetailView.vue'
 import AccountView from '@/views/AccountView.vue'
+import AdminView from '@/views/Admin/AdminView.vue'
+import UserListView from "@/views/Admin/UserListView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-/* 
+/*
     {
       path: '/',
       name: 'home',
@@ -27,16 +29,35 @@ const router = createRouter({
       component: GameDetailView,
     },
     {
+      // invalidated Games page
+      path: '/admin/games',
+      name: 'createdGames',
+      component: GameListView,
+      props: {adminMode: true}
+    },
+    {
       // user page
       path: '/user/:id',
       name: 'userDetail',
       component: UserDetailView,
     },
     {
+      // users admin page
+      path: '/admin/users',
+      name: 'usersAdmin',
+      component: UserListView,
+    },
+    {
       // logged in user's account page
       path: '/account',
       name: 'account',
       component: AccountView,
+    },
+    {
+      //Admin page
+      path: '/admin',
+      name: 'admin',
+      component: AdminView,
     },
     // {
     //   path: '/about',
