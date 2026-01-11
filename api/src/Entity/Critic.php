@@ -38,8 +38,8 @@ use App\Entity\Game;
         new Patch(),
         new Delete(),
     ],
-    order: ["publicationDate" => "DESC"],
     normalizationContext: ["groups" => ["serialization:critic:read"]],
+    order: ["publicationDate" => "DESC"],
 )]
 #[ORM\Entity(repositoryClass: CriticRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -51,41 +51,41 @@ class Critic
     #[Groups(['serialization:critic:read'])]
     private ?int $id;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Groups(['serialization:critic:read'])]
     private ?int $note = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 500)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 20, max: 500, minMessage: 'Le message général doit faire au minimum 20 caractères', maxMessage: 'Le message général doit faire au maximum 500 caractères')]
     #[Groups(['serialization:critic:read'])]
     private ?string $generalMessage = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 500)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 20, max: 500, minMessage: 'La critique des graphismes doit faire au minimum 20 caractères', maxMessage: 'La critique des graphismes doit faire au maximum 500 caractères')]
     #[Groups(['serialization:critic:read'])]
     private ?string $visualMessage = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 500)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 20, max: 500, minMessage: 'La critique de la musique doit faire au minimum 20 caractères', maxMessage: 'La critique de la musique doit faire au maximum 500 caractères')]
     #[Groups(['serialization:critic:read'])]
     private ?string $soundtrackMessage = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 500)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 20, max: 500, minMessage: 'La critique du scénario doit faire au minimum 20 caractères', maxMessage: 'La critique du scénario doit faire au maximum 500 caractères')]
     #[Groups(['serialization:critic:read'])]
     private ?string $scenarioMessage = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Groups(['serialization:critic:read'])]
@@ -109,7 +109,7 @@ class Critic
         return $this;
     }
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Groups(['serialization:critic:read'])]

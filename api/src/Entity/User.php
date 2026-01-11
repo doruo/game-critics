@@ -41,9 +41,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         deserialize: false, // no need to have a body , not a single change is accepted in this route
         processor: AdminProcessor::class,
     ),
-
-    new Put(denormalizationContext: ["groups" => ["deserialization:user:update"]],security: "is_granted('USER_SELF_CONNECTED_OR_ADMIN_EXCEPT_ADMIN',object)",validationContext: ["groups" => ["Default", "validation:user:update"]],processor: UserProcessor::class),
-    ],
+ ],
     normalizationContext: ["groups" => ["serialization:user:read"]]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -55,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['serialization:user:read'])]
     private ?int $id;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 20)]
     #[Assert\NotBlank(groups: ["validation:user:create"])]
     #[Assert\NotNull(groups: ["validation:user:create"])]
     #[Assert\Length(min: 4, max: 20, minMessage: 'Le login doit faire au minimum 4 caractères', maxMessage: 'Le login doit faire au maximum 20 caractères')]
@@ -85,10 +83,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Regex(pattern: '#^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}$#', message: 'Votre mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre')]
     private ?string $plainPassword = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50)]
     #[Assert\NotBlank(groups: ["validation:user:create"])]
     #[Assert\NotNull(groups: ["validation:user:create"])]
     #[Assert\Email(message: "Le format d'email n'est pas valide")]
+    #[Assert\Length(min: 5, max: 50, minMessage: 'Votre email doit faire au minimum 5 caractères', maxMessage: 'Votre email doit faire au maximum 50 caractères')]
     #[ApiProperty(description: 'email de l\'utilisateur ')]
     #[Groups(['deserialization:user:create', 'deserialization:user:update',"serialization:user:read"])]
     private ?string $email = null;

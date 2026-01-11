@@ -35,21 +35,21 @@ class Game
     #[Groups(['serialization:game:read'])]
     private ?int $id;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 40)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 4, max: 40, minMessage: 'Le nom doit faire au minimum 4 caractères', maxMessage: 'Le nom doit faire au maximum 40 caractères')]
     #[Groups(['serialization:game:read'])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 500)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 4, max: 500, minMessage: 'La description doit faire au minimum 4 caractères', maxMessage: 'La description doit faire au maximum 500 caractères')]
     #[Groups(['serialization:game:read'])]
     private ?string $description = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\DateTime]
@@ -57,21 +57,21 @@ class Game
     #[Groups(['serialization:game:read'])]
     private ?DateTime $releaseDate = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 60)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 1, max: 60, minMessage: 'Le nom du studio de développement doit faire au minimum 1 caractère', maxMessage: 'Le nom du studio de développement doit faire au maximum 60 caractères')]
     #[Groups(['serialization:game:read'])]
     private ?string $developper = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 60)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Length(min: 1, max: 60, minMessage: 'Le nom de l\'éditeur doit faire au minimum 1 caractère', maxMessage: 'Le nom de l\'éditeur doit faire au maximum 60 caractères')]
     #[Groups(['serialization:game:read'])]
     private ?string $publisher = null;
 
-    #[ORM\Column(length: 180, nullable: true)]
+    #[ORM\Column(nullable: true)]
     #[Groups(['serialization:game:read'])]
     private ?float $avgNote = null;
 
@@ -81,25 +81,25 @@ class Game
     #[Groups(['serialization:game:read'])]
     private ?string $gameMode = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Groups(['serialization:game:read'])]
     private ?int $targetAge = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 50)]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Groups(['serialization:game:read'])]
     #[Assert\Length(min: 3, max: 50, minMessage: 'Le genre doit faire au minimum 3 caractères', maxMessage: 'Le genre doit faire au maximum 50 caractères')]
     private ?string $genre = null;
 
-    #[ORM\Column(length: 180, nullable: true)]
+    #[ORM\Column(length: 50, nullable: true)]
     #[Groups(['serialization:game:read'])]
     #[Assert\Length(min: 3, max: 50, minMessage: 'La licence doit faire au minimum 3 caractères', maxMessage: 'La licence doit faire au maximum 50 caractères')]
     private ?string $licence = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Groups(['serialization:game:read'])]
@@ -108,7 +108,7 @@ class Game
     /**
      * @var list<string>
      */
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Groups(['serialization:game:read'])]
@@ -117,12 +117,12 @@ class Game
     /**
      * @var list<string> images and screenshots
      */
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     private ?array $images = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     /**
@@ -130,7 +130,7 @@ class Game
      */
     private ?string $pochette = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     private ?bool $approved = null;
