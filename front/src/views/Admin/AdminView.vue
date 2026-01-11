@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import GameDetailView from "@/views/GameDetailView.vue";
-import type {Game} from "@/types.ts";
-import {ref} from "vue";
-
 </script>
 
 <template>
