@@ -53,16 +53,20 @@ watch(newUser.value, () => {
 <template>
   <h3> Create an account</h3>
   <form @submit.prevent="connect" class="content">
-    <label for="login-field">Login</label>
+    <label for="login-field">Login : </label>
     <input id="login-field" minlength="4" v-model="newUser.login" >
 
-    <label for="email-field">Email</label>
-    <input id="email-field" type="email" v-model="newUser.email" >
+    <p>
+      <label for="email-field">Email : </label>
+      <input id="email-field" type="email" v-model="newUser.email" >
+    </p>
 
-    <label for="password-field">Mot de passe</label>
+    <label for="password-field">Mot de passe : </label>
     <input id="password-field" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}" type="password" v-model="newUser.plainPassword" > 
 
-    <button type="submit"> Create</button>
+    <p>
+      <button type="submit"> Create</button>
+    </p>
   </form>
 </template>
 
