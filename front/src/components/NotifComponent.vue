@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { removeNotif } from '@/util/notifStore.ts';
 import type { Notif } from '../types.ts';
+import NavButton from './NavButton.vue';
 
 const props = defineProps<{
   notif: Notif,
@@ -10,7 +11,7 @@ const props = defineProps<{
 
 <template>
   <div class="notification" :class="(notif.type)">
-    <button @click="removeNotif(notif)">Close</button>
+    <NavButton @click="removeNotif(notif)">Close</NavButton>
     <h2> {{ notif.type }}</h2>
     <p> {{ notif.message }}</p>
     <div class="progress-bar"></div>

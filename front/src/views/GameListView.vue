@@ -5,6 +5,7 @@ import { apiStore } from '@/util/apiStore.ts';
 import GameComponent from '@/components/GameComponent.vue';
 import CriticList from '@/components/CriticList.vue';
 import GameFormComponent from '@/components/GameFormComponent.vue';
+import NavButton from '@/components/NavButton.vue';
 
 const gameList: Ref<Array<Game> | 'loading' | 'failed'> = ref('loading');
 const selectedGame: Ref<Game | null> = ref(null);
@@ -41,7 +42,8 @@ function selectGame(game: Game) {
 </script>
 
 <template>
-  <button v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</button>
+  <br>
+  <NavButton v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</NavButton>
   <GameFormComponent v-else @hide-form="gameFormDisplayed = false"/>
   <main>
     <div class="game-list">
