@@ -10,7 +10,7 @@ import { isAuthDiplayed } from '@/util/authDisplayedStore';
   }>();
 
 function connect(): void {
-  apiStore.createRessource('utilisateurs', newUser.value)
+  apiStore.createRessource('users', newUser.value)
   .then((data) => {
     if (data.success) {
       addNotif({autoRemoved: true, type: 'success', message: "New user of login " + newUser.value.login + " has been created"});
