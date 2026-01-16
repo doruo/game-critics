@@ -33,6 +33,8 @@
     border-radius: 15px;
     transition: 1s;
     cursor: pointer;
+    border: 3px solid rgba(0, 204, 255, 0.2);
+    width: fit-content;
   }
 
     .nav-button .bar {
@@ -46,6 +48,7 @@
 
   .nav-button:hover {
     background-color: rgba(0, 0, 0, 0.05);
+    border: 3px solid transparent;
   }
 
   @keyframes nav-button-hover{
