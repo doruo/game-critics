@@ -85,9 +85,20 @@ import { addNotif } from '@/util/notifStore';
     <p> <label for="password-field">New Password:</label> <input id="password-field" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}" v-model="newUser.plainPassword" type="password"></p>
 
     <button type="submit">Save</button>
+
+    <button type="button" v-if="!confirmDelete" @click="confirmDelete = true"> Delete Account</button>
+    <button type="button" v-if="confirmDelete" @click="confirmDelete = false"> No, do NOT Delete My Account.</button>
+    <button type="button" v-if="confirmDelete" @click="deleteAccount"> Yes, Delete My Account.</button>
   </form>
 
-  <button v-if="!confirmDelete" @click="confirmDelete = true"> Delete Account</button>
-  <button v-if="confirmDelete" @click="confirmDelete = false"> No, do NOT Delete My Account.</button>
-  <button v-if="confirmDelete" @click="deleteAccount"> Yes, Delete My Account.</button>
 </template>
+
+<style scoped>
+  form {
+    background-image: linear-gradient(90deg, white 70%, #d3d3d3 90% );
+    border: 3px solid rgb(0, 204, 255);
+    border-radius: 15px;
+    padding: .5em;
+    width: fit-content;
+  }
+</style>
