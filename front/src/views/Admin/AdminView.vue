@@ -4,7 +4,7 @@
 <template>
   <nav>
     <RouterLink to="/admin/users/">Users</RouterLink>
-    <RouterLink :key="$route.fullPath" to="/admin/games/">Unvalidated games</RouterLink>
+    <RouterLink to="/admin/games/">Manage games</RouterLink>
   </nav>
 
 
