@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[ApiProperty(description: 'iri', readable: true, writable: false)]
+    #[ApiProperty(description: 'id', readable: true, writable: false)]
     #[Groups(['serialization:user:read'])]
     private ?int $id;
 
