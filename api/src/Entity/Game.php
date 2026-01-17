@@ -2,30 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\GameRepository;
-use Doctrine\ORM\Mapping as ORM;
-
-use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
-use App\State\GameProcessor;
-
-use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Link;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Repository\GameRepository;
+use Doctrine\ORM\Mapping as ORM;
+use App\State\GameProcessor;
 use App\Entity\Critic;
 use DateTime;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Criticable game object.
  * */
 #[UniqueEntity('name', message : "Ce jeu existe déjà.")]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[ApiResource(
     operations: [
