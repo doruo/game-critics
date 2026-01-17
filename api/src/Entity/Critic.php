@@ -3,20 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\CriticRepository;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Attribute\Groups;
+
+use App\State\CriticProcessor;
+
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Link;
+
 use App\Entity\User;
 use App\Entity\Game;
+
+use DateTime;
 
 /**
  * Critic of a game.
@@ -31,10 +36,15 @@ use App\Entity\Game;
                     fromClass: Game::class
                 )
             ],
+            normalizationContext: ["groups" => ["serialization:critic:read"]]
         ),
-        new Get(),
-        new Post(),
-        new Put(),
+        new Get(normalizationContext: ["groups" => ["serialization:critic:read"]]),
+        new Post(
+            denormalizationContext: ["groups" => ["deserialization:critic:create"]], 
+            validationContext: ["groups" => ["Default", "validation:user:create"]], 
+            processor: CriticProcessor::class
+        ),
+        // Only if author is connected user or admin
         new Patch(),
         new Delete(),
     ],
