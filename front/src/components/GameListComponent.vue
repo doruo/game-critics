@@ -47,7 +47,7 @@ function selectGame(game: Game) {
 <template>
   <div v-if="!props.adminMode">
     <button v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</button>
-    <GameFormComponent v-else @hide-form="gameFormDisplayed = false" :create="true"/>
+    <GameFormComponent v-else @hide-form="gameFormDisplayed = false" :mode="'create'"/>
   </div>
 
   <main>

@@ -10,10 +10,10 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   game?: Game,
-  update?: boolean,
-  create?: boolean,
+  mode: 'update' | 'create';
 }>();
 
+let errorMSG : Ref<'' | 'failed' | 'loading'> = ref('loading')
 let actualGame: Ref<Game> = ref({
     id: 0,
     name: '',
@@ -33,9 +33,12 @@ let actualGame: Ref<Game> = ref({
     averageNote: 0,
 });
 
-if (props.update && props.game) {
-  apiStore.getById('games', props.game.id as string).then((data) => actualGame.value = data as Game)
-    //TODO catch si erreur y a
+if (props.mode == 'update' && props.game) {
+
+  //TODO à modifier quand l'api sera là
+  //apiStore.getById('games', props.game.id as string).then((data) => actualGame.value = data as Game).catch(() => errorMSG.value = 'failed')
+
+  errorMSG.value = ''
 
   actualGame.value.id = props.game.id
   actualGame.value.name = props.game.name
@@ -96,7 +99,10 @@ function removeImage(indexToRemove: number) {
 }
 </script>
 <template>
-  <form v-if="props.create" @submit.prevent="uploadGame" class="critic-form">
+  <p v-if="errorMSG == 'loading'"><i>Fetching User Details</i></p>
+  <p v-else-if="errorMSG == 'failed'"><i>User Details could not be fetched</i></p>
+
+  <form v-if="props.mode == 'create'" @submit.prevent="uploadGame" class="critic-form">
     <p><b> Name :</b></p>
     <input v-model="actualGame.name" ></input>
 
@@ -146,7 +152,7 @@ function removeImage(indexToRemove: number) {
     <button type="submit"> Upload</button>
   </form>
 
-  <form v-if="props.update" @submit.prevent="updateGame" class="critic-form">
+  <form v-if="props.mode == 'update'" @submit.prevent="updateGame" class="critic-form">
     <p><b> Name :</b></p>
     <input v-model="actualGame.name" ></input>
 

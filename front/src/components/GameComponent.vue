@@ -114,7 +114,7 @@ function state(editing: boolean) {
   <div v-if="isEditing">
     <h2>Editing {{ game.name }}</h2>
     <button class="edit" @click="state(false)">Cancel Editing of {{game.name}}</button>
-    <GameFormComponent :update="true" :game="game"/>
+    <GameFormComponent :mode="'update'" :game="game"/>
   </div>
 </template>
 
