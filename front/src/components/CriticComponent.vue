@@ -60,7 +60,6 @@ function cancelEdit() : void {
   editedCritic.value.visualMessage = props.critic.visualMessage;
   editedCritic.value.soundtrackMessage = props.critic.soundtrackMessage;
   editedCritic.value.scenarioMessage = props.critic.scenarioMessage;
-
   editedCritic.value.note = props.critic.note;
 }
 </script>

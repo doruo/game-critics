@@ -12,6 +12,7 @@ const props = defineProps<{passedGame?: Ref<Game>}>();
 const game: Ref<Game | 'loading' | 'failed'> = props.passedGame ? props.passedGame : ref('loading');
 const criticFormDisplayed = ref(false);
 
+//TODO à remettre lorsque l'api fonctionne
 /*if (!props.passedGame) {
     apiStore.getById('games', route.params.id as string)
     .then((data) => game.value = data as Game)

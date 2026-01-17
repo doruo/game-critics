@@ -14,7 +14,6 @@ const route = useRoute();
 
 const props = defineProps<{
   adminMode?: 'pending' | 'validated',
-  normalMode?: boolean,
 }>();
 
 const loadGames = async () => {
@@ -28,12 +27,11 @@ const loadGames = async () => {
     } else if (props.adminMode === 'validated') {
       gameList.value = gameList.value.filter(game => game.approved)
     }
-  } else if (props.normalMode){
+  } else {
     gameList.value = gameList.value.filter(game => game.approved)
   }
 }
 
-// to reload the list
 loadGames();
 watch(() => route.path, () => {
   loadGames();
@@ -67,6 +65,7 @@ function selectGame(game: Game) {
     </div>
 
     <div class="critic-list" v-if="selectedGame && !props.adminMode">
+      <h2>Critics of {{selectedGame.name}}</h2>
       <CriticList :id-type="('game')" :id="(selectedGame.id as string)"/>
     </div>
 
@@ -83,7 +82,4 @@ function selectGame(game: Game) {
     flex: 1;
   }
 
-  .critic-list {
-    background-color: red;
-  }
 </style>
