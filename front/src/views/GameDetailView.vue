@@ -7,35 +7,35 @@ import CriticList from '@/components/CriticList.vue';
 import CriticFormComponent from '@/components/CriticFormComponent.vue';
 
 const route = useRoute();
-const props = defineProps<{passedGame: Ref<Game> | undefined}>();
+const props = defineProps<{passedGame?: Ref<Game>}>();
 
 const game: Ref<Game | 'loading' | 'failed'> = props.passedGame ? props.passedGame : ref('loading');
 const criticFormDisplayed = ref(false);
 
-if (!props.passedGame) {
+/*if (!props.passedGame) {
     apiStore.getById('games', route.params.id as string)
     .then((data) => game.value = data as Game)
     .catch(() => game.value = 'failed');
-}
+}*/
 
-// game.value = {
-//     approved: true,
-//     averageNote: 4.3,
-//     description: 'Big game',
-//     developer: 'Supercell',
-//     gameMode: 'Singleplayer',
-//     genre: 'Adventure',
-//     id: 1,
-//     images: ['https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg', 'https://www.androidpolice.com/wp-content/uploads/2018/06/unnamed-1-7.png', 'https://image.winudf.com/v2/image1/Y29tLnN1cGVyY2VsbC5icmF3bHN0YXJzX3NjcmVlbl8xM18xNTY3MTg5NzczXzA4NA/screen-13.jpg?fakeurl=1&type=.jpg'],
-//     license: 'Assassin\'s creed',
-//     name: 'Brawl Stars',
-//     platform: ['Linux', 'Android'],
-//     pochette: 'https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg',
-//     price: 0,
-//     publisher: 'Matteo',
-//     releaseDate: "2021-09-15",
-//     targetAge: 7,
-// }
+game.value = {
+  approved: true,
+  averageNote: 4.3,
+  description: 'Big game',
+  developer: 'Supercell',
+  gameMode: 'Singleplayer',
+  genre: 'Adventure',
+  id: 1,
+  images: ['https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg', 'https://www.androidpolice.com/wp-content/uploads/2018/06/unnamed-1-7.png', 'https://image.winudf.com/v2/image1/Y29tLnN1cGVyY2VsbC5icmF3bHN0YXJzX3NjcmVlbl8xM18xNTY3MTg5NzczXzA4NA/screen-13.jpg?fakeurl=1&type=.jpg'],
+  license: 'Assassin\'s creed',
+  name: 'Brawl Stars',
+  platform: ['Linux', 'Android'],
+  pochette: 'https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg',
+  price: 0,
+  publisher: 'Matteo',
+  releaseDate: "2021-09-15",
+  targetAge: 7,
+}
 </script>
 
 <template>
@@ -64,7 +64,7 @@ if (!props.passedGame) {
                 <li>Released on {{ new Date(game.releaseDate).toLocaleDateString() }}</li>
             </ul>
         </div>
-    
+
         <div class="image-list" v-if="game.images">
             <img v-for="image, index in game.images" :src="image" height="150" :alt="('image n°' + index)">
         </div>
