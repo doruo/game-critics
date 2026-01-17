@@ -31,7 +31,7 @@ const editedGame = ref({
   approved: true
 });
 
-function manageGame(game: Game, type: 'accept' | 'delete'{
+function manageGame(game: Game, type: 'accept' | 'delete'){
   if (type === "delete") {
     apiStore.deleteResource('game', game.id as string).then((data) => {
       addNotif({
