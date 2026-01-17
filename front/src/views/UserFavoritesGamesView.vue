@@ -4,7 +4,7 @@ import GameListComponent from "@/components/GameListComponent.vue";
 </script>
 
 <template>
-<GameListComponent :normal-mode="true" />
+<GameListComponent  />
 </template>
 
 <style scoped>

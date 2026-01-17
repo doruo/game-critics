@@ -4,6 +4,8 @@ import {type Ref, ref, watch} from "vue";
 import {apiStore} from "@/util/apiStore.ts";
 import UserComponent from "@/components/UserComponent.vue";
 import {useRoute} from "vue-router";
+import {valorant} from "@/mock.ts";
+import { Game } from "@/types.ts";
 
 
 
@@ -19,7 +21,7 @@ const loadUsers = async () => {
       id: 1,
       login: 'hicham123',
       email: 'hicham@example.com',
-      roles: ['ROLE_USER', 'ROLE_ADMIN']
+      roles: ['ROLE_USER', 'ROLE_ADMIN'],
     },
     {
       id: 2,

@@ -1,0 +1,89 @@
+<script setup lang="ts">
+import { ref, type Ref, watch } from 'vue';
+import type { Game } from '../types.ts';
+import { useRoute } from "vue-router";
+import {minecraft, valorant, brawlstars} from "@/mock.ts";
+import GameComponent from "@/components/GameComponent.vue";
+import GameFormComponent from './GameFormComponent.vue';
+import CriticList from './CriticList.vue';
+
+const gameList: Ref<Array<Game> | 'loading' | 'failed'> = ref('loading');
+const selectedGame: Ref<Game | null> = ref(null);
+const gameFormDisplayed = ref(false);
+const route = useRoute();
+
+const props = defineProps<{
+  adminMode?: 'pending' | 'validated',
+  normalMode?: boolean,
+}>();
+
+const loadGames = async () => {
+  //apiStore.getAll('games').then((data) => gameList.value = data as Array<Game>).catch(() => gameList.value = 'failed')
+  //TODO À SUPPRIMER QUAND L'API FONCTIONNE
+  gameList.value = [minecraft.value, brawlstars.value, valorant.value];
+
+  if (props.adminMode && Array.isArray(gameList.value)) {
+    if (props.adminMode === 'pending') {
+      gameList.value = gameList.value.filter(game => !game.approved)
+    } else if (props.adminMode === 'validated') {
+      gameList.value = gameList.value.filter(game => game.approved)
+    }
+  } else if (props.normalMode){
+    gameList.value = gameList.value.filter(game => game.approved)
+  }
+}
+
+// to reload the list
+loadGames();
+watch(() => route.path, () => {
+  loadGames();
+})
+
+function selectGame(game: Game) {
+  if (selectedGame.value !== game)
+    selectedGame.value = game;
+  else
+    selectedGame.value = null;
+}
+</script>
+<template>
+  <div v-if="!props.adminMode">
+    <button v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</button>
+    <GameFormComponent v-else @hide-form="gameFormDisplayed = false" :create="true"/>
+  </div>
+
+  <main>
+    <div class="game-list">
+      <p v-if="gameList == 'loading'"><i>Fetching critics for this Game</i></p>
+      <p v-else-if="gameList == 'failed'"><i>Game critics could not be loaded</i></p>
+
+      <GameComponent
+        v-for="game in gameList"
+        :game="game"
+        @select-game="(gameToSelect) => selectGame(gameToSelect)"
+        :admin-mode="props.adminMode"
+        @loadGames="loadGames"
+      />
+    </div>
+
+    <div class="critic-list" v-if="selectedGame && !props.adminMode">
+      <CriticList :id-type="('game')" :id="(selectedGame.id as string)"/>
+    </div>
+
+  </main>
+</template>
+
+<style scoped>
+  main {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .game-list, .critic-list {
+    flex: 1;
+  }
+
+  .critic-list {
+    background-color: red;
+  }
+</style>

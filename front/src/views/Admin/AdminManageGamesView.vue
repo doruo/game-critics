@@ -1,6 +1,5 @@
 <script setup lang="ts">
-
-import GameListView from "@/views/GameListView.vue";
+import GameListComponent from "@/components/GameListComponent.vue";
 </script>
 
 <template>
@@ -8,12 +7,12 @@ import GameListView from "@/views/GameListView.vue";
   <div class="games-container">
     <div class="games-column">
       <h2>Invalidated games</h2>
-      <GameListView :admin-mode="true" :invalidated="true" />
+      <GameListComponent admin-mode="pending" />
     </div>
 
     <div class="games-column">
       <h2>Manage all validated games</h2>
-      <GameListView :admin-mode="true" :edit="true" />
+      <GameListComponent admin-mode="validated" />
     </div>
   </div>
 </template>

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import GameListView from '@/views/GameListView.vue'
+import GameListComponent from '@/components/GameListComponent.vue'
 import GameDetailView from '@/views/GameDetailView.vue'
 import UserDetailView from '@/views/UserDetailView.vue'
 import AccountView from '@/views/AccountView.vue'
@@ -7,6 +7,7 @@ import AdminView from '@/views/Admin/AdminView.vue'
 import UserListView from "@/views/Admin/UserListView.vue";
 import AdminManageGamesView from "@/views/Admin/AdminManageGamesView.vue";
 import GameFormComponent from "@/components/GameFormComponent.vue";
+import GameListView from "@/views/GameListView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,11 +60,6 @@ const router = createRouter({
       path: '/admin/users',
       name: 'usersAdmin',
       component: UserListView,
-    },
-    {
-      path: '/admin/games',
-      name: 'editGameAdmin',
-      component: AdminManageGamesView,
     },
     // {
     //   path: '/about',
