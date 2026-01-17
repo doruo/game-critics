@@ -5,6 +5,8 @@ import UserDetailView from '@/views/UserDetailView.vue'
 import AccountView from '@/views/AccountView.vue'
 import AdminView from '@/views/Admin/AdminView.vue'
 import UserListView from "@/views/Admin/UserListView.vue";
+import AdminManageGamesView from "@/views/Admin/AdminManageGamesView.vue";
+import GameFormComponent from "@/components/GameFormComponent.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,23 +31,10 @@ const router = createRouter({
       component: GameDetailView,
     },
     {
-      // invalidated Games page
-      path: '/admin/games',
-      name: 'createdGames',
-      component: GameListView,
-      props: {adminMode: true}
-    },
-    {
       // user page
       path: '/user/:id',
       name: 'userDetail',
       component: UserDetailView,
-    },
-    {
-      // users admin page
-      path: '/admin/users',
-      name: 'usersAdmin',
-      component: UserListView,
     },
     {
       // logged in user's account page
@@ -58,6 +47,23 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: AdminView,
+    },
+    {
+      // Admin Manage Games page
+      path: '/admin/games',
+      name: 'manageGames',
+      component: AdminManageGamesView,
+    },
+    {
+      // users admin page
+      path: '/admin/users',
+      name: 'usersAdmin',
+      component: UserListView,
+    },
+    {
+      path: '/admin/games',
+      name: 'editGameAdmin',
+      component: AdminManageGamesView,
     },
     // {
     //   path: '/about',

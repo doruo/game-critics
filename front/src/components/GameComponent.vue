@@ -2,14 +2,19 @@
 import type { Game } from '../types.ts';
 import {apiStore} from "@/util/apiStore.ts";
 import {addNotif} from "@/util/notifStore.ts";
+import {useRoute} from "vue-router";
 import {ref} from "vue";
+import GameFormComponent from "@/components/GameFormComponent.vue";
 
+const emit = defineEmits<{selectGame: [gameToSelect: Game], loadGames: void}>();
 const props = defineProps<{
   game: Game,
-  adminMode?: boolean,
+  invalidated?: boolean,
+  edit?: boolean,
+  adminMode?: boolean
 }>();
 
-
+let isEditing = ref(false)
 const editedGame = ref({
   id: props.game.id,
   name: props.game.name,
@@ -29,10 +34,8 @@ const editedGame = ref({
   approved: true
 });
 
-const emit = defineEmits<{selectGame: [gameToSelect: Game], loadGames: void}>();
-
-function manageGame(game: Game, type: 'accept' | 'reject'){
-  if (type=="reject"){
+function manageGame(game: Game, type: 'accept' | 'delete'){
+  if (type=="delete"){
     apiStore.deleteResource('game', game.id as string).then((data) => {
       if (data.success){
         addNotif({autoRemoved: true, type: 'success', message: "The game has been deleted"})
@@ -54,21 +57,47 @@ function manageGame(game: Game, type: 'accept' | 'reject'){
     emit("loadGames");
   }
 
+  /*if (type=="edit"){
+    apiStore.patchResource('game', game.id as string, editedGame.value).then((data) => {
+      if (data.success){
+        addNotif({autoRemoved: true, type: 'success', message: "The game has been accepted."})
+      } else {
+        addNotif({autoRemoved: true, type: 'error', message: "The game could not been accepted"})
+      }
+    });
+    emit("loadGames");
+  }*/
+
+}
+function state(editing: boolean){
+  if(editing){
+    isEditing.value = true
+  } else {
+    isEditing.value = false
+  }
 }
 </script>
 
 <template>
-  <div class="game-component" @click="$emit('selectGame', game)">
-    <img class="pochette" :src="game.pochette" height="150" :alt="('Pochette du jeu ' + game.name)" v-if="game.pochette">
-    <div class="right">
-      <h2><RouterLink :to="{name:'gameDetail', params: {id: game.id}}">{{ game.name }}</RouterLink></h2>
-      <p><i>Published by </i> {{ game.publisher }}</p>
-      <p>Average note : {{ game.averageNote }}</p>
-    </div>
-    <div v-if="adminMode" class="buttons">
-      <button class="accept" @click="() => manageGame(game, 'accept')">Accept</button>
-      <button class="reject" @click="() => manageGame(game, 'reject')">Reject</button>
-    </div>
+  <div v-if="!isEditing" class="game-component" @click="!adminMode ? $emit('selectGame', game) : null">
+      <img class="pochette" :src="game.pochette" height="150" :alt="('Pochette du jeu ' + game.name)" v-if="game.pochette">
+      <div class="right">
+        <h2><RouterLink :to="{name:'gameDetail', params: {id: game.id}}">{{ game.name }}</RouterLink></h2>
+        <p><i>Published by </i> {{ game.publisher }}</p>
+        <p>Average note : {{ game.averageNote }}</p>
+      </div>
+
+      <div v-if="adminMode" class="buttons">
+        <button class="delete" @click="() => manageGame(game, 'delete')">Delete</button>
+        <button class="accept" v-if="invalidated" @click="() => manageGame(game, 'accept')">Accept</button>
+        <button class="edit" v-if="edit" @click="state(true)">Edit</button>
+      </div>
+
+  </div>
+  <div v-if="isEditing">
+    <h2>Editing {{game.name}}</h2>
+    <GameFormComponent :update="true" :game="game"/>
+    <button class="edit" v-if="edit" @click="state(false)">Cancel</button>
   </div>
 </template>
 
@@ -90,7 +119,12 @@ function manageGame(game: Game, type: 'accept' | 'reject'){
     background-color: greenyellow;
   }
 
-  .reject {
+  .edit {
+    height: 40px;
+    background-color: gray;
+  }
+
+  .delete {
     height: 40px;
     background-color: red;
   }

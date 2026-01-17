@@ -13,13 +13,15 @@ const gameFormDisplayed = ref(false);
 const route = useRoute();
 
 const props = defineProps<{
+  invalidated?: boolean,
   adminMode?: boolean,
+  edit?: boolean
 }>();
 
 // TODO : A supprimer une fois cette partie de l'api complété
 
 const brawlstars = ref<Game>({
-  approved: false,
+  approved: true,
   averageNote: 4.3,
   description: 'Big game',
   developer: 'Supercell',
@@ -87,13 +89,15 @@ const valorant = ref<Game>({
 
 const loadGames = async () => {
   //apiStore.getAll('games').then((data) => gameList.value = data as Array<Game>).catch(() => gameList.value = 'failed')
-
   //TODO À SUPPRIMER QUAND L'API FONCTIONNE
   gameList.value =[minecraft.value, brawlstars.value, valorant.value];
 
-  //if adminMode
-  if (props.adminMode && Array.isArray(gameList.value)){
+  if (props.invalidated && Array.isArray(gameList.value)){
     gameList.value = gameList.value.filter(game => !game.approved)
+  }
+
+  if (props.edit && Array.isArray(gameList.value)){
+    gameList.value = gameList.value.filter(game => game.approved)
   }
 }
 
@@ -113,9 +117,9 @@ function selectGame(game: Game) {
 </script>
 
 <template>
-  <div v-if="!props.adminMode">
+  <div v-if="!props.invalidated && !adminMode">
     <button v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</button>
-    <GameFormComponent v-else @hide-form="gameFormDisplayed = false"/>
+    <GameFormComponent v-else @hide-form="gameFormDisplayed = false" :create="true"/>
   </div>
 
   <main>
@@ -123,13 +127,15 @@ function selectGame(game: Game) {
       <p v-if="gameList == 'loading'"><i>Fetching critics for this Game</i></p>
       <p v-else-if="gameList == 'failed'"><i>Game critics could not be loaded</i></p>
 
-      <GameComponent v-for="game in gameList" :game="game" @select-game="(gameToSelect) => selectGame(gameToSelect)" :admin-mode="props.adminMode" @loadGames="loadGames" v-else/>
+      <GameComponent v-for="game in gameList" :game="game" @select-game="(gameToSelect) => selectGame(gameToSelect)" :edit="props.edit" :admin-mode="props.adminMode" :invalidated="props.invalidated" @loadGames="loadGames" v-else/>
     </div>
 
-    <div class="critic-list" v-if="selectedGame">
+    <div class="critic-list" v-if="selectedGame && !adminMode">
       <CriticList :id-type="('game')" :id="(selectedGame.id as string)"/>
     </div>
+
   </main>
+
 </template>
 
 <style scoped>

@@ -72,8 +72,7 @@ function cancelEdit() : void {
     <button v-if="userIsAuthor && !isBeingEdited" @click="isBeingEdited = true"> Edit Critic</button>
     <button v-if="isBeingEdited" @click="saveEditedCritic"> Save</button>
     <button v-if="isBeingEdited" @click="cancelEdit"> Cancel</button>
-    <!-- TODO : s'assurer que le role soit bien 'ADMIN' et pas autre chose -->
-    <button v-if="userIsAuthor || loggedInUser?.roles.includes('ADMIN')" @click="deleteCrtic"> Delete Critic</button>
+    <button v-if="userIsAuthor || loggedInUser?.roles.includes('ROLE_ADMIN')" @click="deleteCrtic"> Delete Critic</button>
 
     <p><b> General Critic :</b></p>
     <p v-if="!isBeingEdited">{{ critic.generalMessage }}</p>
