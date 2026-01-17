@@ -31,7 +31,7 @@ Site de critiques de jeux vidéos.
 - doctrine-orm >= 4.2
 
 ## Mise en place
-http://localhost/api/public/api
+
 ```bash
 cd ~/gamecritics/api
 composer install
