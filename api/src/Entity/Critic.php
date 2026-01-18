@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CriticRepository;
+use App\State\CriticAuthorProcessor;
+use App\State\UserFavoriteCriticsProvider;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -52,6 +54,97 @@ use DateTime;
         ),
 
         new Delete(),
+
+
+        // -------------------------------------
+        //              USERS
+        // -------------------------------------
+
+
+        new GetCollection(
+            uriTemplate: '/users/{id}/favoritesCritics',
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: User::class
+                )
+            ],
+            normalizationContext: ['groups' => ['serialization:critic:read']],
+            security: "is_granted('ROLE_USER') and request.attributes.get('id') == user.getId()",
+            provider: UserFavoriteCriticsProvider::class
+        ),
+
+        new GetCollection(
+            uriTemplate: '/users/{id}/critics',
+            uriVariables: [
+                'id' => new Link(
+                    fromProperty: 'critics',
+                    fromClass: User::class
+                )
+            ],
+            normalizationContext: [
+                'groups' => ['serialization:critic:read']
+            ]
+        ),
+
+        new Post(
+            uriTemplate: '/users/{id}/critics',
+            uriVariables: [
+                'id' => new Link(fromClass: User::class)
+            ],
+            normalizationContext: [
+                'groups' => ['serialization:critic:read']
+            ],
+            denormalizationContext: [
+                'groups' => ['deserialization:critic:create']
+            ],
+            security: "is_granted('AUTH_CONNECTED', id)",
+            validationContext: [
+                'groups' => ['validation:critic:create']
+            ],
+            processor: CriticAuthorProcessor::class
+        ),
+
+
+        new Get(
+            uriTemplate: '/users/{id}/critics/{criticId}',
+            uriVariables: [
+                'id' => new Link(fromClass: User::class),
+                'criticId' => new Link(fromClass: Critic::class)
+            ],
+            normalizationContext: [
+                'groups' => ['serialization:critic:read']
+            ]
+        ),
+
+        new Patch(
+            uriTemplate: '/users/{id}/critics/{criticId}',
+            uriVariables: [
+                'id' => new Link(fromClass: User::class),
+                'criticId' => new Link(fromClass: Critic::class)
+            ],
+            normalizationContext: [
+                'groups' => ['serialization:critic:read']
+            ],
+            denormalizationContext: [
+                'groups' => ['deserialization:critic:update']
+            ],
+            security: "is_granted('CRITIC_FROM_CONNECTED_USERS_OR_ADMIN', object)",
+            validationContext: [
+                'groups' => ['validation:critic:update']
+            ]
+        ),
+
+        new Delete(
+            uriTemplate: '/users/{id}/critics/{criticId}',
+            uriVariables: [
+                'id' => new Link(fromClass: User::class),
+                'criticId' => new Link(fromClass: Critic::class)
+            ],
+            security: "is_granted('CRITIC_DELETE', object)"
+        ),
+
+
+
     ],
     normalizationContext: ["groups" => ["serialization:critic:read"]],
     order: ["publicationDate" => "DESC"],
@@ -154,7 +247,8 @@ class Critic
     #[ORM\ManyToOne(inversedBy: 'critics')]
     #[ORM\JoinColumn(nullable: false)]
     #[ApiProperty(description: "Jeu concerné par la critique")]
-    #[Groups(['serialization:critic:read'])]
+    #[Assert\NotBlank(groups: ["validation:critic:create"])]
+    #[Groups(['serialization:critic:read','deserialization:critic:create'])]
     private ?Game $game = null;
 
     #[ORM\ManyToOne(inversedBy: 'critics')]

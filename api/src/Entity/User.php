@@ -58,6 +58,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         validationContext: ["groups" => ["Default", "validation:user:favoritesGames:update"]],
         provider: null
     ),
+
+
  ],
     normalizationContext: ["groups" => ["serialization:user:read"]],
     provider: UserProvider::class

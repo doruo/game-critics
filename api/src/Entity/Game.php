@@ -98,7 +98,7 @@ class Game
     ])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 500)]
+    #[ORM\Column(length: 500,nullable: true)]
     #[ApiProperty(description: "Description détaillée du jeu")]
     #[Assert\Length(
         min: 4,
@@ -113,7 +113,7 @@ class Game
     ])]
     private ?string $description = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'datetime')]
     #[ApiProperty(description: "Date de sortie officielle du jeu")]
     #[Assert\NotNull(groups: ["validation:game:create"])]
     #[Assert\LessThanOrEqual(value: "today",groups: ["validation:game:create", "validation:game:update"])]
@@ -140,7 +140,7 @@ class Game
     ])]
     private ?string $developper = null;
 
-    #[ORM\Column(length: 60)]
+    #[ORM\Column(length: 60,nullable: true)]
     #[ApiProperty(description: "Éditeur du jeu")]
     #[Assert\Length(
         min: 1,
@@ -163,7 +163,7 @@ class Game
     #[Groups(['serialization:game:read'])]
     private ?float $avgNote = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50,nullable: true)]
     #[ApiProperty(description: "Mode de jeu")]
     #[Assert\Length(
         min: 1,
@@ -178,7 +178,7 @@ class Game
     ])]
     private ?string $gameMode = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[ApiProperty(description: "Age minimum recommander pour jouer au jeu")]
     #[Groups([
         'serialization:game:read',
@@ -187,7 +187,7 @@ class Game
     ])]
     private ?int $targetAge = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50,nullable: true)]
     #[ApiProperty(description: "Genre principal du jeu")]
     #[Assert\Length(
         min: 3,
@@ -218,6 +218,7 @@ class Game
     private ?string $licence = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(groups: ["validation:game:create"])]
     #[ApiProperty(description: "Prix du jeu")]
     #[Groups([
         'serialization:game:read',
@@ -229,7 +230,7 @@ class Game
     /**
      * @var list<string>
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[ApiProperty(description: "Plateformes supportées")]
     #[Groups([
         'serialization:game:read',
@@ -243,7 +244,7 @@ class Game
      *
      * Liens vers les images et captures d'écran du jeu
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[ApiProperty(description: "Images et captures d'écran du jeu")]
     #[Groups([
         'serialization:game:read',
@@ -255,7 +256,7 @@ class Game
     /**
      * Image de la pochette du jeu
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[ApiProperty(description: "Image principale (pochette) du jeu")]
     #[Groups([
         'serialization:game:read',
@@ -264,7 +265,7 @@ class Game
     ])]
     private ?string $pochette = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[ApiProperty(
         description: "Indique si le jeu a été validé par un administrateur",
         readable: true,
@@ -366,7 +367,7 @@ class Game
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(\DateTimeInterface $releaseDate): self
+    public function setReleaseDate(?\DateTimeInterface $releaseDate): self
     {
         $this->releaseDate = $releaseDate;
 
