@@ -2,6 +2,14 @@
 
 Site de critiques de jeux vidéos.
 
+
+Répartition du travail
+
+Hicham : 20%
+Marc : 20%
+Yann : 30%
+Matteo : 30%
+
 ## Dépendances
 
 - php >=8.1 
@@ -160,3 +168,4 @@ docker compose up -d
 #### Liste des critiques d’un jeu
 
 - /games/{id}/critics
+
