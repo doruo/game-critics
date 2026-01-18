@@ -38,7 +38,7 @@ use DateTime;
 
         // unvalidated
         new GetCollection(
-            uriTemplate: '/games/unvalidated',
+            uriTemplate: '/unvalidatedGames',
             normalizationContext: ["groups" => ["serialization:game:read"]],
             security: "is_granted('AUTH_ADMIN', null)",
             securityMessage: "Vous devez être admin pour accéder à cette route",
