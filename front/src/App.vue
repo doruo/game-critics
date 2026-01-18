@@ -16,7 +16,10 @@ apiStore.refresh();
   <NotifList />
   <header>
       <nav>
-        <NavButton @click="adminNavIsExpanded = !adminNavIsExpanded" id="adminLine">
+        <NavButton 
+          v-if="loggedInUser?.roles && loggedInUser.roles.includes('ROLE_ADMIN')"
+          @click="adminNavIsExpanded = !adminNavIsExpanded"
+        >
           Admin
           <RouterLink v-if="adminNavIsExpanded" @click.stop to="/admin/users/">Users</RouterLink>
           <RouterLink v-if="adminNavIsExpanded" @click.stop to="/admin/games/">Games</RouterLink>
