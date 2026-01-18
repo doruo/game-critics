@@ -69,7 +69,7 @@ function cancelEdit() : void {
     <button v-if="userIsAuthor && !isBeingEdited" @click="isBeingEdited = true"> Edit Critic</button>
     <button v-if="isBeingEdited" @click="saveEditedCritic"> Save</button>
     <button v-if="isBeingEdited" @click="cancelEdit"> Cancel</button>
-    <button v-if="userIsAuthor || loggedInUser?.roles.includes('ROLE_ADMIN')" @click="deleteCrtic"> Delete Critic</button>
+    <button v-if="userIsAuthor || (loggedInUser?.roles && loggedInUser?.roles.includes('ROLE_ADMIN'))" @click="deleteCrtic"> Delete Critic</button>
 
     <p v-if="!isBeingEdited">Note : <b>{{ critic.note }}</b> Stars</p>
     <p v-else>Note : <input v-model="editedCritic.note" type="number"> Stars</p>

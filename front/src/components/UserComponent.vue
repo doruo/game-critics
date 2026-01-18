@@ -11,7 +11,7 @@ const props = defineProps<{
 
 const isAdmin = props.user.roles.includes('ROLE_ADMIN')
 
-const emit = defineEmits<{loadUsers: void}>();
+const emit = defineEmits<{loadUsers: []}>();
 
 function deleteUser(user: User) {
     apiStore.deleteResource('users', user.login).then((data) => {

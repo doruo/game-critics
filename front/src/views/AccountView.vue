@@ -2,6 +2,7 @@
 import { ref, watch, type Ref } from 'vue';
 import { apiStore, loggedInUser } from '@/util/apiStore.ts';
 import { addNotif } from '@/util/notifStore';
+import GameListComponent from '@/components/GameListComponent.vue';
 
   const errors: Ref<Array<string>> = ref([]);
 
@@ -50,7 +51,7 @@ import { addNotif } from '@/util/notifStore';
       plainPassword: !newUser.value.plainPassword ? undefined : newUser.value.plainPassword,
     };
 
-    apiStore.patchResource('users', loggedInUser.value?.id as string, data)
+    apiStore.updateResource('users', loggedInUser.value?.id as string, data, 'PATCH')
     .then((data) => {
       if (data.success)
         addNotif({autoRemoved: true, type: 'success', message: "The changes have been applied"});
@@ -91,6 +92,14 @@ import { addNotif } from '@/util/notifStore';
     <button type="button" v-if="confirmDelete" @click="deleteAccount"> Yes, Delete My Account.</button>
   </form>
 
+  <hr>
+  <div class="fav-list-container">
+    <div class="fav-list">
+      <h2> Favorite Games :</h2>
+      <GameListComponent :fav-type="true"></GameListComponent>
+    </div>
+  </div>
+
 </template>
 
 <style scoped>
@@ -100,5 +109,14 @@ import { addNotif } from '@/util/notifStore';
     border-radius: 15px;
     padding: .5em;
     width: fit-content;
+  }
+
+  .fav-list-container {
+    display: flex;
+    min-width: 90%;
+    justify-content: center;
+  }
+  .fav-list {
+    width: 90%;
   }
 </style>

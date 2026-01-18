@@ -1,18 +1,26 @@
 <script setup lang="ts">
 import type { Game } from '../types.ts';
-import { apiStore } from "@/util/apiStore.ts";
+import { apiStore, loggedInUserFavGameIds } from "@/util/apiStore.ts";
 import { addNotif } from "@/util/notifStore.ts";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import GameFormComponent from "@/components/GameFormComponent.vue";
-import {alreadyOnFav, testingFavGame, addToFav, delFromFav} from "@/func.ts";
+import {alreadyOnFav, addToFav, delFromFav} from "@/func.ts";
 
-const emit = defineEmits<{ selectGame: [gameToSelect: Game], loadGames: void }>();
+const emit = defineEmits<{ selectGame: [gameToSelect: Game], loadGames: [] }>();
 const props = defineProps<{
   game: Game,
-  adminMode?: 'pending' | 'validated'
+  adminMode?: 'pending' | 'validated',
 }>();
 
-let isEditing = ref(false)
+const isFavorite = computed(() => {
+  if (loggedInUserFavGameIds.value)
+    return loggedInUserFavGameIds.value.includes(props.game.id as string);
+  else 
+    return false;
+
+});
+
+const isEditing = ref(false)
 /*const editedGame = ref({
   id: props.game.id,
   name: props.game.name,
@@ -59,14 +67,13 @@ function acceptGame(game: Game){
 function state(editing: boolean) {
   isEditing.value = editing
 }
-testingFavGame(props.game);
-
 
 </script>
 <template>
   <div
     v-if="!isEditing"
     class="game-component"
+    @click="$emit('selectGame', props.game)"
   >
     <img
       class="pochette"
@@ -84,20 +91,20 @@ testingFavGame(props.game);
       </h2>
       <p><i>Published by </i> {{ game.publisher }}</p>
       <p>Average note : {{ game.averageNote }}</p>
-      <button v-if="!adminMode" @click="$emit('selectGame', game)">View critics</button>
-      <button @click="addToFav(game)" v-if="!(adminMode == 'pending') && !(alreadyOnFav)">Add to favorit</button>
-      <button @click="delFromFav(game)" v-if="!(adminMode == 'pending') && alreadyOnFav">Delete from favorit</button>
+      <!-- <button v-if="!adminMode" @click="$emit('selectGame', game)">View critics</button> -->
+      <button @click.stop="addToFav(game)" v-if="adminMode !== 'pending' && !isFavorite">Add to favorites</button>
+      <button @click.stop="delFromFav(game)" v-if="adminMode !== 'pending' && isFavorite">Remove from favorites</button>
     </div>
 
     <div v-if="adminMode" class="buttons">
-      <button class="delete" @click="() => deleteGame(game)">
+      <button class="delete" @click.stop="() => deleteGame(game)">
         Delete
       </button>
 
       <button
         class="accept"
         v-if="adminMode === 'pending'"
-        @click="() => acceptGame(game)"
+        @click.stop="() => acceptGame(game)"
       >
         Accept
       </button>
@@ -105,7 +112,7 @@ testingFavGame(props.game);
       <button
         class="edit"
         v-if="adminMode === 'validated'"
-        @click="state(true)"
+        @click.stop="state(true)"
       >
         Edit
       </button>

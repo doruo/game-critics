@@ -1,9 +1,24 @@
 import type { User } from "@/types";
-import { ref, type Ref } from "vue";
+import { ref, watch, type Ref } from "vue";
 
 export const adminNavIsExpanded: Ref<boolean> = ref(false);
 
 export const loggedInUser: Ref<User | null> = ref(null);
+export const loggedInUserFavGameIds: Ref<Array<string> | null> = ref(null)
+
+watch(loggedInUser, fetchFavorites)
+
+export async function fetchFavorites() {
+    if (loggedInUser.value === null)
+        loggedInUserFavGameIds.value = null;
+    else {
+        await apiStore.getAllById('users', loggedInUser.value.id as string, 'favoritesGames')
+        .then((data) => loggedInUserFavGameIds.value = (data as Array<string>) // IRIs
+            .map(IRI => IRI.split('/').pop() as string)
+        );
+        return;
+    }
+}
 
 export const apiStore = {
     apiUrl: "http://localhost/the_feed_api/public/api/", // To change in production
