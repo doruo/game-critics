@@ -127,7 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Critic>
      */
-    #[ORM\OneToMany(targetEntity: Critic::class, mappedBy: 'author')]
+    #[ORM\OneToMany(targetEntity: Critic::class, mappedBy: 'author',orphanRemoval: true)]
     #[Groups(['deserialization:user:update'])]
     private Collection $critics;
 
