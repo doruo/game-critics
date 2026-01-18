@@ -278,7 +278,7 @@ class Game
     #[Groups(["deserialization:game:update","deserialization:game:create","serialization:game:read"])]
     private ?bool $approved = false;
 
-    #[ORM\OneToMany(targetEntity: Critic::class, mappedBy: 'game')]
+    #[ORM\OneToMany(targetEntity: Critic::class, mappedBy: 'game',orphanRemoval: true)]
     #[Groups(['deserialization:user:update'])]
     private Collection $critics;
 
