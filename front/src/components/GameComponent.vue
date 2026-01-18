@@ -12,6 +12,7 @@ const props = defineProps<{
 }>();
 
 let isEditing = ref(false)
+let alreadyOnFav = ref(false)
 const editedGame = ref({
   id: props.game.id,
   name: props.game.name,
@@ -31,37 +32,38 @@ const editedGame = ref({
   approved: true
 });
 
-function manageGame(game: Game, type: 'accept' | 'delete'){
-  if (type === "delete") {
-    apiStore.deleteResource('game', game.id as string).then((data) => {
-      addNotif({
-        autoRemoved: true,
-        type: data.success ? 'success' : 'error',
-        message: data.success
-          ? "The game has been deleted"
-          : "The game could not been deleted"
-      })
-    });
-    emit("loadGames");
-  }
-
-  if (type === "accept") {
-    apiStore.patchResource('game', game.id as string, editedGame.value).then((data) => {
-      addNotif({
-        autoRemoved: true,
-        type: data.success ? 'success' : 'error',
-        message: data.success
-          ? "The game has been accepted."
-          : "The game could not been accepted"
-      })
-    });
-    emit("loadGames");
-  }
+function deleteGame(game: Game){
+  apiStore.deleteResource('game', game.id as string).then((data) => {
+    addNotif({
+      autoRemoved: true,
+      type: data.success ? 'success' : 'error',
+      message: data.success
+        ? "The game has been deleted"
+        : "The game could not been deleted"
+    })
+  });
+  emit("loadGames");
 }
-
+function acceptGame(game: Game){
+  apiStore.patchResource('game', game.id as string, editedGame.value).then((data) => {
+    addNotif({
+      autoRemoved: true,
+      type: data.success ? 'success' : 'error',
+      message: data.success
+        ? "The game has been accepted."
+        : "The game could not been accepted"
+    })
+  });
+  emit("loadGames");
+}
 function state(editing: boolean) {
   isEditing.value = editing
 }
+function addToFav(game: Game){} //todo à faire
+function delFromFav(game: Game){} //todo à faire
+function testingFavGame(game: Game){} //TODO à faire
+
+testingFavGame(props.game);
 
 </script>
 <template>
@@ -86,17 +88,19 @@ function state(editing: boolean) {
       </h2>
       <p><i>Published by </i> {{ game.publisher }}</p>
       <p>Average note : {{ game.averageNote }}</p>
+      <button @click="addToFav(game)" v-if="!(adminMode == 'pending') && !(alreadyOnFav)">Add to favorit</button>
+      <button @click="delFromFav(game)" v-if="!(adminMode == 'pending') && alreadyOnFav">Delete from favorit</button>
     </div>
 
     <div v-if="adminMode" class="buttons">
-      <button class="delete" @click="() => manageGame(game, 'delete')">
+      <button class="delete" @click="() => deleteGame(game)">
         Delete
       </button>
 
       <button
         class="accept"
         v-if="adminMode === 'pending'"
-        @click="() => manageGame(game, 'accept')"
+        @click="() => acceptGame(game)"
       >
         Accept
       </button>
