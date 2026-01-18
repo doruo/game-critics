@@ -23,11 +23,13 @@ const props = defineProps<{
 const loadGames = async () => {
   if (props.favType) {
     apiStore.getAllById('users', loggedInUser.value?.id as string, 'favoritesGames')
-    .then((data) => gameList.value = data as Array<Game>)
+    .then((data) => {
+      gameList.value = data as Array<Game>
+    })
     .catch(() => gameList.value = 'failed')
   }
   else {
-    const routeToUse = props.adminMode === 'pending' ? 'unvalidated' : 'games';
+    const routeToUse = props.adminMode === 'pending' ? 'unvalidatedGames' : 'games';
     apiStore.getAll(routeToUse)
     .then((data) => gameList.value = data as Array<Game>)
     .catch(() => gameList.value = 'failed')

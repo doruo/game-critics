@@ -31,9 +31,13 @@ export const apiStore = {
     },
     // Ex : /games/5 to get the game of id 5
     getById(ressource: string, id: string|number): Promise<unknown> {
-        return fetch(this.apiUrl + ressource + '/' + id)
+        return fetch(this.apiUrl + ressource + '/' + id, {
+            method: "GET",
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+        })
         .then(reponsehttp => reponsehttp.json())
-        .then (data => data.member);
+        .then (data => data);
     },
     // Ex : /games/5/critics to get all the critics of the game of id 5
     getAllById(ressource: string, id: string|number, nestedResource: string): Promise<unknown> {

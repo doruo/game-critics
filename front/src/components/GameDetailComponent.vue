@@ -8,20 +8,20 @@ import { alreadyOnFav, addToFav, delFromFav } from "@/func.ts";
 import {apiStore} from "@/util/apiStore.ts";
 
 const route = useRoute();
-const props = defineProps<{passedGame?: Ref<Game>}>();
+// const props = defineProps<{passedGame?: Ref<Game>}>();
 
 const game: Ref<Game | 'loading' | 'failed'> = ref('loading');
 const criticFormDisplayed = ref(false);
 
 //TODO à remettre lorsque l'api fonctionne
-/*if (!props.passedGame) {
+// if (!props.passedGame) {
     apiStore.getById('games', route.params.id as string)
     .then((data) => game.value = data as Game)
     .catch(() => game.value = 'failed');
-} else {
-  game.value = props.passedGame.value;
-}*/
-
+// } else {
+//   game.value = props.passedGame.value;
+// }
+/* 
 game.value = {
   approved: true,
   averageNote: 4.3,
@@ -40,7 +40,7 @@ game.value = {
   releaseDate: "2021-09-15",
   targetAge: 7,
 }
-
+ */
 </script>
 
 <template>
@@ -84,7 +84,7 @@ game.value = {
     <button v-if="!criticFormDisplayed" @click="criticFormDisplayed = true"> Write a critic</button>
     <CriticFormComponent v-else :game="(game as Game)" @hide-form="criticFormDisplayed = false" />
 
-    <CriticList :id-type="('game')" :id="(props.passedGame ? props.passedGame.value.id as string : route.params.id as string)"/>
+    <CriticList :id-type="('game')" :id="route.params.id as string"/>
 </template>
 
 <style scoped>
