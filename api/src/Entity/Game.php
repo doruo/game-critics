@@ -14,7 +14,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Link;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use App\Repository\GameRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -277,7 +276,7 @@ class Game
         description: "Indique si le jeu a été validé par un administrateur",
     )]
     #[Groups(["deserialization:game:update","deserialization:game:create","serialization:game:read"])]
-    private ?bool $approved = null;
+    private ?bool $approved = false;
 
     #[ORM\OneToMany(targetEntity: Critic::class, mappedBy: 'game')]
     #[Groups(['deserialization:user:update'])]
