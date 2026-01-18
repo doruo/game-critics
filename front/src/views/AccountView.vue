@@ -3,6 +3,7 @@ import { ref, watch, type Ref } from 'vue';
 import { apiStore, loggedInUser } from '@/util/apiStore.ts';
 import { addNotif } from '@/util/notifStore';
 import GameListComponent from '@/components/GameListComponent.vue';
+import router from '@/router';
 
   const errors: Ref<Array<string>> = ref([]);
 
@@ -63,9 +64,17 @@ import GameListComponent from '@/components/GameListComponent.vue';
   function deleteAccount() {
     apiStore.deleteResource('users', loggedInUser.value?.id as string)
     .then((res) => {
+      console.log(res);
+      
       if (res.success) {
         addNotif({autoRemoved: true, type: 'success', message: "Your account has successfully been deleted, logging you out"});
-        apiStore.logout();
+        // ABSOLUMENT - PAS - SÛR
+        document.cookie = `BEARER=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure;`;
+        document.cookie = `refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure;`;
+        loggedInUser.value = null;
+        addNotif({autoRemoved: false, type: 'warning', message: "Si vous avez des difficulté à créer un compte après la suppression d'un compte, tentez de manuellement supprimer les cookies"});
+        router.push('/games');
+        // apiStore.logout();
       }
       else
         addNotif({autoRemoved: false, type: 'error', message: "Your account could not be deleted : " + res.error});

@@ -21,7 +21,7 @@ export async function fetchFavorites() {
 }
 
 export const apiStore = {
-    apiUrl: "http://localhost/the_feed_api/public/api/", // To change in production
+    apiUrl: "http://localhost/api/public/api/", // To change in production
 
     // Ex : /games to get all the games
     getAll(ressource:string): Promise<unknown> {
@@ -78,11 +78,8 @@ export const apiStore = {
                     return {success: false, error: reponseJSON.message};
                 })
             } else {
-                return reponsehttp.json()
-                .then(() => {
-                    loggedInUser.value = null;
-                    return {success: true};
-                })
+                loggedInUser.value = null;
+                return {success: true};
             }
         })
     },
@@ -147,10 +144,7 @@ export const apiStore = {
         })
         .then(reponsehttp => {
             if (reponsehttp.ok) {
-                return reponsehttp.json()
-                .then(() => {
-                    return {success: true};
-                });
+                return {success: true};
             }
             else {
                 return reponsehttp.json()

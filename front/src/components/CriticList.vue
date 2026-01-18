@@ -16,7 +16,7 @@ const props = defineProps<{
 const criticList: Ref<Array<Critic> | 'loading' | 'failed'> = ref('loading');
 
 watchEffect(() => {
-  if (typeof criticList.value !== 'string')
+  if (criticList.value !== 'loading' && criticList.value !== 'failed')
     emit('numberOfCritics', criticList.value.length);
 });
 

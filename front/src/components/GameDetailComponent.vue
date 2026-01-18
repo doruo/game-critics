@@ -26,7 +26,7 @@ game.value = {
   approved: true,
   averageNote: 4.3,
   description: 'Big game',
-  developer: 'Supercell',
+  developper: 'Supercell',
   gameMode: 'Singleplayer',
   genre: 'Adventure',
   id: 1,
@@ -52,7 +52,7 @@ game.value = {
             <div class="left">
                 <img class="pochette" :src="game.pochette" height="150" :alt="('Pochette du jeu ' + game.name)" v-if="game.pochette">
                 <p> Published by <b> {{ game.publisher }}</b></p>
-                <p> Developed by <b> {{ game.developer }}</b></p>
+                <p> Developed by <b> {{ game.developper }}</b></p>
             </div>
             <blockquote> {{ game.description }}</blockquote>
         </div>

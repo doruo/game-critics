@@ -25,17 +25,18 @@ const loadGames = async () => {
   if (props.favType) {
     apiStore.getAllById('users', loggedInUser.value?.id as string, 'favoritesGames')
     .then((data) => gameList.value = data as Array<Game>)
-    // .catch(() => gameList.value = 'failed')
+    .catch(() => gameList.value = 'failed')
   }
   else {
-    const routeToUse = props.adminMode === 'pending' ? 'games?approved=false' : 'games';
+    const routeToUse = props.adminMode === 'pending' ? 'unvalidated' : 'games';
+    // const routeToUse = 'games';
     apiStore.getAll(routeToUse)
     .then((data) => gameList.value = data as Array<Game>)
-    // .catch(() => gameList.value = 'failed')
+    .catch(() => gameList.value = 'failed')
   }
 
   //TODO À SUPPRIMER QUAND L'API FONCTIONNE
-  gameList.value = [minecraft.value, brawlstars.value, valorant.value];
+  // gameList.value = [minecraft.value, brawlstars.value, valorant.value];
   /*
 
   if (props.adminMode && Array.isArray(gameList.value)) {
