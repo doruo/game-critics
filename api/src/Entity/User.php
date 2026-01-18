@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use App\State\AdminProcessor;
 use App\State\UserProcessor;
+use App\State\UserProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(operations: [
-    new Get(normalizationContext: ["groups" => ["serialization:user:read"]], security: "is_granted('USER_SELF_CONNECTED_OR_ADMIN',object)"),
+    new Get(normalizationContext: ["groups" => ["serialization:user:read"]], security: "is_granted('AUTH_CONNECTED',object)"),
     new GetCollection(normalizationContext: ["groups" => ["serialization:user:read"]],security: "is_granted('AUTH_ADMIN',object)"),
     new Delete(security: "is_granted('USER_SELF_CONNECTED_OR_ADMIN_EXCEPT_ADMIN',object)"),
     // no security for post otherwise you would need an anccount to create one
@@ -41,8 +42,25 @@ use Symfony\Component\Validator\Constraints as Assert;
         deserialize: false, // no need to have a body , not a single change is accepted in this route
         processor: AdminProcessor::class,
     ),
+
+    new Get(
+        uriTemplate: '/users/{id}/favoritesGames',
+        normalizationContext: ["groups" => ["serialization:user:favoritesGames:read"],"skipCustomContextBuilder" => true],
+        security: "is_granted('USER_SELF_CONNECTED_ONLY',object)",
+        provider: null
+    ),
+
+    new Patch(
+        uriTemplate: '/users/{id}/favoritesGames',
+        normalizationContext: ["groups" => ["serialization:user:favoritesGames:read"],"skipCustomContextBuilder" => true],
+        denormalizationContext: ["groups" => ["deserialization:user:favoritesGames:update"]],
+        security: "is_granted('USER_SELF_CONNECTED_ONLY',object)",
+        validationContext: ["groups" => ["Default", "validation:user:favoritesGames:update"]],
+        provider: null
+    ),
  ],
-    normalizationContext: ["groups" => ["serialization:user:read"]]
+    normalizationContext: ["groups" => ["serialization:user:read"]],
+    provider: UserProvider::class
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -65,7 +83,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[ApiProperty(description: 'roles', readable: false, writable: false)]
+    #[ApiProperty(description: 'roles', readable: true, writable: false)]
+    #[Groups(["serialization:user:read:private"])]
     private array $roles = [];
 
     /**
@@ -89,14 +108,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email(message: "Le format d'email n'est pas valide")]
     #[Assert\Length(min: 5, max: 50, minMessage: 'Votre email doit faire au minimum 5 caractères', maxMessage: 'Votre email doit faire au maximum 50 caractères')]
     #[ApiProperty(description: 'email de l\'utilisateur ')]
-    #[Groups(['deserialization:user:create', 'deserialization:user:update',"serialization:user:read"])]
+    #[Groups(['deserialization:user:create', 'deserialization:user:update',"serialization:user:read:private"])]
     private ?string $email = null;
+
+    #[ApiProperty(description: 'hashed email of the user', writable: false)]
+    #[Groups(["serialization:user:read"])]
+    private ?string $hashedEmail = null;
 
     /**
      * @var Collection<int, Game>
      */
     #[ORM\ManyToMany(targetEntity: Game::class)]
-    #[Groups(['deserialization:user:update'])]
+    #[Groups(["serialization:user:favoritesGames:read","deserialization:user:favoritesGames:update"])]
     private Collection $favoritesGames;
 
     /**
@@ -262,5 +285,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getHashedEmail(): ?string
+    {
+        return $this->hashedEmail;
+    }
+
+    /**
+     * @param string|null $hashedEmail
+     */
+    public function setHashedEmail(?string $hashedEmail): void
+    {
+        $this->hashedEmail = $hashedEmail;
     }
 }

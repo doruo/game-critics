@@ -19,6 +19,7 @@ class AdminProcessor implements ProcessorInterface
         unset($roles[array_search('ROLE_USER', $roles)]); // remove 'ROLE_USER' from $roles
         if(!in_array('ROLE_ADMIN', $roles)){
             $roles[] = "ROLE_ADMIN";
+            $roles = array_values($roles);
         }
         $data->setRoles($roles);
 

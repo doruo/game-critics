@@ -6,12 +6,14 @@ namespace App\EventListener;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AuthenticationSuccessListener
 {
     public function __construct(
         //Service permettant de décoder un JWT (entre autres)
-        private JWTTokenManagerInterface $jwtManager
+        private JWTTokenManagerInterface $jwtManager,
+        private UserPasswordHasherInterface $passwordHasher
     )
     {}
 
@@ -25,6 +27,7 @@ class AuthenticationSuccessListener
         $data['id'] = $user->getID();
         $data['login'] = $user->getLogin();
         $data['email'] = $user->getEmail();
+        $data['hashedEmail'] = $this->passwordHasher->hashPassword($user, $user->getEmail());
         $data['roles'] = $user->getRoles();
 
 
