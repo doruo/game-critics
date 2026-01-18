@@ -13,8 +13,8 @@ const props = defineProps<{
 }>();
 
 const newCritic = ref({
-  author: loggedInUser.value,
-  game: props.game,
+  // author: loggedInUser.value,
+  game: '/api/public/api/games/' + props.game.id,
   generalMessage: '',
   visualMessage: '',
   soundtrackMessage: '',
@@ -23,7 +23,7 @@ const newCritic = ref({
 });
 
 function uploadCritic() : void {
-  apiStore.createRessource('critics', newCritic.value)
+  apiStore.createRessource(`users/${loggedInUser.value?.id}/critics`, newCritic.value)
   .then(res => {
     if (res.success) {
       addNotif({autoRemoved: true, type: 'success', message: "Your Critic has been uploaded"});

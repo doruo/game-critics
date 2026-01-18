@@ -2,7 +2,7 @@
 import { ref, type Ref, watch } from 'vue';
 import type {Game, User} from '../types.ts';
 import { useRoute } from "vue-router";
-import {minecraft, valorant, brawlstars, user1} from "@/mock.ts";
+// import {minecraft, valorant, brawlstars, user1} from "@/mock.ts";
 import GameComponent from "@/components/GameComponent.vue";
 import GameFormComponent from './GameFormComponent.vue';
 import CriticList from './CriticList.vue';
@@ -14,7 +14,6 @@ const selectedGame: Ref<Game | null> = ref(null);
 const gameFormDisplayed = ref(false);
 const route = useRoute();
 
-// const errorUser : Ref<'' | 'failed' | 'loading'> = ref('loading')
 
 const props = defineProps<{
   adminMode?: 'pending' | 'validated',
@@ -24,12 +23,13 @@ const props = defineProps<{
 const loadGames = async () => {
   if (props.favType) {
     apiStore.getAllById('users', loggedInUser.value?.id as string, 'favoritesGames')
-    .then((data) => gameList.value = data as Array<Game>)
+    .then((data) => {
+      gameList.value = data as Array<Game>
+    })
     .catch(() => gameList.value = 'failed')
   }
   else {
-    const routeToUse = props.adminMode === 'pending' ? 'unvalidated' : 'games';
-    // const routeToUse = 'games';
+    const routeToUse = props.adminMode === 'pending' ? 'unvalidatedGames' : 'games';
     apiStore.getAll(routeToUse)
     .then((data) => gameList.value = data as Array<Game>)
     .catch(() => gameList.value = 'failed')
@@ -70,7 +70,7 @@ function selectGame(game: Game) {
 
 </script>
 <template>
-  <div v-if="!props.adminMode && !props.favType">
+  <div v-if="loggedInUser !== null && !props.adminMode && !props.favType">
     <NavButton v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</NavButton>
     <GameFormComponent v-else @hide-form="gameFormDisplayed = false" :mode="'create'"/>
   </div>
