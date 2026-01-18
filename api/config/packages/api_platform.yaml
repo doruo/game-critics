@@ -1,5 +1,5 @@
 api_platform:
-    title: GametCritics API
+    title: GameCritics API
     version: 1.0.0
     defaults:
         cache_headers:
@@ -7,3 +7,5 @@ api_platform:
         formats:
             jsonld: ['application/ld+json']
             json: ['application/json']
+        pagination_items_per_page: 30 # Pour changer le nombre de ressources renvoyées si la pagination est activée
+        pagination_enabled: true # Active ou désactive la pagination
