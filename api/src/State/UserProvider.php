@@ -34,7 +34,7 @@ class UserProvider implements ProviderInterface
         $data = $this->itemProvider->provide($operation, $uriVariables, $context);
 
         if ($data !== null) {
-            $hashedEmail = $this->passwordHasher->hashPassword($data, $data->getEmail());
+            $hashedEmail = hash("SHA256", $data->getEmail());
             $data->setHashedEmail($hashedEmail);
         }
 
