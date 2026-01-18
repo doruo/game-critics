@@ -2,6 +2,7 @@
 
 Site de critiques de jeux vidéos.
 
+Permet aux utilisateurs de consulter des critiques de jeux, noter les jeux et gérer leurs jeux favoris.
 
 Répartition du travail
 
@@ -10,162 +11,133 @@ Marc : 20%
 Yann : 30%
 Matteo : 30%
 
-## Dépendances
 
-- php >=8.1 
 
-- symfony >= 6.9
+---
 
-- api-plateform
+## Déploiement & Dépôts
 
-- doctrine-orm >= 4.2
+### URL des projets déployés
+- Front VueJS : [http://localhost/front/](http://localhost/front/)
+- API Platform : [http://localhost/api/public/api/](http://localhost/api/public/api/)
 
-## Mise en place
+### Dépôts Git
+- Front VueJS : `<lien_du_repo_front>`
+- API Symfony : `<lien_du_repo_api>`
 
-## Accès principaux
+---
 
-- Front VueJS : http://localhost/front/
+## Installation & Mise en place
 
-- API Platform : http://localhost/api/public/api/
+### Prérequis
+- PHP >= 8.1
+- Symfony >= 6.9
+- Composer
+- Node.js / npm
+- Docker & Docker Compose
 
-## Dépendances
-
-- php >=8.1 
-
-- symfony >= 6.9
-
-- api-plateform
-
-- doctrine-orm >= 4.2
-
-## Mise en place
-
+### Installation des dépendances
 ```bash
+# API
 cd ~/gamecritics/api
 composer install
-cd ..
-```
 
-## Deploiment en local
+# Front
+cd ../front
+npm install
 
-```bash
+Déploiement en local
 cd ~/gamecritics
 docker compose up -d
-```
 
-## API - Routes
+Base de données
 
-### Accès principaux
+Créer une base gamecritics dans phpMyAdmin.
 
-- Front VueJS : http://localhost/front/
+Importer le script SQL fourni à la racine du dépôt api via l’onglet SQL.
 
-- API Plateform : http://localhost/api/public/
+Peupler la BD
 
-##
+Un script SQL est fourni pour ajouter des utilisateurs, jeux et critiques de test.
 
-### Authentification
+Exemple d’utilisateurs :
 
-#### Route d’authentification
+| Type                | Login | Mot de passe |
+| ------------------- | ----- | ------------ |
+| Administrateur      | admin | Motdepasse1    |
+| Utilisateur basique | user | Motdepasse1     |
+| Utilisateur basique | userPDP | Motdepasse1     |
 
-- /auth
+Présentation du thème
 
-#### Invalidation du JWT (déconnexion)
+Objet critiqué : jeux vidéo.
 
-- /token/invalidate 
+Informations affichées pour un jeu : nom, description, studio, éditeur, genre, mode de jeu, âge recommandé, plateformes, prix, images, note moyenne.
 
-#### Rafraîchissement du JWT
+Critiques :
 
-- /token/refresh 
+Note générale (0-20)
 
-##
+Critique des graphismes
 
-### Utilisateurs
+Critique de la bande-son
 
-#### Liste des utilisateurs
+Critique du scénario
 
-- /users
+Chaque utilisateur peut créer, modifier ou supprimer ses propres critiques.
 
-#### Détails d’un utilisateur
+Les administrateurs peuvent valider les jeux et gérer les utilisateurs.
 
-- /users/{id}
+Authentification
 
-#### Liste des critiques d’un utilisateur
+Authentification via JWT.
 
-- /users/{id}/critics
+Routes principales :
 
-##
+Connexion : /auth → retourne le JWT
 
-### Jeux
+Déconnexion : /token/invalidate
 
-#### Liste des jeux
+Refresh token : /token/refresh
 
-- /games
+Les tokens sont hashés en base de données pour plus de sécurité.
 
-#### Détails d’un jeu
+API - Routes principales
+Users
+Users :
+| Route                            | Méthode | Description                          | Sécurité               |
+| -------------------------------- | ------- | ------------------------------------ | ---------------------- |
+| `/users`                         | GET     | Liste des utilisateurs               | Admin                  |
+| `/users/{id}`                    | GET     | Détail d’un utilisateur              | Admin ou user connecté |
+| `/users/{id}`                    | PATCH   | Mise à jour utilisateur              | User ou Admin          |
+| `/users/{id}`                    | DELETE  | Supprimer un utilisateur             | User ou Admin          |
+| `/users/{id}/promoteAdmin`       | PATCH   | Promouvoir un utilisateur en admin   | Admin                  |
+| `/users/{id}/favoritesGames`     | GET     | Liste jeux favoris                   | User connecté          |
+| `/users/{id}/favoritesGames`     | PATCH   | Modifier jeux favoris                | User connecté          |
+| `/users/{id}/critics`            | GET     | Liste critiques d’un utilisateur     | Public                 |
+| `/users/{id}/critics`            | POST    | Ajouter critique pour un utilisateur | User connecté          |
+| `/users/{id}/critics/{criticId}` | GET     | Détail critique d’un utilisateur     | Public                 |
+| `/users/{userId}/critics/{id}`   | PATCH   | Modifier critique                    | Auteur ou Admin        |
+| `/users/{userId}/critics/{id}`   | DELETE  | Supprimer critique                   | Auteur ou Admin        |
+| `/users/{id}/favoritesCritics`   | GET     | Critiques favorites de l’utilisateur | User connecté          |
 
-- /games/{id}
+Games : 
+| Route               | Méthode | Description                 | Sécurité                       |
+| ------------------- | ------- | --------------------------- | ------------------------------ |
+| `/games`            | GET     | Liste tous les jeux validés | Public                         |
+| `/games/{id}`       | GET     | Détail d’un jeu             | Public si validé / Admin sinon |
+| `/games`            | POST    | Ajouter un jeu              | User connecté                  |
+| `/games/{id}`       | PATCH   | Modifier un jeu             | Admin                          |
+| `/games/{id}`       | DELETE  | Supprimer un jeu            | Admin                          |
+| `/unvalidatedGames` | GET     | Liste des jeux non validés  | Admin                          |
 
-#### Liste des jeux favories d’un utilisateur
 
-### Authentification
-
-#### Route d’authentification
-
-- /auth
-
-#### Invalidation du JWT (déconnexion)
-
-- /token/invalidate 
-
-#### Rafraîchissement du JWT
-
-- /token/refresh 
-
-##
-
-### Utilisateurs
-
-#### Liste des utilisateurs
-
-- /users
-
-#### Détails d’un utilisateur
-
-- /users/{id}
-
-#### Liste des critiques d’un utilisateur
-
-- /users/{id}/critics
-
-##
-
-### Jeux
-
-#### Liste des jeux
-
-- /games
-
-#### Détails d’un jeu
-
-- /games/{id}
-
-#### Liste des jeux favories d’un utilisateur
-
-- /users/{id}/favorites/games
-
-##
-
-### Critiques
-
-#### Liste des critiques d’un utilisateur
-
-- /users/{id}/critics
-
-#### Détails d’une critique d’un utilisateur
-
-- /users/{id}/critics/{id}
-
-#### Liste des critiques d’un jeu
-
-- /games/{id}/critics
-
+Critics:
+| Route                      | Méthode | Description                        |
+| -------------------------- | ------- | ---------------------------------- |
+| `/games/{id}/critics`      | GET     | Liste critiques d’un jeu           |
+| `/users/{id}/critics`      | GET     | Liste critiques d’un utilisateur   |
+| `/users/{id}/critics/{id}` | GET     | Détail d’une critique              |
+| `/users/{id}/critics`      | POST    | Créer critique pour un utilisateur |
+| `/users/{id}/critics/{id}` | PATCH   | Modifier critique                  |
+| `/users/{id}/critics/{id}` | DELETE  | Supprimer critique                 |
