@@ -43,6 +43,7 @@ function selectGame(game: Game) {
   else
     selectedGame.value = null;
 }
+
 </script>
 <template>
   <div v-if="!props.adminMode">

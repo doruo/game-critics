@@ -4,6 +4,7 @@ import { apiStore } from "@/util/apiStore.ts";
 import { addNotif } from "@/util/notifStore.ts";
 import { ref } from "vue";
 import GameFormComponent from "@/components/GameFormComponent.vue";
+import {alreadyOnFav, testingFavGame, addToFav, delFromFav} from "@/func.ts";
 
 const emit = defineEmits<{ selectGame: [gameToSelect: Game], loadGames: void }>();
 const props = defineProps<{
@@ -12,7 +13,6 @@ const props = defineProps<{
 }>();
 
 let isEditing = ref(false)
-let alreadyOnFav = ref(false)
 const editedGame = ref({
   id: props.game.id,
   name: props.game.name,
@@ -59,18 +59,14 @@ function acceptGame(game: Game){
 function state(editing: boolean) {
   isEditing.value = editing
 }
-function addToFav(game: Game){} //todo à faire
-function delFromFav(game: Game){} //todo à faire
-function testingFavGame(game: Game){} //TODO à faire
-
 testingFavGame(props.game);
+
 
 </script>
 <template>
   <div
     v-if="!isEditing"
     class="game-component"
-    @click="!adminMode ? $emit('selectGame', game) : null"
   >
     <img
       class="pochette"
@@ -88,6 +84,7 @@ testingFavGame(props.game);
       </h2>
       <p><i>Published by </i> {{ game.publisher }}</p>
       <p>Average note : {{ game.averageNote }}</p>
+      <button v-if="!adminMode" @click="$emit('selectGame', game)">View critics</button>
       <button @click="addToFav(game)" v-if="!(adminMode == 'pending') && !(alreadyOnFav)">Add to favorit</button>
       <button @click="delFromFav(game)" v-if="!(adminMode == 'pending') && alreadyOnFav">Delete from favorit</button>
     </div>
@@ -160,3 +157,4 @@ testingFavGame(props.game);
     min-height: 100%;
   }
 </style>
+
