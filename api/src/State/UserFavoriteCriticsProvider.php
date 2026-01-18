@@ -22,8 +22,10 @@ class UserFavoriteCriticsProvider implements ProviderInterface
 
         if($data!==null){
             foreach ($data->getFavoritesGames() as $game) {
-                foreach ($game->getCritics() as $critic) {
-                    $critics[] = $critic;
+                if($game->isApproved()){
+                    foreach ($game->getCritics() as $critic) {
+                        $critics[] = $critic;
+                    }
                 }
             }
         }
