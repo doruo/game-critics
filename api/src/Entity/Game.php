@@ -19,6 +19,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use App\Repository\GameRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\State\GameProcessor;
+use App\State\GameProvider;
+use App\State\UnvalidatedGameProvider;
 use DateTime;
 
 /**
@@ -29,19 +31,19 @@ use DateTime;
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[ApiResource(
     operations: [
+        // validated - default
         new GetCollection(
-            normalizationContext: ["groups" => ["serialization:game:read"]]
+            normalizationContext: ["groups" => ["serialization:game:read"]],
+            provider: GameProvider::class
         ),
 
+        // unvalidated
         new GetCollection(
-            uriTemplate: '/games/{id}/critics',
-            uriVariables: [
-                'idGameCritics' => new Link(
-                    fromProperty: 'critics',
-                    fromClass: Critic::class
-                )
-            ],
-            normalizationContext: ["groups" => ["serialization:critic:read"]],
+            uriTemplate: '/unvalidated',
+            normalizationContext: ["groups" => ["serialization:game:read"]],
+            security: "is_granted('AUTH_ADMIN', object)",
+            securityMessage: "Vous devez être admin pour accéder à cette route",
+            provider: UnvalidatedGameProvider::class
         ),
 
         new Get(
@@ -51,20 +53,22 @@ use DateTime;
         new Post(
             normalizationContext: ["groups" => ["serialization:game:read"]],
             denormalizationContext: ["groups" => ["deserialization:game:create"]],
-            security: "is_granted('AUTH_CONNECTED',object)",
             validationContext: ["groups" => ["Default", "validation:game:create"]],
+            security: "is_granted('AUTH_CONNECTED', object)",
             processor: GameProcessor::class
         ),
 
         new Patch(
             normalizationContext: ["groups" => ["serialization:game:read"]],
             denormalizationContext: ["groups" => ["deserialization:game:update"]],
+            validationContext: ["groups" => ["Default", "validation:game:update"]],
             security: "is_granted('AUTH_ADMIN',object)",
-            validationContext: ["groups" => ["Default", "validation:game:update"]]
+            securityMessage: "Vous devez être admin pour accéder à cette route",
         ),
 
         new Delete(
-            security: "is_granted('AUTH_ADMIN',object)"
+            security: "is_granted('AUTH_ADMIN',object)",
+            securityMessage: "Vous devez être admin pour accéder à cette route",
         ),
     ]
 )]
@@ -267,6 +271,7 @@ class Game
 
     #[ORM\Column(nullable: true)]
     #[ApiProperty(
+        securityPostDenormalize: "is_granted('ROLE_ADMIN')",
         description: "Indique si le jeu a été validé par un administrateur",
         readable: true,
         writable: false
