@@ -1,6 +1,8 @@
 import type { User } from "@/types";
 import { ref, type Ref } from "vue";
 
+export const adminNavIsExpanded: Ref<boolean> = ref(false);
+
 export const loggedInUser: Ref<User | null> = ref(null);
 
 export const apiStore = {

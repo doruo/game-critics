@@ -12,7 +12,7 @@ const route = useRoute();
 
 
 const loadUsers = async () => {
-  //apiStore.getAll('user').then((data) => { users.value = data as User[];}).catch(() => users.value = 'failed');
+  //apiStore.getAll('users').then((data) => { users.value = data as User[];}).catch(() => users.value = 'failed');
 
   users.value = [
     {
@@ -47,9 +47,13 @@ watch(() => route.path, () =>{
   <p v-if="users == 'loading'"><i>Fetching users.</i></p>
   <p v-else-if="users == 'failed'"><i>Users could not be loaded</i></p>
 
-  <UserComponent v-for="user in users" :user="user" />
+  <div class="user-list" v-else>
+    <UserComponent v-for="user in users" @load-users="loadUsers" :user="user" />
+  </div>
 </template>
 
 <style scoped>
-
+  .user-list {
+    width: fit-content;;
+  }
 </style>

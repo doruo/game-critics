@@ -2,7 +2,9 @@
 import { ref, type Ref } from 'vue';
 import { apiStore } from '@/util/apiStore.ts';
 import { addNotif } from '@/util/notifStore.ts';
-import type {Game} from '@/types';
+import type { Game } from '@/types';
+import ImagePreview from './ImagePreview.vue';
+import NavButton from './NavButton.vue';
 
 const emit = defineEmits<{
   hideForm: [],
@@ -96,106 +98,109 @@ function removeImage(indexToRemove: number) {
 }
 </script>
 <template>
-  <form v-if="props.create" @submit.prevent="uploadGame" class="critic-form">
-    <p><b> Name :</b></p>
-    <input v-model="actualGame.name" ></input>
+  <form @submit.prevent="props.update ? updateGame : uploadGame" class="critic-form">
+    <h3> Submit a new Game</h3>
+    <div class="fields-container">
+      <div class="left">
+  
+        <p>
+          <label for="name"><b> Name : </b></label>
+          <input id="name" v-model="actualGame.name" ></input>
+        </p>
+  
+        <p>
+          <label for="pochette"><b> Pochette Link : </b></label>
+          <input id="pochette" v-model="actualGame.pochette" ></input>
+          <ImagePreview :link="actualGame.pochette"></ImagePreview>
+        </p>
+  
+        <p>
+          <label for="publisher"><b> Publisher : </b></label>
+          <input id="publisher" v-model="actualGame.publisher" ></input>
+        </p>
+  
+        <p>
+          <label for="developer"><b> Developer : </b></label>
+          <input id="developer" v-model="actualGame.developer" ></input>
+        </p>
+  
+        <p>
+          <label for="description"><b> Description :</b></label>
+          <br>
+          <textarea id="description" v-model="actualGame.description" ></textarea>
+        </p>
+  
+        <p>
+          <label><b>Price : </b></label>
+          <input v-model="actualGame.price" type="number">
+        </p>
+      
+      </div>
+  
+      <div class="right">
+        <p>
+          <label for="genre"><b> Genre : </b></label>
+          <input id="genre" v-model="actualGame.genre" ></input>
+        </p>
+    
+        <p>
+          <label for="gamemode"><b> Gamemode : </b></label>
+          <input id="gamemode" v-model="actualGame.gameMode" ></input>
+        </p>
+    
+        <p>
+          <label for="age"><b>Targeted age : </b></label>
+          <input id="age" v-model="actualGame.targetAge" type="number">
+        </p>
+    
+        <p>
+          <label for="license"><b> License : </b></label>
+          <input id="license" v-model="actualGame.license">
+        </p>
+  
+        <p>
+          <label for="date"><b> Release date : </b></label>
+          <input id="date" v-model="actualGame.releaseDate">
+        </p>
+  
+        <p><b> Platforms :</b></p>
+        <ul>
+          <li v-for="(_, index) in actualGame.platform" > <input v-model="actualGame.platform[index]"> <button type="button" @click="removePlatform(index)">remove</button></li>
+          <li><NavButton @click="actualGame.platform.push('')">Add platform</NavButton></li>
+        </ul>
+    
+        <p><b> Additional images :</b></p>
+        <ul>
+          <li v-for="(_, index) in actualGame.images" >
+            <input v-model="actualGame.images[index]"> <button type="button" @click="removeImage(index)">remove</button>
+            <ImagePreview :link="actualGame.images[index]"></ImagePreview>
+          </li>
+          <li><NavButton @click="actualGame.images.push('')">Add image link</NavButton></li>
+        </ul>
+      </div>
+    </div>
 
-    <p><b> Pochette Link :</b></p>
-    <input v-model="actualGame.pochette" ></input>
-    <span>Preview :</span>
-    <img :src="actualGame.pochette" height="100" alt="L'image n'a pas pu être récupérée">
+    <button type="button" @click="$emit('hideForm')"> Cancel</button>
+    <button type="submit"> {{ props.update ? 'Update' : 'Upload' }}</button>
 
-    <p><b> Publisher :</b></p>
-    <input v-model="actualGame.publisher" ></input>
-
-    <p><b> Developer :</b></p>
-    <input v-model="actualGame.developer" ></input>
-
-    <p><b> Description :</b></p>
-    <textarea v-model="actualGame.description" ></textarea>
-
-    <p> Price : <input v-model="actualGame.price" type="number"> $</p>
-
-    <p><b> Genre :</b></p>
-    <input v-model="actualGame.genre" ></input>
-
-    <p><b> Gamemode :</b></p>
-    <input v-model="actualGame.gameMode" ></input>
-
-    <p> Targeted age : <input v-model="actualGame.targetAge" type="number"></p>
-
-    <p> License : <input v-model="actualGame.license"></p>
-    <p> Release date : <input v-model="actualGame.releaseDate" type="date"></p>
-    <p><b> Platforms :</b></p>
-    <ul>
-      <li v-for="(_, index) in actualGame.platform" > <input v-model="actualGame.platform[index]"> <button @click="removePlatform(index)">remove</button></li>
-      <li><button @click="actualGame.platform.push('')">Add platform</button></li>
-    </ul>
-
-    <p><b> Additional images :</b></p>
-    <ul>
-      <li v-for="(_, index) in actualGame.images" >
-        <input v-model="actualGame.images[index]"> <button @click="removeImage(index)">remove</button>
-        <span> Preview: </span>
-        <img :src="actualGame.images[index]" height="100" alt="L'image n'a pas pu être récupérée">
-      </li>
-      <li><button @click="actualGame.images.push('')">Add image link</button></li>
-    </ul>
-
-    <button @click="$emit('hideForm')"> Cancel</button>
-    <button type="submit"> Upload</button>
-  </form>
-
-  <form v-if="props.update" @submit.prevent="updateGame" class="critic-form">
-    <p><b> Name :</b></p>
-    <input v-model="actualGame.name" ></input>
-
-    <p><b> Pochette Link :</b></p>
-    <input v-model="actualGame.pochette" ></input>
-    <span>Preview :</span>
-    <img :src="actualGame.pochette" height="100" alt="L'image n'a pas pu être récupérée">
-
-    <p><b> Publisher :</b></p>
-    <input v-model="actualGame.publisher" ></input>
-
-    <p><b> Developer :</b></p>
-    <input v-model="actualGame.developer"></input>
-
-    <p><b> Description :</b></p>
-    <textarea v-model="actualGame.description" ></textarea>
-
-    <p> Price : <input v-model="actualGame.price" type="number"> $</p>
-
-    <p><b> Genre :</b></p>
-    <input v-model="actualGame.genre" ></input>
-
-    <p><b> Gamemode :</b></p>
-    <input v-model="actualGame.gameMode" ></input>
-
-    <p> Targeted age : <input v-model="actualGame.targetAge" type="number"></p>
-
-    <p> License : <input v-model="actualGame.license"></p>
-    <p> Release date : <input v-model="actualGame.releaseDate" type="date"></p>
-    <p><b> Platforms :</b></p>
-    <ul>
-      <li v-for="(_, index) in actualGame.platform" > <input v-model="actualGame.platform[index]"> <button @click="removePlatform(index)">remove</button></li>
-    </ul>
-    <li><button @click="actualGame.platform.push('')">Add platform</button></li>
-
-
-    <p><b> Additional images :</b></p>
-    <ul>
-      <li v-for="(_, index) in actualGame.images" >
-        <input v-model="actualGame.images[index]"> <button @click="removeImage(index)">remove</button>
-        <span> Preview: </span>
-        <img :src="actualGame.images[index]" height="100" alt="L'image n'a pas pu être récupérée">
-      </li>
-      <li><button @click="actualGame.images.push('')">Add image link</button></li>
-    </ul>
-
-    <button type="submit"> Update</button>
   </form>
 </template>
 
 <style scoped>
+  .fields-container {
+    display: flex;
+    gap: 1em;
+  }
+  form {
+    background-image: linear-gradient(90deg, white 70%, #d3d3d3 90% );
+    border: 3px solid rgb(0, 204, 255);
+    border-radius: 15px;
+    padding: .5em;
+    width: fit-content;
+  }
+  .left {
+    border-right: 2px solid black;
+    padding-right: 1em;
+    margin-right: 1em;
+  }
 </style>

@@ -2,11 +2,10 @@
 import type { Game } from '../types.ts';
 import {apiStore} from "@/util/apiStore.ts";
 import {addNotif} from "@/util/notifStore.ts";
-import {useRoute} from "vue-router";
 import {ref} from "vue";
 import GameFormComponent from "@/components/GameFormComponent.vue";
 
-const emit = defineEmits<{selectGame: [gameToSelect: Game], loadGames: void}>();
+const emit = defineEmits<{selectGame: [gameToSelect: Game], loadGames: []}>();
 const props = defineProps<{
   game: Game,
   invalidated?: boolean,
@@ -36,7 +35,7 @@ const editedGame = ref({
 
 function manageGame(game: Game, type: 'accept' | 'delete'){
   if (type=="delete"){
-    apiStore.deleteResource('game', game.id as string).then((data) => {
+    apiStore.deleteResource('games', game.id as string).then((data) => {
       if (data.success){
         addNotif({autoRemoved: true, type: 'success', message: "The game has been deleted"})
       } else {
@@ -47,7 +46,7 @@ function manageGame(game: Game, type: 'accept' | 'delete'){
   }
 
   if (type=="accept"){
-    apiStore.patchResource('game', game.id as string, editedGame.value).then((data) => {
+    apiStore.patchResource('games', game.id as string, editedGame.value).then((data) => {
       if (data.success){
         addNotif({autoRemoved: true, type: 'success', message: "The game has been accepted."})
       } else {
@@ -58,7 +57,7 @@ function manageGame(game: Game, type: 'accept' | 'delete'){
   }
 
   /*if (type=="edit"){
-    apiStore.patchResource('game', game.id as string, editedGame.value).then((data) => {
+    apiStore.patchResource('games', game.id as string, editedGame.value).then((data) => {
       if (data.success){
         addNotif({autoRemoved: true, type: 'success', message: "The game has been accepted."})
       } else {
@@ -107,6 +106,7 @@ function state(editing: boolean){
   .game-component {
     display: flex;
     flex-direction: row;
+    border-radius: 15px;
   }
 
   .buttons{
@@ -133,11 +133,19 @@ function state(editing: boolean){
     background-color: gray;
   }
 
+  .game-component:hover, .selected {
+    background-image: linear-gradient(90deg, white 50%, #d5d5d5 80% );
+  }
+
   .right {
     width: max-content;
   }
-
-  .image-pochette {
-    min-height: 100%;
+  
+  .pochette {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    padding-right: 0.5em;
+    margin-right: 0.5em;
+    border-right: 3px solid rgb(0, 204, 255);
   }
 </style>

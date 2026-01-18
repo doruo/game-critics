@@ -5,7 +5,7 @@ import { apiStore, loggedInUser } from '@/util/apiStore.ts';
 import { addNotif } from '@/util/notifStore.ts';
 
 const emit = defineEmits<{
-  œ: [],
+  hideForm: [],
 }>();
 
 const props = defineProps<{
@@ -51,10 +51,25 @@ function uploadCritic() : void {
 
     <p> Your Note : <input v-model="newCritic.note" type="number"> Stars</p>
 
-    <button @click="$emit('hideForm')"> Cancel</button>
+    <button type="button" @click="$emit('hideForm')"> Cancel</button>
     <button type="submit"> Upload</button>
   </form>
+  <br>
 </template>
 
 <style scoped>
+  textarea {
+    margin-left: 1em;
+    background-color: gray;
+    color: white;
+    padding: 0.3em;
+    border-radius: 5px;
+  }
+  form {
+    border-top: 4px solid rgb(0, 204, 255);
+    border-bottom: 4px solid rgb(0, 204, 255);
+    border-radius: 8px;
+    padding: 0.3em;
+    width: fit-content;
+  }
 </style>

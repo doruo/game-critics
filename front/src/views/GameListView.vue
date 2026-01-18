@@ -6,6 +6,7 @@ import GameComponent from '@/components/GameComponent.vue';
 import CriticList from '@/components/CriticList.vue';
 import GameFormComponent from '@/components/GameFormComponent.vue';
 import {useRoute} from "vue-router";
+import NavButton from '@/components/NavButton.vue';
 
 const gameList: Ref<Array<Game> | 'loading' | 'failed'> = ref('loading');
 const selectedGame: Ref<Game | null> = ref(null);
@@ -17,6 +18,9 @@ const props = defineProps<{
   adminMode?: boolean,
   edit?: boolean
 }>();
+apiStore.getAll('games')
+.then((data) => gameList.value = data as Array<Game>)
+// .catch(() => gameList.value = 'failed');
 
 // TODO : A supprimer une fois cette partie de l'api complété
 
@@ -88,7 +92,8 @@ const valorant = ref<Game>({
 });
 
 const loadGames = async () => {
-  //apiStore.getAll('games').then((data) => gameList.value = data as Array<Game>).catch(() => gameList.value = 'failed')
+  const routeToCall = props.invalidated ? 'games' : 'games?approved=false'
+  // apiStore.getAll(routeToCall).then((data) => gameList.value = data as Array<Game>).catch(() => gameList.value = 'failed')
   //TODO À SUPPRIMER QUAND L'API FONCTIONNE
   gameList.value =[minecraft.value, brawlstars.value, valorant.value];
 
@@ -117,8 +122,9 @@ function selectGame(game: Game) {
 </script>
 
 <template>
+  <br>
   <div v-if="!props.invalidated && !adminMode">
-    <button v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</button>
+    <NavButton v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</NavButton>
     <GameFormComponent v-else @hide-form="gameFormDisplayed = false" :create="true"/>
   </div>
 
@@ -128,6 +134,14 @@ function selectGame(game: Game) {
       <p v-else-if="gameList == 'failed'"><i>Game critics could not be loaded</i></p>
 
       <GameComponent v-for="game in gameList" :game="game" @select-game="(gameToSelect) => selectGame(gameToSelect)" :edit="props.edit" :admin-mode="props.adminMode" :invalidated="props.invalidated" @loadGames="loadGames" v-else/>
+
+  <!-- <br>
+  <GameFormComponent v-else @hide-form="gameFormDisplayed = false"/>
+  <main>
+    <div class="game-list">
+      <p v-if="gameList == 'loading'"><i>Fetching Game List</i></p>
+      <p v-else-if="gameList == 'failed'"><i>Game List could not be loaded</i></p>
+      <GameComponent v-for="game in gameList" :is-selected="selectedGame === game" :game="game" @select-game="(gameToSelect) => selectGame(gameToSelect)" v-else /> -->
     </div>
 
     <div class="critic-list" v-if="selectedGame && !adminMode">
@@ -146,5 +160,14 @@ function selectGame(game: Game) {
 
   .game-list, .critic-list {
     flex: 1;
+  }
+
+  .critic-list {
+    border-left: 3px solid rgb(0, 204, 255);
+  }
+  .game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
   }
 </style>

@@ -10,7 +10,7 @@ import GameListView from "@/views/GameListView.vue";
       <h2>Invalidated games</h2>
       <GameListView :admin-mode="true" :invalidated="true" />
     </div>
-
+<hr>
     <div class="games-column">
       <h2>Manage all validated games</h2>
       <GameListView :admin-mode="true" :edit="true" />
@@ -21,13 +21,16 @@ import GameListView from "@/views/GameListView.vue";
 <style scoped>
 .games-container {
   display: flex;
-  justify-content: space-between; /* gauche / droite */
   gap: 2rem; /* espace entre les deux blocs */
 }
 
 .games-column {
-  width: 48%; /* ou flex: 1 */
-  border-style: solid;     /* sinon la bordure ne s’affiche pas */
-  border-color: black;
+  flex: 1;
+}
+
+hr {
+  background-color: rgb(0, 204, 255);
+  color: rgb(0, 204, 255);
+  width: 2px;
 }
 </style>
