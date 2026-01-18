@@ -5,6 +5,7 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -22,6 +23,12 @@ class CriticAuthorProcessor implements ProcessorInterface
         $user = $this->security->getUser();
         $data->setAuthor($user);
 
-        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+        try {
+            return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+        } catch (UniqueConstraintViolationException $e) {
+            throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException(
+                'Vous avez déjà écrit une critique pour ce jeu.'
+            );
+        }
     }
 }
