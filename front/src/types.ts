@@ -9,9 +9,9 @@ export interface Game{
     gameMode: string;
     targetAge: number;
     genre: string;
-    license: string | undefined;
+    licence: string | undefined;
     price: number;
-    platform: Array<string>;
+    plateform: Array<string>;
     images: Array<string>;
     pochette: string;
     approved: boolean;

@@ -4,7 +4,8 @@ import { apiStore, loggedInUserFavGameIds } from "@/util/apiStore.ts";
 import { addNotif } from "@/util/notifStore.ts";
 import { computed, ref } from "vue";
 import GameFormComponent from "@/components/GameFormComponent.vue";
-import {alreadyOnFav, addToFav, delFromFav} from "@/func.ts";
+import {addToFav, delFromFav} from "@/func.ts";
+import GameUpdateFormComponent from "@/components/Auth/GameUpdateFormComponent.vue";
 
 const emit = defineEmits<{ selectGame: [gameToSelect: Game], loadGames: [] }>();
 const props = defineProps<{
@@ -21,24 +22,6 @@ const isFavorite = computed(() => {
 });
 
 const isEditing = ref(false)
-/*const editedGame = ref({
-  id: props.game.id,
-  name: props.game.name,
-  publisher: props.game.publisher,
-  description: props.game.description,
-  releaseDate: props.game.releaseDate,
-  developer: props.game.developer,
-  averageNote: props.game.averageNote,
-  gameMode: props.game.gameMode,
-  targetAge: props.game.targetAge,
-  genre: props.game.genre,
-  license: props.game.license,
-  price: props.game.price,
-  platform: props.game.platform,
-  images: props.game.images,
-  pochette: props.game.pochette,
-  approved: true
-});*/ // TODO a supp plus tard si pas utilisé
 
 function deleteGame(game: Game){
   apiStore.deleteResource('games', game.id as string).then((data) => {
@@ -121,8 +104,8 @@ function state(editing: boolean) {
 
   <div v-if="isEditing">
     <h2>Editing {{ game.name }}</h2>
-    <button class="edit" @click="state(false)">Cancel Editing of {{game.name}}</button>
-    <GameFormComponent :mode="'update'" :game="game"/>
+    <button class="edit" @click="state(false) ">Cancel Editing of {{game.name}}</button>
+    <GameUpdateFormComponent :mode="'update'" :game="game"/>
   </div>
 </template>
 

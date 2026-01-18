@@ -59,7 +59,7 @@ game.value = {
 
         <hr>
         <ul> Playable on :
-            <li v-for="platform in game.platform"> {{ platform }}</li>
+            <li v-for="platform in game.plateform"> {{ platform }}</li>
         </ul>
         <p>Available for {{ game.price }} $</p>
 
@@ -69,7 +69,7 @@ game.value = {
                 <li>Genre : {{ game.genre }}</li>
                 <li>Gamemode : {{ game.gameMode }}</li>
                 <li>Pegi {{ game.targetAge }}</li>
-                <li>Licence : {{ game.license ? game.license : 'None' }}</li>
+                <li>Licence : {{ game.licence ? game.licence : 'None' }}</li>
                 <li>Released on {{ new Date(game.releaseDate).toLocaleDateString() }}</li>
             </ul>
         </div>

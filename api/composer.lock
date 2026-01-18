@@ -2496,7 +2496,7 @@
                 {
                     "name": "Luís Cobucci",
                     "email": "lcobucci@gmail.com",
-                    "role": "Developer"
+                    "role": "developper"
                 }
             ],
             "description": "A simple library to work with JSON Web Token and JSON Web Signature",
@@ -7519,7 +7519,7 @@
                     "name": "Fabien Potencier",
                     "email": "fabien@symfony.com",
                     "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "role": "Lead developper"
                 },
                 {
                     "name": "Twig Team",

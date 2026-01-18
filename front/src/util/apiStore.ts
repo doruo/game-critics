@@ -9,23 +9,36 @@ export const loggedInUserFavGameIds: Ref<Array<string> | null> = ref(null)
 watch(loggedInUser, fetchFavorites)
 
 export async function fetchFavorites() {
-    if (loggedInUser.value === null)
-        loggedInUserFavGameIds.value = null;
-    else {
-        await apiStore.getAllById('users', loggedInUser.value.id as string, 'favoritesGames')
-        .then((data) => loggedInUserFavGameIds.value = (data as Array<string>) // IRIs
-            .map(IRI => IRI.split('/').pop() as string)
-        );
-        return;
-    }
+  if (loggedInUser.value === null) {
+    loggedInUserFavGameIds.value = null;
+    return;
+  }
+
+  await apiStore.getAllById('users', loggedInUser.value.id as string, 'favoritesGames')
+    .then((data) => {
+      if (Array.isArray(data)) {
+        loggedInUserFavGameIds.value = data
+          .map(IRI => IRI.split('/').pop() as string);
+      } else {
+        loggedInUserFavGameIds.value = []; // Aucun favori
+      }
+    })
+    .catch((error) => {
+      console.error('Erreur lors de la récupération des favoris :', error);
+      loggedInUserFavGameIds.value = [];
+    });
 }
 
 export const apiStore = {
     apiUrl: "http://localhost/api/public/api/", // To change in production
 
-    // Ex : /games to get all the games
-    getAll(ressource:string): Promise<unknown> {
-        return fetch(this.apiUrl + ressource, {
+    // Ex : /games to get all the games || /games?page=1
+    getAll(ressource:string, page?: number): Promise<unknown> {
+      let url = this.apiUrl + ressource
+      if (page){
+        url = url + '?page=' + page
+      }
+        return fetch(url, {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
@@ -33,8 +46,9 @@ export const apiStore = {
         .then(reponsehttp => reponsehttp.json())
         .then (data => data.member);
     },
+
     // Ex : /games/5 to get the game of id 5
-    getById(ressource: string, id: string|number): Promise<unknown> {
+    getById(ressource: string, id: string): Promise<unknown> {
         return fetch(this.apiUrl + ressource + '/' + id, {
             method: "GET",
             headers: {'Content-Type': 'application/json'},
@@ -43,6 +57,7 @@ export const apiStore = {
         .then(reponsehttp => reponsehttp.json())
         .then (data => data);
     },
+
     // Ex : /games/5/critics to get all the critics of the game of id 5
     getAllById(ressource: string, id: string|number, nestedResource: string): Promise<unknown> {
         return fetch(this.apiUrl + ressource + '/' + id + '/' + nestedResource)
