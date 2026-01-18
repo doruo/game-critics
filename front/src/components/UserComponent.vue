@@ -3,7 +3,6 @@ import type {User} from "@/types.ts";
 import {type Ref, ref} from "vue";
 import {apiStore} from "@/util/apiStore.ts";
 import {addNotif} from "@/util/notifStore.ts";
-import NavButton from "./NavButton.vue";
 
 const props = defineProps<{
   user: User,
@@ -11,14 +10,7 @@ const props = defineProps<{
 
 const isAdmin = props.user.roles.includes('ROLE_ADMIN')
 
-const emit = defineEmits<{loadUsers: []}>();
-
-const editedUser: Ref<User> = ref({
-  id: props.user.id,
-  login: props.user.login,
-  email: props.user.email,
-  roles: ['ROLE_USER', 'ROLE_ADMIN']
-});
+const emit = defineEmits<{loadUsers: void}>();
 
 function deleteUser(user: User) {
     apiStore.deleteResource('users', user.login).then((data) => {
@@ -29,10 +21,10 @@ function deleteUser(user: User) {
       }
     });
     emit("loadUsers");
-}
+  }
 
-function promoteUser(user: User) {
-    apiStore.patchResource('games', user.login, editedUser.value).then((data) => {
+  function promoteUser(user: User) {
+    apiStore.updateResource('games', user.login, {roles: ['ROLE_USER', 'ROLE_ADMIN']}, 'PATCH').then((data) => {
       if (data.success) {
         addNotif({autoRemoved: true, type: 'success', message: "The user has been promoted."})
       } else {
@@ -40,7 +32,8 @@ function promoteUser(user: User) {
       }
     });
     emit("loadUsers");
-}
+  }
+
 </script>
 
 <template>

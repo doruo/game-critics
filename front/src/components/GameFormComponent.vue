@@ -75,7 +75,7 @@ function uploadGame() : void {
 
 function updateGame() : void {
   if (props.game) {
-    apiStore.patchResource('games', props.game.id as string, actualGame.value) //
+    apiStore.updateResource('games', props.game.id as string, actualGame.value, 'PUT') //
       .then(res => {
         if (res.success) {
           addNotif({autoRemoved: true, type: 'success', message: "Your Game has been updated"});

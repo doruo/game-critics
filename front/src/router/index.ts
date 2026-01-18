@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import GameListComponent from '@/components/GameListComponent.vue'
-import GameDetailView from '@/views/GameDetailView.vue'
+import GameDetailComponent from '@/components/GameDetailComponent.vue'
 import UserDetailView from '@/views/UserDetailView.vue'
 import AccountView from '@/views/AccountView.vue'
 import UserListView from "@/views/Admin/UserListView.vue";
 import AdminManageGamesView from "@/views/Admin/AdminManageGamesView.vue";
 import GameFormComponent from "@/components/GameFormComponent.vue";
 import GameListView from "@/views/GameListView.vue";
+import GameDetailView from "@/views/GameDetailView.vue";
+import UserFavoritesGamesView from "@/views/UserFavoritesGamesView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,15 +28,21 @@ const router = createRouter({
     },
     {
       // Game page
-      path: '/game/:id',
+      path: '/games/:id',
       name: 'gameDetail',
       component: GameDetailView,
     },
     {
       // user page
-      path: '/user/:id',
+      path: '/users/:id',
       name: 'userDetail',
       component: UserDetailView,
+    },
+    {
+      // user favorites games page
+      path:'/users/:id/favoritesGames',
+      name:'userFavoritesGames',
+      component: UserFavoritesGamesView,
     },
     {
       // logged in user's account page

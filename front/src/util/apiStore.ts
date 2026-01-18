@@ -29,7 +29,7 @@ export const apiStore = {
 
     login(login: string, password: string): Promise<{ success: boolean, error?: string }> {
         return fetch(this.apiUrl + "auth", {
-            method: "POST",  
+            method: "POST",
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
             body: JSON.stringify({login: login, password: password}),
@@ -52,7 +52,7 @@ export const apiStore = {
 
     logout(): Promise<{ success: boolean, error?: string }> {
         return fetch(this.apiUrl + "token/invalidate", {
-            method: "POST",  
+            method: "POST",
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
         })
@@ -74,7 +74,7 @@ export const apiStore = {
 
     refresh(): Promise<{ success: boolean, error?: string }> {
         return fetch(this.apiUrl + "token/refresh", {
-            method: "POST",  
+            method: "POST",
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
         })
@@ -96,7 +96,7 @@ export const apiStore = {
 
     createRessource(resource: string, data: unknown, refreshAllowed = true): Promise<{ success: boolean, error?: string }> {
         return fetch(this.apiUrl + resource, {
-            method: "POST",  
+            method: "POST",
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
             body: JSON.stringify(data),
@@ -126,7 +126,7 @@ export const apiStore = {
 
     deleteResource(resource: string, id: string): Promise<{ success: boolean, error?: string }> {
         return fetch(this.apiUrl + resource + '/' + id, {
-            method: "DELETE",  
+            method: "DELETE",
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
         })
@@ -146,9 +146,14 @@ export const apiStore = {
         })
     },
 
-    patchResource(resource: string, id: string, data: unknown): Promise<{ success: boolean, error?: string }> {
-        return fetch(this.apiUrl + resource + '/' + id, {
-            method: "PATCH",  
+  //par exemple /users/:id/favoritesGames en PUT
+    updateResource(resource: string, id: string, data: unknown, method: 'PATCH' | 'PUT', nestedResource?: string): Promise<{ success: boolean, error?: string }> {
+      let url = this.apiUrl + resource + '/' + id;
+      if (nestedResource){
+        url = url + '/' + nestedResource;
+      }
+        return fetch(url, {
+            method: method,
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
             body: JSON.stringify(data),

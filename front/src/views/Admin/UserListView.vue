@@ -4,8 +4,7 @@ import {type Ref, ref, watch} from "vue";
 import {apiStore} from "@/util/apiStore.ts";
 import UserComponent from "@/components/UserComponent.vue";
 import {useRoute} from "vue-router";
-import {valorant} from "@/mock.ts";
-import { Game } from "@/types.ts";
+import {user1, user2, user3} from "@/mock.ts";
 
 
 
@@ -16,26 +15,7 @@ const route = useRoute();
 const loadUsers = async () => {
   //apiStore.getAll('users').then((data) => { users.value = data as User[];}).catch(() => users.value = 'failed');
 
-  users.value = [
-    {
-      id: 1,
-      login: 'hicham123',
-      email: 'hicham@example.com',
-      roles: ['ROLE_USER', 'ROLE_ADMIN'],
-    },
-    {
-      id: 2,
-      login: 'alice456',
-      email: 'alice@example.com',
-      roles: ['ROLE_USER']
-    },
-    {
-      id: 3,
-      login: 'bob789',
-      email: 'bob@example.com',
-      roles: ['ROLE_USER']
-    }
-  ];
+  users.value = [user1.value, user2.value, user3.value];
 }
 
 // to reload the list

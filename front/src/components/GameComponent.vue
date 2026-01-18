@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import type { Game } from '../types.ts';
-import {apiStore} from "@/util/apiStore.ts";
-import {addNotif} from "@/util/notifStore.ts";
-import {ref} from "vue";
+import { apiStore } from "@/util/apiStore.ts";
+import { addNotif } from "@/util/notifStore.ts";
+import { ref } from "vue";
 import GameFormComponent from "@/components/GameFormComponent.vue";
+import {alreadyOnFav, testingFavGame, addToFav, delFromFav} from "@/func.ts";
 
-const emit = defineEmits<{selectGame: [gameToSelect: Game], loadGames: []}>();
+const emit = defineEmits<{ selectGame: [gameToSelect: Game], loadGames: void }>();
 const props = defineProps<{
   game: Game,
   adminMode?: 'pending' | 'validated'
 }>();
 
 let isEditing = ref(false)
-const editedGame = ref({
+/*const editedGame = ref({
   id: props.game.id,
   name: props.game.name,
   publisher: props.game.publisher,
@@ -29,44 +30,43 @@ const editedGame = ref({
   images: props.game.images,
   pochette: props.game.pochette,
   approved: true
-});
+});*/ // TODO a supp plus tard si pas utilisé
 
 function deleteGame(game: Game){
-    apiStore.deleteResource('games', game.id as string).then((data) => {
-      addNotif({
-        autoRemoved: true,
-        type: data.success ? 'success' : 'error',
-        message: data.success
-          ? "The game has been deleted"
-          : "The game could not been deleted"
-      })
-    });
-    emit("loadGames");
+  apiStore.deleteResource('game', game.id as string).then((data) => {
+    addNotif({
+      autoRemoved: true,
+      type: data.success ? 'success' : 'error',
+      message: data.success
+        ? "The game has been deleted"
+        : "The game could not been deleted"
+    })
+  });
+  emit("loadGames");
 }
-
 function acceptGame(game: Game){
-    apiStore.patchResource('games', game.id as string, editedGame.value).then((data) => {
-      addNotif({
-        autoRemoved: true,
-        type: data.success ? 'success' : 'error',
-        message: data.success
-          ? "The game has been accepted."
-          : "The game could not been accepted"
-      })
-    });
-    emit("loadGames");
+  apiStore.updateResource('games', game.id as string, {approved: true}, 'PATCH').then((data) => {
+    addNotif({
+      autoRemoved: true,
+      type: data.success ? 'success' : 'error',
+      message: data.success
+        ? "The game has been accepted."
+        : "The game could not been accepted"
+    })
+  });
+  emit("loadGames");
 }
-
 function state(editing: boolean) {
   isEditing.value = editing
 }
+testingFavGame(props.game);
+
 
 </script>
 <template>
   <div
     v-if="!isEditing"
     class="game-component"
-    @click="!adminMode ? $emit('selectGame', game) : null"
   >
     <img
       class="pochette"
@@ -84,6 +84,9 @@ function state(editing: boolean) {
       </h2>
       <p><i>Published by </i> {{ game.publisher }}</p>
       <p>Average note : {{ game.averageNote }}</p>
+      <button v-if="!adminMode" @click="$emit('selectGame', game)">View critics</button>
+      <button @click="addToFav(game)" v-if="!(adminMode == 'pending') && !(alreadyOnFav)">Add to favorit</button>
+      <button @click="delFromFav(game)" v-if="!(adminMode == 'pending') && alreadyOnFav">Delete from favorit</button>
     </div>
 
     <div v-if="adminMode" class="buttons">
@@ -154,7 +157,7 @@ function state(editing: boolean) {
   .right {
     width: max-content;
   }
-  
+
   .pochette {
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;

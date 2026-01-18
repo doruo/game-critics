@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, type Ref, watch } from 'vue';
-import type { Game } from '../types.ts';
+import type {Game, User} from '../types.ts';
 import { useRoute } from "vue-router";
-import {minecraft, valorant, brawlstars} from "@/mock.ts";
+import {minecraft, valorant, brawlstars, user1} from "@/mock.ts";
 import GameComponent from "@/components/GameComponent.vue";
 import GameFormComponent from './GameFormComponent.vue';
 import CriticList from './CriticList.vue';
+import {apiStore} from "@/util/apiStore.ts";
 import { apiStore } from '@/util/apiStore.ts';
 import NavButton from './NavButton.vue';
 
@@ -14,8 +15,17 @@ const selectedGame: Ref<Game | null> = ref(null);
 const gameFormDisplayed = ref(false);
 const route = useRoute();
 
+let errorUser : Ref<'' | 'failed' | 'loading'> = ref('loading')
+let userFav: Ref<User> = ref({
+      id: '',
+      login: '',
+      email: '',
+      roles: ''
+});
+
 const props = defineProps<{
   adminMode?: 'pending' | 'validated',
+  favType?: boolean
 }>();
 
 const loadGames = async () => {
@@ -30,8 +40,15 @@ const loadGames = async () => {
     } else if (props.adminMode === 'validated') {
       gameList.value = gameList.value.filter(game => game.approved)
     }
-  } else {
+  } else if (!props.adminMode) {
     gameList.value = gameList.value.filter(game => game.approved)
+  } else if (props.favType){
+    //TODO remettre quand api est la
+    gameList.value = [brawlstars.value, valorant.value];
+
+    //apiStore.getById('users', route.params.id as string).then((data) => userFav.value = data as User).catch(() => errorUser.value = 'failed')
+    //apiStore.getAllById('users', route.params.id as string, 'favoritesGames').then((data) => gameList.value = data as Array<Game>).catch(() => gameList.value = 'failed')
+
   }
 }
 
@@ -46,17 +63,25 @@ function selectGame(game: Game) {
   else
     selectedGame.value = null;
 }
+
 </script>
 <template>
-  <div v-if="!props.adminMode">
+  <div v-if="!props.adminMode && !props.favType">
     <NavButton v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</NavButton>
     <GameFormComponent v-else @hide-form="gameFormDisplayed = false" :mode="'create'"/>
   </div>
 
   <main>
+    <div v-if="favType && userFav">
+      <p v-if="errorUser == 'loading'"><i>Fetching user</i></p>
+      <p v-else-if="errorUser == 'failed'"><i>Game critics could not be loaded</i></p>
+    </div>
+
     <div class="game-list">
       <p v-if="gameList == 'loading'"><i>Fetching Games</i></p>
       <p v-else-if="gameList == 'failed'"><i>Games could not be loaded</i></p>
+
+      <h2 v-if="favType">Favorites games of {{userFav.login}}</h2>
 
       <GameComponent
         v-else

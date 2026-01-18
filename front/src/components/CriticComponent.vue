@@ -41,7 +41,7 @@ function deleteCrtic() : void {
 }
 
 function saveEditedCritic() : void {
-  apiStore.patchResource('critics', props.critic.id as string, editedCritic.value)
+  apiStore.updateResource('critics', props.critic.id as string, editedCritic.value, 'PATCH')
   .then(res => {
     if (res.success) {
       isBeingEdited.value = false;

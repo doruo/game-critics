@@ -4,7 +4,8 @@ import GameListComponent from "@/components/GameListComponent.vue";
 </script>
 
 <template>
-<GameListComponent  />
+<GameListComponent :fav-type="true" />
+
 </template>
 
 <style scoped>
