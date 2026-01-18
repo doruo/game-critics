@@ -276,7 +276,7 @@ class Game
         description: "Indique si le jeu a été validé par un administrateur",
     )]
     #[Groups(["deserialization:game:update","deserialization:game:create","serialization:game:read"])]
-    private ?bool $approved = null;
+    private ?bool $approved = false;
 
     #[ORM\OneToMany(targetEntity: Critic::class, mappedBy: 'game')]
     #[Groups(['deserialization:user:update'])]

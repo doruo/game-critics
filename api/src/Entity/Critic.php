@@ -102,10 +102,15 @@ use DateTime;
         ),
 
         new Patch(
-            uriTemplate: '/users/{id}/critics/{criticId}',
+            uriTemplate: '/users/{userId}/critics/{id}',
             uriVariables: [
-                'id' => new Link(fromClass: User::class),
-                'criticId' => new Link(fromClass: Critic::class)
+                'userId' => new Link(
+                    fromProperty: 'critics',
+                    fromClass: User::class
+                ),
+                'id' => new Link(
+                    fromClass: Critic::class
+                ),
             ],
             normalizationContext: [
                 'groups' => ["serialization:critic:read","serialization:game:read"]
@@ -121,10 +126,15 @@ use DateTime;
         ),
 
         new Delete(
-            uriTemplate: '/users/{id}/critics/{criticId}',
+            uriTemplate: '/users/{userId}/critics/{id}',
             uriVariables: [
-                'id' => new Link(fromClass: User::class),
-                'criticId' => new Link(fromClass: Critic::class)
+                'userId' => new Link(
+                    fromProperty: 'critics',
+                    fromClass: User::class
+                ),
+                'id' => new Link(
+                    fromClass: Critic::class
+                ),
             ],
             securityMessage: "Vous devez être l'auteur de la critique ou un admin pour acceder à cette route",
             securityPostDenormalize: "is_granted('CRITIC_FROM_CONNECTED_USERS_OR_ADMIN', object)"
