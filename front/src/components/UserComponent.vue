@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import type {User} from "@/types.ts";
-import {type Ref, ref} from "vue";
-import {apiStore} from "@/util/apiStore.ts";
+import {apiStore, loggedInUser} from "@/util/apiStore.ts";
 import {addNotif} from "@/util/notifStore.ts";
 import NavButton from "@/components/NavButton.vue";
 
 const props = defineProps<{
   user: User,
 }>();
+let isAdmin: boolean | undefined = false;
 
-const isAdmin = props.user.roles.includes('ROLE_ADMIN')
+if (loggedInUser){
+  isAdmin = loggedInUser.value?.roles.includes('ROLE_ADMIN')
+}
 
 const emit = defineEmits<{loadUsers: []}>();
 
 function deleteUser(user: User) {
-    apiStore.deleteResource('users', user.login).then((data) => {
+    apiStore.deleteResource('users', user.id as string).then((data) => {
       if (data.success) {
         addNotif({autoRemoved: true, type: 'success', message: "The user has been deleted"})
       } else {
@@ -25,7 +27,7 @@ function deleteUser(user: User) {
   }
 
   function promoteUser(user: User) {
-    apiStore.updateResource('games', user.login, {roles: ['ROLE_USER', 'ROLE_ADMIN']}, 'PATCH').then((data) => {
+    apiStore.updateResource('users', user.id as string, {roles: ['ROLE_ADMIN']}, 'PATCH').then((data) => {
       if (data.success) {
         addNotif({autoRemoved: true, type: 'success', message: "The user has been promoted."})
       } else {
@@ -38,14 +40,13 @@ function deleteUser(user: User) {
 </script>
 
 <template>
-  <div :class="{'user-component': true, admin: isAdmin}">
-    <b class="id">#{{user.id}}</b>
+  <div :class="{'user-component': true}">
+    <b class="id">{{user.id}}</b>
     <RouterLink :to="{name:'userDetail', params: {id: user.id}}">{{user.login}}</RouterLink>
     <span>{{user.email}}</span>
-    <b v-if="isAdmin">(Admin)</b>
 
-    <NavButton v-if="!isAdmin" @click="deleteUser(user)">Delete</NavButton>
-    <NavButton v-if="!isAdmin" @click="promoteUser(user)">Promote</NavButton>
+    <NavButton  @click="deleteUser(user)">Delete</NavButton>
+    <NavButton  @click="promoteUser(user)">Promote</NavButton>
   </div>
 </template>
 

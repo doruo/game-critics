@@ -8,7 +8,6 @@ import NavButton from './components/NavButton.vue';
 
 apiStore.refresh();
 
-//TODO ajouter v-if="loggedInUser?.roles.includes('ROLE_ADMIN') au div admin
 </script>
 
 <template>
@@ -16,7 +15,7 @@ apiStore.refresh();
   <NotifList />
   <header>
       <nav>
-        <NavButton 
+        <NavButton
           v-if="loggedInUser?.roles && loggedInUser.roles.includes('ROLE_ADMIN')"
           @click="adminNavIsExpanded = !adminNavIsExpanded"
         >

@@ -15,7 +15,7 @@ const props = defineProps<{
 const isFavorite = computed(() => {
   if (loggedInUserFavGameIds.value)
     return loggedInUserFavGameIds.value.includes(props.game.id as string);
-  else 
+  else
     return false;
 
 });
@@ -41,7 +41,7 @@ const isEditing = ref(false)
 });*/ // TODO a supp plus tard si pas utilisé
 
 function deleteGame(game: Game){
-  apiStore.deleteResource('game', game.id as string).then((data) => {
+  apiStore.deleteResource('games', game.id as string).then((data) => {
     addNotif({
       autoRemoved: true,
       type: data.success ? 'success' : 'error',
