@@ -51,6 +51,7 @@ use DateTime;
             ],
             normalizationContext: ['groups' => ["serialization:critic:read","serialization:game:read"]],
             security: "is_granted('ROLE_USER') and request.attributes.get('id') == user.getId()",
+            securityMessage: "Vous ne pouvez accéder qu'à vos critiques",
             provider: UserFavoriteCriticsProvider::class
         ),
 
@@ -79,6 +80,7 @@ use DateTime;
                 'groups' => ['deserialization:critic:create']
             ],
             security: "is_granted('ROLE_USER')",
+            securityMessage: "Vous devez être connecté pour accéder à cette route",
             validationContext: [
                 'groups' => ['validation:critic:create']
             ],
@@ -111,8 +113,8 @@ use DateTime;
             denormalizationContext: [
                 'groups' => ['deserialization:critic:update']
             ],
-            securityMessage: "Vous devez être l'auteur de la critique ou un admin pour acceder à cette route",
             securityPostDenormalize: "is_granted('CRITIC_FROM_CONNECTED_USERS_OR_ADMIN', object)",
+            securityMessage: "Vous devez être l'auteur de la critique ou un admin pour acceder à cette route",
             validationContext: [
                 'groups' => ['validation:critic:update']
             ]
