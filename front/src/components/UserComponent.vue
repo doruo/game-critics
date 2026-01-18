@@ -12,16 +12,9 @@ const isAdmin = props.user.roles.includes('ROLE_ADMIN')
 
 const emit = defineEmits<{loadUsers: void}>();
 
-const editedUser = ref({
-  id: props.user.id,
-  login: props.user.login,
-  email: props.user.email,
-  roles: ['ROLE_USER', 'ROLE_ADMIN']
-});
-
 function manageUser(user: User, type: 'delete' | 'promote') {
   if (type == "delete") {
-    apiStore.deleteResource('user', user.login).then((data) => {
+    apiStore.deleteResource('users', user.login).then((data) => {
       if (data.success) {
         addNotif({autoRemoved: true, type: 'success', message: "The user has been deleted"})
       } else {
@@ -32,7 +25,7 @@ function manageUser(user: User, type: 'delete' | 'promote') {
   }
 
   if (type == "promote") {
-    apiStore.patchResource('game', user.login, editedUser.value).then((data) => {
+    apiStore.updateResource('games', user.login, {roles: ['ROLE_USER', 'ROLE_ADMIN']}, 'PATCH').then((data) => {
       if (data.success) {
         addNotif({autoRemoved: true, type: 'success', message: "The user has been promoted."})
       } else {

@@ -17,7 +17,8 @@ apiStore.refresh();
     <nav>
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/games">Games</RouterLink>
-      <RouterLink to="/game/0">Game of id 0</RouterLink>
+      <RouterLink to="/games/0">Game of id 0</RouterLink>
+      <RouterLink to="/users/1/favoritesGames">favorites games of id 1</RouterLink>
 
       <div class="admin-dropdown">
         <RouterLink to="/">Admin</RouterLink>

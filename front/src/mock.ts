@@ -1,5 +1,5 @@
 import {ref} from "vue";
-import type {Game} from "@/types.ts";
+import type {Game, User} from "@/types.ts";
 
 export const brawlstars = ref<Game>({
   approved: true,
@@ -67,3 +67,23 @@ export const valorant = ref<Game>({
   releaseDate: '2020-06-02',
   targetAge: 16,
 });
+export const user1 = ref<User>({
+  id: 1,
+  login: 'hicham123',
+  email: 'hicham@example.com',
+  roles: ['ROLE_USER', 'ROLE_ADMIN'],
+});
+export const user2 = ref<User>({
+  id: 2,
+  login: 'alice456',
+  email: 'alice@example.com',
+  roles: ['ROLE_USER']
+});
+export const user3 = ref<User>({
+  id: 3,
+  login: 'bob789',
+  email: 'bob@example.com',
+  roles: ['ROLE_USER']
+});
+
+

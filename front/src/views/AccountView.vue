@@ -32,9 +32,9 @@ import { addNotif } from '@/util/notifStore';
         newErrorMessages.push("Votre mot de passe doit faire au minimum 8 caractères");
       else if (plainPassword.length > 30)
         newErrorMessages.push("Votre mot de passe doit faire au maximum 30 caractères");
-      
+
       // regex modifié légèrement de la classe User car le standard regex diffère en JS
-      if (!plainPassword.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}$/)) 
+      if (!plainPassword.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}$/))
         newErrorMessages.push("Votre mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre");
     }
 
@@ -50,7 +50,7 @@ import { addNotif } from '@/util/notifStore';
       plainPassword: !newUser.value.plainPassword ? undefined : newUser.value.plainPassword,
     };
 
-    apiStore.patchResource('users', loggedInUser.value?.id as string, data)
+    apiStore.updateResource('users', loggedInUser.value?.id as string, data, 'PATCH')
     .then((data) => {
       if (data.success)
         addNotif({autoRemoved: true, type: 'success', message: "The changes have been applied"});
@@ -75,7 +75,7 @@ import { addNotif } from '@/util/notifStore';
 <template>
   <h2> My Account</h2>
 
-  <ul style="color: red;" v-if="errors"> 
+  <ul style="color: red;" v-if="errors">
     <li v-for="error in errors"> {{ error }}</li>
   </ul>
 

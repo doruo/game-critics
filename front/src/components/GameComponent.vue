@@ -13,7 +13,7 @@ const props = defineProps<{
 }>();
 
 let isEditing = ref(false)
-const editedGame = ref({
+/*const editedGame = ref({
   id: props.game.id,
   name: props.game.name,
   publisher: props.game.publisher,
@@ -30,7 +30,7 @@ const editedGame = ref({
   images: props.game.images,
   pochette: props.game.pochette,
   approved: true
-});
+});*/ // TODO a supp plus tard si pas utilisé
 
 function deleteGame(game: Game){
   apiStore.deleteResource('game', game.id as string).then((data) => {
@@ -45,7 +45,7 @@ function deleteGame(game: Game){
   emit("loadGames");
 }
 function acceptGame(game: Game){
-  apiStore.patchResource('game', game.id as string, editedGame.value).then((data) => {
+  apiStore.updateResource('games', game.id as string, {approved: true}, 'PATCH').then((data) => {
     addNotif({
       autoRemoved: true,
       type: data.success ? 'success' : 'error',
