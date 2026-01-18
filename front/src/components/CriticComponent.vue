@@ -28,7 +28,7 @@ const editedCritic = ref({
 const isBeingEdited: Ref<boolean> = ref(false);
 
 function deleteCrtic() : void {
-  apiStore.deleteResource('critics', props.critic.id as string)
+  apiStore.deleteResource(`users/${loggedInUser.value?.id}/critics`, props.critic.id as string)
   .then((res) => {
     if (res.success) {
       addNotif({autoRemoved: true, type: 'success', message: "The Critic has been deleted"});
@@ -41,7 +41,7 @@ function deleteCrtic() : void {
 }
 
 function saveEditedCritic() : void {
-  apiStore.updateResource('critics', props.critic.id as string, editedCritic.value, 'PATCH')
+  apiStore.updateResource(`users/${loggedInUser.value?.id}/critics`, props.critic.id as string, editedCritic.value, 'PATCH')
   .then(res => {
     if (res.success) {
       isBeingEdited.value = false;
@@ -93,8 +93,8 @@ function cancelEdit() : void {
     <textarea class="message" v-else v-model="editedCritic.scenarioMessage" ></textarea>
   </div>
 
-    <p v-if="displayFor === 'game'"><i>Published by </i> <RouterLink :to="`/user/${critic.author.id}`"> {{ critic.author.login }}</RouterLink> on {{ (new Date(critic.publicationDate)).toLocaleString("fr") }}</p>
-    <p v-else><i>For the game : </i> <RouterLink :to="`/game/${critic.game.id}`"> {{ critic.game.name }}</RouterLink> on {{ (new Date(critic.publicationDate)).toLocaleString("fr") }}</p>
+    <p v-if="displayFor === 'game'"><i>Published by </i> <RouterLink :to="`/users/${critic.author.id}`"> {{ critic.author.login }}</RouterLink> on {{ (new Date(critic.publicationDate)).toLocaleString("fr") }}</p>
+    <p v-else><i>For the game : </i> <RouterLink :to="`/games/${critic.game.id}`"> {{ critic.game.name }}</RouterLink> on {{ (new Date(critic.publicationDate)).toLocaleString("fr") }}</p>
 
   </div>
   <br>

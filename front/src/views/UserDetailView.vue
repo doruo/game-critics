@@ -11,12 +11,12 @@ import {user1} from "@/mock.ts";
   const user: Ref<User | 'loading' | 'failed'> = ref('loading');
   const numberOfCritics: Ref<number | 'loading'> = ref('loading')
 
-  /*apiStore.getById('users', route.params.id as string)
+  apiStore.getById('users', route.params.id as string)
   .then((data) => user.value = data as User)
-  .catch(() => user.value = 'failed'); */
+  .catch(() => user.value = 'failed'); 
 //TODO à remettre
 
-  user.value = user1.value;
+  // user.value = user1.value;
 
 </script>
 
