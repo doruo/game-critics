@@ -25,7 +25,11 @@ export const apiStore = {
 
     // Ex : /games to get all the games
     getAll(ressource:string): Promise<unknown> {
-        return fetch(this.apiUrl + ressource)
+        return fetch(this.apiUrl + ressource, {
+            method: "GET",
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+        })
         .then(reponsehttp => reponsehttp.json())
         .then (data => data.member);
     },

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {User} from "@/types.ts";
-import {type Ref, ref, watch} from "vue";
+import {type Ref, ref, watch, watchEffect} from "vue";
 import {apiStore} from "@/util/apiStore.ts";
 import UserComponent from "@/components/UserComponent.vue";
 import {useRoute} from "vue-router";
@@ -10,12 +10,14 @@ import {user1, user2, user3} from "@/mock.ts";
 
 const users: Ref<User[] | 'loading' | 'failed'> = ref('loading');
 const route = useRoute();
+watchEffect(() => console.log(users.value));
+
 
 
 const loadUsers = async () => {
-  //apiStore.getAll('users').then((data) => { users.value = data as User[];}).catch(() => users.value = 'failed');
+  apiStore.getAll('users').then((data) => { users.value = data as User[];}).catch(() => users.value = 'failed');
 
-  users.value = [user1.value, user2.value, user3.value];
+  // users.value = [user1.value, user2.value, user3.value];
 }
 
 // to reload the list
