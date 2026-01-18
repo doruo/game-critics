@@ -6,6 +6,7 @@ use App\Repository\CriticRepository;
 use App\State\CriticAuthorProcessor;
 use App\State\UserFavoriteCriticsProvider;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Attribute\Groups;
 use ApiPlatform\Metadata\ApiResource;
@@ -27,33 +28,13 @@ use DateTime;
         new GetCollection(
             uriTemplate: '/games/{id}/critics',
             uriVariables: [
-                'idGameCritics' => new Link(
+                'id' => new Link(
                     fromProperty: 'critics',
                     fromClass: Game::class
                 )
             ],
-            normalizationContext: ["groups" => ["serialization:critic:read"]]
+            normalizationContext: ["groups" => ["serialization:critic:read","serialization:user:read"]]
         ),
-
-        new Get(
-            normalizationContext: ["groups" => ["serialization:critic:read"]]
-        ),
-
-        new Post(
-            normalizationContext: ["groups" => ["serialization:critic:read"]],
-            denormalizationContext: ["groups" => ["deserialization:critic:create"]],
-            validationContext: ["groups" => ["Default", "validation:critic:create"]],
-            processor: CriticProcessor::class
-        ),
-
-        // Only if author is connected user or admin
-        new Patch(
-            normalizationContext: ["groups" => ["serialization:critic:read"]],
-            denormalizationContext: ["groups" => ["deserialization:critic:update"]],
-            validationContext: ["groups" => ["Default", "validation:critic:update"]]
-        ),
-
-        new Delete(),
 
 
         // -------------------------------------
@@ -68,7 +49,7 @@ use DateTime;
                     fromClass: User::class
                 )
             ],
-            normalizationContext: ['groups' => ['serialization:critic:read']],
+            normalizationContext: ['groups' => ["serialization:critic:read","serialization:game:read"]],
             security: "is_granted('ROLE_USER') and request.attributes.get('id') == user.getId()",
             provider: UserFavoriteCriticsProvider::class
         ),
@@ -82,7 +63,7 @@ use DateTime;
                 )
             ],
             normalizationContext: [
-                'groups' => ['serialization:critic:read']
+                'groups' => ["serialization:critic:read","serialization:game:read"]
             ]
         ),
 
@@ -92,17 +73,19 @@ use DateTime;
                 'id' => new Link(fromClass: User::class)
             ],
             normalizationContext: [
-                'groups' => ['serialization:critic:read']
+                'groups' => ["serialization:critic:read","serialization:game:read"]
             ],
             denormalizationContext: [
                 'groups' => ['deserialization:critic:create']
             ],
-            security: "is_granted('AUTH_CONNECTED', id)",
+            security: "is_granted('ROLE_USER')",
             validationContext: [
                 'groups' => ['validation:critic:create']
             ],
+            read: false,
             processor: CriticAuthorProcessor::class
         ),
+
 
 
         new Get(
@@ -112,8 +95,8 @@ use DateTime;
                 'criticId' => new Link(fromClass: Critic::class)
             ],
             normalizationContext: [
-                'groups' => ['serialization:critic:read']
-            ]
+                'groups' => ["serialization:critic:read","serialization:game:read"]
+            ],
         ),
 
         new Patch(
@@ -123,12 +106,13 @@ use DateTime;
                 'criticId' => new Link(fromClass: Critic::class)
             ],
             normalizationContext: [
-                'groups' => ['serialization:critic:read']
+                'groups' => ["serialization:critic:read","serialization:game:read"]
             ],
             denormalizationContext: [
                 'groups' => ['deserialization:critic:update']
             ],
-            security: "is_granted('CRITIC_FROM_CONNECTED_USERS_OR_ADMIN', object)",
+            securityMessage: "Vous devez être l'auteur de la critique ou un admin pour acceder à cette route",
+            securityPostDenormalize: "is_granted('CRITIC_FROM_CONNECTED_USERS_OR_ADMIN', object)",
             validationContext: [
                 'groups' => ['validation:critic:update']
             ]
@@ -140,7 +124,8 @@ use DateTime;
                 'id' => new Link(fromClass: User::class),
                 'criticId' => new Link(fromClass: Critic::class)
             ],
-            security: "is_granted('CRITIC_DELETE', object)"
+            securityMessage: "Vous devez être l'auteur de la critique ou un admin pour acceder à cette route",
+            securityPostDenormalize: "is_granted('CRITIC_FROM_CONNECTED_USERS_OR_ADMIN', object)"
         ),
 
 
@@ -151,6 +136,7 @@ use DateTime;
 )]
 #[ORM\Entity(repositoryClass: CriticRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\UniqueConstraint(name: 'UNIQ_COUPLE_GAME_USER', fields: ['author','game'])]
 class Critic
 {
     #[ORM\Id]

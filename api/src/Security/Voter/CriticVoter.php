@@ -9,13 +9,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 final class CriticVoter extends Voter
 {
     public const CRITIC_FROM_CONNECTED_USERS_OR_ADMIN = 'CRITIC_FROM_CONNECTED_USERS_OR_ADMIN';
-    public const VIEW = 'POST_VIEW';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::CRITIC_FROM_CONNECTED_USERS_OR_ADMIN, self::VIEW])
+        return in_array($attribute, [self::CRITIC_FROM_CONNECTED_USERS_OR_ADMIN])
             && $subject instanceof \App\Entity\Critic;
     }
 

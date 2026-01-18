@@ -27,7 +27,7 @@ class AuthenticationSuccessListener
         $data['id'] = $user->getID();
         $data['login'] = $user->getLogin();
         $data['email'] = $user->getEmail();
-        $data['hashedEmail'] = $this->passwordHasher->hashPassword($user, $user->getEmail());
+        $data['hashedEmail'] = hash("SHA256", $user->getEmail());
         $data['roles'] = $user->getRoles();
 
 
