@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue';
-import { apiStore } from '@/util/apiStore.ts';
+import { apiStore, loggedInUser } from '@/util/apiStore.ts';
 import { addNotif } from '@/util/notifStore.ts';
 import type { Game } from '@/types';
 import ImagePreview from './ImagePreview.vue';
@@ -42,7 +42,7 @@ if (props.mode == 'update' && props.game) {
 
   errorMSG.value = ''
 
-  actualGame.value.id = props.game.id
+  // actualGame.value.id = props.game.id
   actualGame.value.name = props.game.name
   actualGame.value.publisher = props.game.publisher
   actualGame.value.description = props.game.description
@@ -68,8 +68,9 @@ else
 }
 
 function uploadGame() : void {
-  console.log('FUCK');
-  
+  if (loggedInUser.value !== null && loggedInUser.value.roles.includes('ROLE_ADMIN'))
+    actualGame.value.approved = true;
+
   apiStore.createRessource('games', actualGame.value)
   .then(res => {
     if (res.success) {
