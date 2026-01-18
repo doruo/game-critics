@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(operations: [
     new Get(normalizationContext: ["groups" => ["serialization:user:read"]], security: "is_granted('AUTH_CONNECTED',object)"),
-    new GetCollection(normalizationContext: ["groups" => ["serialization:user:read"]],security: "is_granted('AUTH_ADMIN',object)"),
+    new GetCollection(normalizationContext: ["groups" => ["serialization:user:read"]],security: "is_granted('AUTH_ADMIN',null)"),
     new Delete(security: "is_granted('USER_SELF_CONNECTED_OR_ADMIN_EXCEPT_ADMIN',object)"),
     // no security for post otherwise you would need an anccount to create one
     new Post(denormalizationContext: ["groups" => ["deserialization:user:create"]], validationContext: ["groups" => ["Default", "validation:user:create"]], processor: UserProcessor::class),
