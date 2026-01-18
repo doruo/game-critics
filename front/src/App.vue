@@ -25,8 +25,6 @@ apiStore.refresh();
         </NavButton>
 
         <NavButton to="/games"> Games</NavButton>
-        <NavButton to="/games/0"> Game of id 0</NavButton>
-        <NavButton to="/users/1/favoritesGames">favorites games of id 1</NavButton>
 
         <NavButton @click="isAuthDiplayed = true"> {{ loggedInUser ? 'Logout' : 'Login' }}</NavButton>
         <span v-if="loggedInUser"> Logged in User: <b>{{ loggedInUser.login }}</b></span>
