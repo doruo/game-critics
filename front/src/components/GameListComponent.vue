@@ -6,6 +6,8 @@ import {minecraft, valorant, brawlstars} from "@/mock.ts";
 import GameComponent from "@/components/GameComponent.vue";
 import GameFormComponent from './GameFormComponent.vue';
 import CriticList from './CriticList.vue';
+import { apiStore } from '@/util/apiStore.ts';
+import NavButton from './NavButton.vue';
 
 const gameList: Ref<Array<Game> | 'loading' | 'failed'> = ref('loading');
 const selectedGame: Ref<Game | null> = ref(null);
@@ -17,7 +19,8 @@ const props = defineProps<{
 }>();
 
 const loadGames = async () => {
-  //apiStore.getAll('games').then((data) => gameList.value = data as Array<Game>).catch(() => gameList.value = 'failed')
+  const routeToUse = props.adminMode ? 'games?approved=false' : 'games'
+  // apiStore.getAll(routeToUse).then((data) => gameList.value = data as Array<Game>).catch(() => gameList.value = 'failed')
   //TODO À SUPPRIMER QUAND L'API FONCTIONNE
   gameList.value = [minecraft.value, brawlstars.value, valorant.value];
 
@@ -46,16 +49,17 @@ function selectGame(game: Game) {
 </script>
 <template>
   <div v-if="!props.adminMode">
-    <button v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</button>
+    <NavButton v-if="!gameFormDisplayed" @click="gameFormDisplayed = true"> Submit a Game</NavButton>
     <GameFormComponent v-else @hide-form="gameFormDisplayed = false" :mode="'create'"/>
   </div>
 
   <main>
     <div class="game-list">
-      <p v-if="gameList == 'loading'"><i>Fetching critics for this Game</i></p>
-      <p v-else-if="gameList == 'failed'"><i>Game critics could not be loaded</i></p>
+      <p v-if="gameList == 'loading'"><i>Fetching Games</i></p>
+      <p v-else-if="gameList == 'failed'"><i>Games could not be loaded</i></p>
 
       <GameComponent
+        v-else
         v-for="game in gameList"
         :game="game"
         @select-game="(gameToSelect) => selectGame(gameToSelect)"
@@ -80,6 +84,15 @@ function selectGame(game: Game) {
 
   .game-list, .critic-list {
     flex: 1;
+  }
+
+  .critic-list {
+    border-left: 3px solid rgb(0, 204, 255);
+  }
+  .game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
   }
 
 </style>

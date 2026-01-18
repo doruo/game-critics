@@ -53,12 +53,14 @@ watch(connectingUser.value, () => {
 <template>
   <h3> Login to an existing account</h3>
   <form @submit.prevent="connect" class="content">
-    <label for="login-field">Login</label>
+    <label for="login-field">Login : </label>
     <input id="login-field" type="text" minlength="4" v-model="connectingUser.login" >
 
-    <label for="password-field">Mot de passe</label>
-    <!-- regex modifié légèrement de la classe User car le standard regex diffère en HTML -->
-    <input id="password-field" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}" type="password" v-model="connectingUser.password" > 
+    <p>
+      <label for="password-field">Mot de passe : </label>
+      <!-- regex modifié légèrement de la classe User car le standard regex diffère en HTML -->
+      <input id="password-field" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}" type="password" v-model="connectingUser.password" > 
+    </p>
 
     <button type="submit"> Connexion</button>
   </form>

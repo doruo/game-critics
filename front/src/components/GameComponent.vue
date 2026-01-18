@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Game } from '../types.ts';
-import { apiStore } from "@/util/apiStore.ts";
-import { addNotif } from "@/util/notifStore.ts";
-import { ref } from "vue";
+import {apiStore} from "@/util/apiStore.ts";
+import {addNotif} from "@/util/notifStore.ts";
+import {ref} from "vue";
 import GameFormComponent from "@/components/GameFormComponent.vue";
 
-const emit = defineEmits<{ selectGame: [gameToSelect: Game], loadGames: void }>();
+const emit = defineEmits<{selectGame: [gameToSelect: Game], loadGames: []}>();
 const props = defineProps<{
   game: Game,
   adminMode?: 'pending' | 'validated'
@@ -31,9 +31,8 @@ const editedGame = ref({
   approved: true
 });
 
-function manageGame(game: Game, type: 'accept' | 'delete'){
-  if (type === "delete") {
-    apiStore.deleteResource('game', game.id as string).then((data) => {
+function deleteGame(game: Game){
+    apiStore.deleteResource('games', game.id as string).then((data) => {
       addNotif({
         autoRemoved: true,
         type: data.success ? 'success' : 'error',
@@ -43,10 +42,10 @@ function manageGame(game: Game, type: 'accept' | 'delete'){
       })
     });
     emit("loadGames");
-  }
+}
 
-  if (type === "accept") {
-    apiStore.patchResource('game', game.id as string, editedGame.value).then((data) => {
+function acceptGame(game: Game){
+    apiStore.patchResource('games', game.id as string, editedGame.value).then((data) => {
       addNotif({
         autoRemoved: true,
         type: data.success ? 'success' : 'error',
@@ -56,7 +55,6 @@ function manageGame(game: Game, type: 'accept' | 'delete'){
       })
     });
     emit("loadGames");
-  }
 }
 
 function state(editing: boolean) {
@@ -89,14 +87,14 @@ function state(editing: boolean) {
     </div>
 
     <div v-if="adminMode" class="buttons">
-      <button class="delete" @click="() => manageGame(game, 'delete')">
+      <button class="delete" @click="() => deleteGame(game)">
         Delete
       </button>
 
       <button
         class="accept"
         v-if="adminMode === 'pending'"
-        @click="() => manageGame(game, 'accept')"
+        @click="() => acceptGame(game)"
       >
         Accept
       </button>
@@ -123,6 +121,7 @@ function state(editing: boolean) {
   .game-component {
     display: flex;
     flex-direction: row;
+    border-radius: 15px;
   }
 
   .buttons{
@@ -148,11 +147,19 @@ function state(editing: boolean) {
     background-color: gray;
   }
 
+  .game-component:hover, .selected {
+    background-image: linear-gradient(90deg, white 50%, #d5d5d5 80% );
+  }
+
   .right {
     width: max-content;
   }
-
-  .image-pochette {
-    min-height: 100%;
+  
+  .pochette {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    padding-right: 0.5em;
+    margin-right: 0.5em;
+    border-right: 3px solid rgb(0, 204, 255);
   }
 </style>

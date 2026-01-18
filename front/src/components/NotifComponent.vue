@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { removeNotif } from '@/util/notifStore.ts';
 import type { Notif } from '../types.ts';
+import NavButton from './NavButton.vue';
 
 const props = defineProps<{
   notif: Notif,
@@ -10,7 +11,7 @@ const props = defineProps<{
 
 <template>
   <div class="notification" :class="(notif.type)">
-    <button @click="removeNotif(notif)">Close</button>
+    <NavButton @click="removeNotif(notif)">Close</NavButton>
     <h2> {{ notif.type }}</h2>
     <p> {{ notif.message }}</p>
     <div class="progress-bar"></div>
@@ -19,8 +20,11 @@ const props = defineProps<{
 
 <style scoped>
   .notification {
-    border: 2px solid black;
+    border: 10px solid black;
+    border-radius: 15px;
     width: 100%;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
   }
 
     .notification.success {

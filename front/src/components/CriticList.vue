@@ -39,19 +39,25 @@ watchEffect(() => {
 criticList.value = [
   {
     id: 1,
-    message: "Nul",
-    author: {id: 1, email: "e@e.e", login: "test"},
-    game: {id:0, averageNote:0, name:'', publisher:''},
+    generalMessage: "Bien",
+    scenarioMessage: "Bien2",
+    soundtrackMessage: "Bien3",
+    visualMessage: "Bien4",
+    author: {id: 1, email: "e@e.e", login: "Nightwing", roles: []},
+    game: { approved: true, averageNote: 4.3, description: 'Big game', developer: 'Supercell', gameMode: 'Singleplayer', genre: 'Adventure', id: 1, images: ['https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg', 'https://www.androidpolice.com/wp-content/uploads/2018/06/unnamed-1-7.png', 'https://image.winudf.com/v2/image1/Y29tLnN1cGVyY2VsbC5icmF3bHN0YXJzX3NjcmVlbl8xM18xNTY3MTg5NzczXzA4NA/screen-13.jpg?fakeurl=1&type=.jpg'], license: 'Assassin\'s creed', name: 'Brawl Stars', platform: ['Linux', 'Android'], pochette: 'https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg', price: 0, publisher: 'Matteo', releaseDate: "2021-09-15", targetAge: 7, },
     note: 2,
-    date: "2023-09-15T12:02:09.037Z",
+    publicationDate: "2023-09-15T12:02:09.037Z",
   },
   {
     id: 2,
-    message: "Bien",
-    author: {id: 1, email: "e@e.e", login: "test"},
-    game: {id:0, averageNote:0, name:'', publisher:''},
+    generalMessage: "Bien",
+    scenarioMessage: "Bien2",
+    soundtrackMessage: "Bien3",
+    visualMessage: "Bien4",
+    author: {id: 2, email: "e@e.e", login: "Nightwing", roles: []},
+    game: { approved: true, averageNote: 4.3, description: 'Big game', developer: 'Supercell', gameMode: 'Singleplayer', genre: 'Adventure', id: 1, images: ['https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg', 'https://www.androidpolice.com/wp-content/uploads/2018/06/unnamed-1-7.png', 'https://image.winudf.com/v2/image1/Y29tLnN1cGVyY2VsbC5icmF3bHN0YXJzX3NjcmVlbl8xM18xNTY3MTg5NzczXzA4NA/screen-13.jpg?fakeurl=1&type=.jpg'], license: 'Assassin\'s creed', name: 'Brawl Stars', platform: ['Linux', 'Android'], pochette: 'https://supercell.com/_next/static/media/games_thumbnail_brawlstars.5cd76330.jpg', price: 0, publisher: 'Matteo', releaseDate: "2021-09-15", targetAge: 7, },
     note: 4,
-    date: "2029-09-15T12:02:09.037Z",
+    publicationDate: "2029-09-15T12:02:09.037Z",
   },
 ]
 */
@@ -68,8 +74,13 @@ function removeCritic(criticToRemove: Critic) : void {
 <template>
   <p v-if="criticList == 'loading'"><i>Fetching critics for this Game</i></p>
   <p v-else-if="criticList == 'failed'"><i>Game critics could not be loaded</i></p>
-  <CriticComponent v-for="critic in criticList" :critic="critic" :display-for="props.idType" @remove-critic="removeCritic" v-else/>
+  <div class="critic-list" v-else>
+    <CriticComponent v-for="critic in criticList" :key="critic.id" :critic="critic" :display-for="props.idType" @remove-critic="removeCritic"/>
+  </div>
 </template>
 
 <style scoped>
+  .critic-list {
+    width: fit-content;
+  }
 </style>
