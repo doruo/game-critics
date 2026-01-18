@@ -2,7 +2,6 @@
 import { ref, type Ref, watch } from 'vue';
 import type {Game, User} from '../types.ts';
 import { useRoute } from "vue-router";
-import {minecraft, valorant, brawlstars, user1} from "@/mock.ts";
 import GameComponent from "@/components/GameComponent.vue";
 import GameFormComponent from './GameFormComponent.vue';
 import CriticList from './CriticList.vue';
@@ -13,8 +12,9 @@ const gameList: Ref<Array<Game> | 'loading' | 'failed'> = ref('loading');
 const selectedGame: Ref<Game | null> = ref(null);
 const gameFormDisplayed = ref(false);
 const route = useRoute();
+let page: Ref<number> = ref(1)
 
-// const errorUser : Ref<'' | 'failed' | 'loading'> = ref('loading')
+ const errorUser : Ref<'' | 'failed' | 'loading'> = ref('loading')
 
 const props = defineProps<{
   adminMode?: 'pending' | 'validated',
@@ -25,34 +25,13 @@ const loadGames = async () => {
   if (props.favType) {
     apiStore.getAllById('users', loggedInUser.value?.id as string, 'favoritesGames')
     .then((data) => gameList.value = data as Array<Game>)
-    // .catch(() => gameList.value = 'failed')
-  }
-  else {
-    const routeToUse = props.adminMode === 'pending' ? 'games?approved=false' : 'games';
-    apiStore.getAll(routeToUse)
+    .catch(() => gameList.value = 'failed')
+  } else {
+    const routeToUse = props.adminMode === 'pending' ? 'unvalidated' : 'games';
+    apiStore.getAll(routeToUse, page.value)
     .then((data) => gameList.value = data as Array<Game>)
-    // .catch(() => gameList.value = 'failed')
+    .catch(() => gameList.value = 'failed')
   }
-
-  //TODO À SUPPRIMER QUAND L'API FONCTIONNE
-  gameList.value = [minecraft.value, brawlstars.value, valorant.value];
-  /*
-
-  if (props.adminMode && Array.isArray(gameList.value)) {
-    if (props.adminMode === 'pending') {
-      gameList.value = gameList.value.filter(game => !game.approved)
-    } else if (props.adminMode === 'validated') {
-      gameList.value = gameList.value.filter(game => game.approved)
-    }
-  } else if (!props.adminMode) {
-    gameList.value = gameList.value.filter(game => game.approved)
-  } else if (props.favType){
-    //TODO remettre quand api est la
-    gameList.value = [brawlstars.value, valorant.value];
-
-    //apiStore.getById('users', route.params.id as string).then((data) => userFav.value = data as User).catch(() => errorUser.value = 'failed')
-  }
-*/
 }
 
 loadGames();
@@ -75,17 +54,10 @@ function selectGame(game: Game) {
   </div>
 
   <main>
-<!-- 
-    <div v-if="favType && userFav">
-      <p v-if="errorUser == 'loading'"><i>Fetching user</i></p>
-      <p v-else-if="errorUser == 'failed'"><i>Game critics could not be loaded</i></p>
-    </div>
- -->
 
     <div class="game-list">
       <p v-if="gameList == 'loading'"><i>Fetching Games</i></p>
       <p v-else-if="gameList == 'failed'"><i>Games could not be loaded</i></p>
-      <!-- <h2 v-if="favType">Favorites games of {{userFav.login}}</h2> -->
 
       <GameComponent
         v-else

@@ -21,20 +21,26 @@ export async function fetchFavorites() {
 }
 
 export const apiStore = {
-    apiUrl: "http://localhost/the_feed_api/public/api/", // To change in production
+    apiUrl: "http://localhost/api/public/api/", // To change in production
 
-    // Ex : /games to get all the games
-    getAll(ressource:string): Promise<unknown> {
-        return fetch(this.apiUrl + ressource)
+    // Ex : /games to get all the games || /games?page=1
+    getAll(ressource:string, page?: number): Promise<unknown> {
+      let url = this.apiUrl + ressource
+      if (page){
+        url = url + '?page=' + page
+      }
+        return fetch(url)
         .then(reponsehttp => reponsehttp.json())
         .then (data => data.member);
     },
+
     // Ex : /games/5 to get the game of id 5
     getById(ressource: string, id: string|number): Promise<unknown> {
         return fetch(this.apiUrl + ressource + '/' + id)
         .then(reponsehttp => reponsehttp.json())
         .then (data => data.member);
     },
+
     // Ex : /games/5/critics to get all the critics of the game of id 5
     getAllById(ressource: string, id: string|number, nestedResource: string): Promise<unknown> {
         return fetch(this.apiUrl + ressource + '/' + id + '/' + nestedResource)
