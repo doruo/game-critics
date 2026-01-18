@@ -63,9 +63,15 @@ import GameListComponent from '@/components/GameListComponent.vue';
   function deleteAccount() {
     apiStore.deleteResource('users', loggedInUser.value?.id as string)
     .then((res) => {
+      console.log(res);
+      
       if (res.success) {
         addNotif({autoRemoved: true, type: 'success', message: "Your account has successfully been deleted, logging you out"});
-        apiStore.logout();
+        // ABSOLUMENT - PAS - SÛR
+        document.cookie = `BEARER=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure;`;
+        document.cookie = `refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure;`;
+        loggedInUser.value = null;
+        // apiStore.logout();
       }
       else
         addNotif({autoRemoved: false, type: 'error', message: "Your account could not be deleted : " + res.error});
