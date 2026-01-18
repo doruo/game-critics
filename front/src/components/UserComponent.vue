@@ -3,6 +3,7 @@ import type {User} from "@/types.ts";
 import {type Ref, ref} from "vue";
 import {apiStore} from "@/util/apiStore.ts";
 import {addNotif} from "@/util/notifStore.ts";
+import NavButton from "@/components/NavButton.vue";
 
 const props = defineProps<{
   user: User,

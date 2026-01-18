@@ -4,15 +4,19 @@ import type { User } from '../types.ts';
 import { apiStore } from '@/util/apiStore.ts';
 import { useRoute } from 'vue-router';
 import CriticList from '@/components/CriticList.vue';
+import {user1} from "@/mock.ts";
 
   const route = useRoute();
 
   const user: Ref<User | 'loading' | 'failed'> = ref('loading');
   const numberOfCritics: Ref<number | 'loading'> = ref('loading')
 
-  apiStore.getById('users', route.params.id as string)
+  /*apiStore.getById('users', route.params.id as string)
   .then((data) => user.value = data as User)
-  .catch(() => user.value = 'failed'); 
+  .catch(() => user.value = 'failed'); */
+//TODO à remettre
+
+  user.value = user1.value;
 
 </script>
 

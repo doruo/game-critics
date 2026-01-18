@@ -7,7 +7,6 @@ import GameComponent from "@/components/GameComponent.vue";
 import GameFormComponent from './GameFormComponent.vue';
 import CriticList from './CriticList.vue';
 import {apiStore} from "@/util/apiStore.ts";
-import { apiStore } from '@/util/apiStore.ts';
 import NavButton from './NavButton.vue';
 
 const gameList: Ref<Array<Game> | 'loading' | 'failed'> = ref('loading');
