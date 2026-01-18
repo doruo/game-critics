@@ -1,93 +1,143 @@
 # GameCritics
 
+Site de critiques de jeux vidéos.
+
+Permet aux utilisateurs de consulter des critiques de jeux, noter les jeux et gérer leurs jeux favoris.
+
+Répartition du travail
+
+Hicham : 20%
+Marc : 20%
+Yann : 30%
+Matteo : 30%
 
 
-## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+---
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Déploiement & Dépôts
 
-## Add your files
+### URL des projets déployés
+- Front VueJS : [http://localhost/front/](http://localhost/front/)
+- API Platform : [http://localhost/api/public/api/](http://localhost/api/public/api/)
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+### Dépôts Git
+- Front VueJS : `<lien_du_repo_front>`
+- API Symfony : `<lien_du_repo_api>`
 
-```
-cd existing_repo
-git remote add origin https://gitlabinfo.iutmontp.univ-montp2.fr/ferhanih-hayem-bodiguely-benhalimam/gamecritics.git
-git branch -M main
-git push -uf origin main
-```
+---
 
-## Integrate with your tools
+## Installation & Mise en place
 
-- [ ] [Set up project integrations](https://gitlabinfo.iutmontp.univ-montp2.fr/ferhanih-hayem-bodiguely-benhalimam/gamecritics/-/settings/integrations)
+### Prérequis
+- PHP >= 8.1
+- Symfony >= 6.9
+- Composer
+- Node.js / npm
+- Docker & Docker Compose
 
-## Collaborate with your team
+### Installation des dépendances
+```bash
+# API
+cd ~/gamecritics/api
+composer install
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+# Front
+cd ../front
+npm install
 
-## Test and Deploy
+Déploiement en local
+cd ~/gamecritics
+docker compose up -d
 
-Use the built-in continuous integration in GitLab.
+Base de données
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Créer une base gamecritics dans phpMyAdmin.
 
-***
+Importer le script SQL fourni à la racine du dépôt api via l’onglet SQL.
 
-# Editing this README
+Peupler la BD
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Un script SQL est fourni pour ajouter des utilisateurs, jeux et critiques de test.
 
-## Suggestions for a good README
+Exemple d’utilisateurs :
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+| Type                | Login | Mot de passe |
+| ------------------- | ----- | ------------ |
+| Administrateur      | admin | Motdepasse1    |
+| Utilisateur basique | user | Motdepasse1     |
+| Utilisateur basique | userPDP | Motdepasse1     |
 
-## Name
-Choose a self-explaining name for your project.
+Présentation du thème
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Objet critiqué : jeux vidéo.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+Informations affichées pour un jeu : nom, description, studio, éditeur, genre, mode de jeu, âge recommandé, plateformes, prix, images, note moyenne.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+Critiques :
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Note générale (0-20)
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Critique des graphismes
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Critique de la bande-son
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Critique du scénario
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Chaque utilisateur peut créer, modifier ou supprimer ses propres critiques.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Les administrateurs peuvent valider les jeux et gérer les utilisateurs.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Authentification
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Authentification via JWT.
 
-## License
-For open source projects, say how it is licensed.
+Routes principales :
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Connexion : /auth → retourne le JWT
+
+Déconnexion : /token/invalidate
+
+Refresh token : /token/refresh
+
+Les tokens sont hashés en base de données pour plus de sécurité.
+
+API - Routes principales
+Users
+Users :
+| Route                            | Méthode | Description                          | Sécurité               |
+| -------------------------------- | ------- | ------------------------------------ | ---------------------- |
+| `/users`                         | GET     | Liste des utilisateurs               | Admin                  |
+| `/users/{id}`                    | GET     | Détail d’un utilisateur              | Admin ou user connecté |
+| `/users/{id}`                    | PATCH   | Mise à jour utilisateur              | User ou Admin          |
+| `/users/{id}`                    | DELETE  | Supprimer un utilisateur             | User ou Admin          |
+| `/users/{id}/promoteAdmin`       | PATCH   | Promouvoir un utilisateur en admin   | Admin                  |
+| `/users/{id}/favoritesGames`     | GET     | Liste jeux favoris                   | User connecté          |
+| `/users/{id}/favoritesGames`     | PATCH   | Modifier jeux favoris                | User connecté          |
+| `/users/{id}/critics`            | GET     | Liste critiques d’un utilisateur     | Public                 |
+| `/users/{id}/critics`            | POST    | Ajouter critique pour un utilisateur | User connecté          |
+| `/users/{id}/critics/{criticId}` | GET     | Détail critique d’un utilisateur     | Public                 |
+| `/users/{userId}/critics/{id}`   | PATCH   | Modifier critique                    | Auteur ou Admin        |
+| `/users/{userId}/critics/{id}`   | DELETE  | Supprimer critique                   | Auteur ou Admin        |
+| `/users/{id}/favoritesCritics`   | GET     | Critiques favorites de l’utilisateur | User connecté          |
+
+Games : 
+| Route               | Méthode | Description                 | Sécurité                       |
+| ------------------- | ------- | --------------------------- | ------------------------------ |
+| `/games`            | GET     | Liste tous les jeux validés | Public                         |
+| `/games/{id}`       | GET     | Détail d’un jeu             | Public si validé / Admin sinon |
+| `/games`            | POST    | Ajouter un jeu              | User connecté                  |
+| `/games/{id}`       | PATCH   | Modifier un jeu             | Admin                          |
+| `/games/{id}`       | DELETE  | Supprimer un jeu            | Admin                          |
+| `/unvalidatedGames` | GET     | Liste des jeux non validés  | Admin                          |
+
+
+Critics:
+| Route                      | Méthode | Description                        |
+| -------------------------- | ------- | ---------------------------------- |
+| `/games/{id}/critics`      | GET     | Liste critiques d’un jeu           |
+| `/users/{id}/critics`      | GET     | Liste critiques d’un utilisateur   |
+| `/users/{id}/critics/{id}` | GET     | Détail d’une critique              |
+| `/users/{id}/critics`      | POST    | Créer critique pour un utilisateur |
+| `/users/{id}/critics/{id}` | PATCH   | Modifier critique                  |
+| `/users/{id}/critics/{id}` | DELETE  | Supprimer critique                 |
