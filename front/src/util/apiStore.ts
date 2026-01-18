@@ -21,7 +21,7 @@ export async function fetchFavorites() {
 }
 
 export const apiStore = {
-    apiUrl: "http://localhost/the_feed_api/public/api/", // To change in production
+    apiUrl: "http://localhost/api/public/api/", // To change in production
 
     // Ex : /games to get all the games
     getAll(ressource:string): Promise<unknown> {

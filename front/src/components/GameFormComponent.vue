@@ -17,12 +17,12 @@ const props = defineProps<{
 
 let errorMSG : Ref<'' | 'failed' | 'loading'> = ref('loading')
 let actualGame: Ref<Game> = ref({
-    id: 0,
+    // id: 0,
     name: '',
     publisher: '',
     description: '',
     releaseDate: '',
-    developer: '',
+    developper: '',
     gameMode: '',
     targetAge: 0,
     genre: '',
@@ -47,7 +47,7 @@ if (props.mode == 'update' && props.game) {
   actualGame.value.publisher = props.game.publisher
   actualGame.value.description = props.game.description
   actualGame.value.releaseDate = props.game.releaseDate
-  actualGame.value.developer = props.game.developer
+  actualGame.value.developper = props.game.developper
   actualGame.value.gameMode = props.game.gameMode
   actualGame.value.targetAge = props.game.targetAge
   actualGame.value.genre = props.game.genre
@@ -60,8 +60,16 @@ if (props.mode == 'update' && props.game) {
   actualGame.value.averageNote = props.game.averageNote
 }
 
+function updateOrUpload() : void {
+if (props.mode === 'update')
+  updateGame()
+else
+  uploadGame();
+}
 
 function uploadGame() : void {
+  console.log('FUCK');
+  
   apiStore.createRessource('games', actualGame.value)
   .then(res => {
     if (res.success) {
@@ -104,7 +112,7 @@ function removeImage(indexToRemove: number) {
   <p v-if="errorMSG == 'loading'"><i>Fetching User Details</i></p>
   <p v-else-if="errorMSG == 'failed'"><i>User Details could not be fetched</i></p>
 
-  <form @submit.prevent="props.mode === 'update' ? updateGame : uploadGame" class="critic-form">
+  <form @submit.prevent="updateOrUpload" class="critic-form">
     <h3> Submit a new Game</h3>
     <div class="fields-container">
       <div class="left">
@@ -127,7 +135,7 @@ function removeImage(indexToRemove: number) {
   
         <p>
           <label for="developer"><b> Developer : </b></label>
-          <input id="developer" v-model="actualGame.developer" ></input>
+          <input id="developer" v-model="actualGame.developper" ></input>
         </p>
   
         <p>
@@ -166,7 +174,7 @@ function removeImage(indexToRemove: number) {
   
         <p>
           <label for="date"><b> Release date : </b></label>
-          <input id="date" v-model="actualGame.releaseDate">
+          <input id="date" type="date" v-model="actualGame.releaseDate">
         </p>
   
         <p><b> Platforms :</b></p>
