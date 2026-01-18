@@ -33,9 +33,9 @@ import GameListComponent from '@/components/GameListComponent.vue';
         newErrorMessages.push("Votre mot de passe doit faire au minimum 8 caractères");
       else if (plainPassword.length > 30)
         newErrorMessages.push("Votre mot de passe doit faire au maximum 30 caractères");
-      
+
       // regex modifié légèrement de la classe User car le standard regex diffère en JS
-      if (!plainPassword.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}$/)) 
+      if (!plainPassword.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}$/))
         newErrorMessages.push("Votre mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre");
     }
 
@@ -76,12 +76,12 @@ import GameListComponent from '@/components/GameListComponent.vue';
 <template>
   <h2> My Account</h2>
 
-  <ul style="color: red;" v-if="errors"> 
+  <ul style="color: red;" v-if="errors">
     <li v-for="error in errors"> {{ error }}</li>
   </ul>
 
   <form @submit.prevent="saveNewUserInfos">
-    <p> <label for="login-field">Login:</label> <input minlength="4" id="login-field" v-model="newUser.login" type="text"></p>
+    <p> <label for="login-field">Login:</label> <input minlength="4" id="login-field" v-model="newUser.login" type="text" readonly></p>
     <p> <label for="email-field">Email:</label> <input id="email-field" v-model="newUser.email" type="email"></p>
     <p> <label for="password-field">New Password:</label> <input id="password-field" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}" v-model="newUser.plainPassword" type="password"></p>
 

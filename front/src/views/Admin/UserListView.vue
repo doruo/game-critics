@@ -4,9 +4,6 @@ import {type Ref, ref, watch} from "vue";
 import {apiStore} from "@/util/apiStore.ts";
 import UserComponent from "@/components/UserComponent.vue";
 import {useRoute} from "vue-router";
-import {user1, user2, user3} from "@/mock.ts";
-
-
 
 const users: Ref<User[] | 'loading' | 'failed'> = ref('loading');
 const route = useRoute();
@@ -14,6 +11,7 @@ let page: Ref<number> = ref(1)
 
 const loadUsers = async () => {
   apiStore.getAll('users', page.value).then((data) => { users.value = data as User[];}).catch(() => users.value = 'failed');
+  console.log(users.value)
 }
 
 // to reload the list

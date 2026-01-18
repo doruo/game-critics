@@ -28,7 +28,7 @@ const loadGames = async () => {
     .catch(() => gameList.value = 'failed')
   } else {
     const routeToUse = props.adminMode === 'pending' ? 'unvalidated' : 'games';
-    apiStore.getAll(routeToUse, page.value)
+    apiStore.getAll(routeToUse)
     .then((data) => gameList.value = data as Array<Game>)
     .catch(() => gameList.value = 'failed')
   }

@@ -17,22 +17,22 @@ const props = defineProps<{
 
 let errorMSG : Ref<'' | 'failed' | 'loading'> = ref('loading')
 let actualGame: Ref<Game> = ref({
-    id: 0,
-    name: '',
-    publisher: '',
-    description: '',
-    releaseDate: '',
-    developer: '',
-    gameMode: '',
-    targetAge: 0,
-    genre: '',
-    license: '',
-    price: 0,
-    platform: [],
-    images: [],
-    pochette: '',
-    approved: false,
-    averageNote: 0,
+  id: 0,
+  name: '',
+  publisher: '',
+  description: '',
+  releaseDate: '',
+  developper: '',
+  gameMode: '',
+  targetAge: 0,
+  genre: '',
+  licence: '',
+  price: 0,
+  plateform: [],
+  images: [],
+  pochette: '',
+  approved: false,
+  averageNote: 0,
 });
 
 if (props.mode == 'update' && props.game) {
@@ -47,13 +47,13 @@ if (props.mode == 'update' && props.game) {
   actualGame.value.publisher = props.game.publisher
   actualGame.value.description = props.game.description
   actualGame.value.releaseDate = props.game.releaseDate
-  actualGame.value.developer = props.game.developer
+  actualGame.value.developper = props.game.developper
   actualGame.value.gameMode = props.game.gameMode
   actualGame.value.targetAge = props.game.targetAge
   actualGame.value.genre = props.game.genre
-  actualGame.value.license = props.game.license
+  actualGame.value.licence = props.game.licence
   actualGame.value.price = props.game.price
-  actualGame.value.platform = props.game.platform
+  actualGame.value.plateform = props.game.plateform
   actualGame.value.images = props.game.images
   actualGame.value.pochette = props.game.pochette
   actualGame.value.approved = props.game.approved
@@ -63,14 +63,14 @@ if (props.mode == 'update' && props.game) {
 
 function uploadGame() : void {
   apiStore.createRessource('games', actualGame.value)
-  .then(res => {
-    if (res.success) {
-      addNotif({autoRemoved: true, type: 'success', message: "Your Game has been submitted"});
-    }
-    else {
-      addNotif({autoRemoved: false, type: 'error', message: "Your GaMe could not be submitted : " + res.error});
-    }
-  });
+    .then(res => {
+      if (res.success) {
+        addNotif({autoRemoved: true, type: 'success', message: "Your Game has been submitted"});
+      }
+      else {
+        addNotif({autoRemoved: false, type: 'error', message: "Your GaMe could not be submitted : " + res.error});
+      }
+    });
 }
 
 function updateGame() : void {
@@ -93,7 +93,7 @@ function updateGame() : void {
 }
 
 function removePlatform(indexToRemove: number) {
-  actualGame.value.platform = actualGame.value.platform.filter((_, index) => index !== indexToRemove);
+  actualGame.value.plateform = actualGame.value.plateform.filter((_, index) => index !== indexToRemove);
 }
 
 function removeImage(indexToRemove: number) {
@@ -108,73 +108,73 @@ function removeImage(indexToRemove: number) {
     <h3> Submit a new Game</h3>
     <div class="fields-container">
       <div class="left">
-  
+
         <p>
           <label for="name"><b> Name : </b></label>
           <input id="name" v-model="actualGame.name" ></input>
         </p>
-  
+
         <p>
           <label for="pochette"><b> Pochette Link : </b></label>
           <input id="pochette" v-model="actualGame.pochette" ></input>
           <ImagePreview :link="actualGame.pochette"></ImagePreview>
         </p>
-  
+
         <p>
           <label for="publisher"><b> Publisher : </b></label>
           <input id="publisher" v-model="actualGame.publisher" ></input>
         </p>
-  
+
         <p>
-          <label for="developer"><b> Developer : </b></label>
-          <input id="developer" v-model="actualGame.developer" ></input>
+          <label for="developper"><b> Developper : </b></label>
+          <input id="developper" v-model="actualGame.developper" ></input>
         </p>
-  
+
         <p>
           <label for="description"><b> Description :</b></label>
           <br>
           <textarea id="description" v-model="actualGame.description" ></textarea>
         </p>
-  
+
         <p>
           <label><b>Price : </b></label>
           <input v-model="actualGame.price" type="number">
         </p>
-      
+
       </div>
-  
+
       <div class="right">
         <p>
           <label for="genre"><b> Genre : </b></label>
           <input id="genre" v-model="actualGame.genre" ></input>
         </p>
-    
+
         <p>
           <label for="gamemode"><b> Gamemode : </b></label>
           <input id="gamemode" v-model="actualGame.gameMode" ></input>
         </p>
-    
+
         <p>
           <label for="age"><b>Targeted age : </b></label>
           <input id="age" v-model="actualGame.targetAge" type="number">
         </p>
-    
+
         <p>
-          <label for="license"><b> License : </b></label>
-          <input id="license" v-model="actualGame.license">
+          <label for="licence"><b> licence : </b></label>
+          <input id="licence" v-model="actualGame.licence">
         </p>
-  
+
         <p>
           <label for="date"><b> Release date : </b></label>
           <input id="date" v-model="actualGame.releaseDate">
         </p>
-  
+
         <p><b> Platforms :</b></p>
         <ul>
-          <li v-for="(_, index) in actualGame.platform" > <input v-model="actualGame.platform[index]"> <button type="button" @click="removePlatform(index)">remove</button></li>
-          <li><NavButton @click="actualGame.platform.push('')">Add platform</NavButton></li>
+          <li v-for="(_, index) in actualGame.plateform" > <input v-model="actualGame.plateform[index]"> <button type="button" @click="removePlatform(index)">remove</button></li>
+          <li><NavButton @click="actualGame.plateform.push('')">Add platform</NavButton></li>
         </ul>
-    
+
         <p><b> Additional images :</b></p>
         <ul>
           <li v-for="(_, index) in actualGame.images" >
@@ -193,20 +193,20 @@ function removeImage(indexToRemove: number) {
 </template>
 
 <style scoped>
-  .fields-container {
-    display: flex;
-    gap: 1em;
-  }
-  form {
-    background-image: linear-gradient(90deg, white 70%, #d3d3d3 90% );
-    border: 3px solid rgb(0, 204, 255);
-    border-radius: 15px;
-    padding: .5em;
-    width: fit-content;
-  }
-  .left {
-    border-right: 2px solid black;
-    padding-right: 1em;
-    margin-right: 1em;
-  }
+.fields-container {
+  display: flex;
+  gap: 1em;
+}
+form {
+  background-image: linear-gradient(90deg, white 70%, #d3d3d3 90% );
+  border: 3px solid rgb(0, 204, 255);
+  border-radius: 15px;
+  padding: .5em;
+  width: fit-content;
+}
+.left {
+  border-right: 2px solid black;
+  padding-right: 1em;
+  margin-right: 1em;
+}
 </style>
