@@ -90,7 +90,7 @@ import router from '@/router';
   </ul>
 
   <form @submit.prevent="saveNewUserInfos">
-    <p> <label for="login-field">Login:</label> <input minlength="4" id="login-field" v-model="newUser.login" type="text"></p>
+    <p> <span>Login:</span> <b>{{ loggedInUser?.login }}</b></p>
     <p> <label for="email-field">Email:</label> <input id="email-field" v-model="newUser.email" type="email"></p>
     <p> <label for="password-field">New Password:</label> <input id="password-field" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,30}" v-model="newUser.plainPassword" type="password"></p>
 

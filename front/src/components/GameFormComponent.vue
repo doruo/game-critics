@@ -68,8 +68,7 @@ else
 }
 
 function uploadGame() : void {
-  if (loggedInUser.value !== null && loggedInUser.value.roles.includes('ROLE_ADMIN'))
-    actualGame.value.approved = true;
+  actualGame.value.approved = loggedInUser.value !== null && loggedInUser.value.roles.includes('ROLE_ADMIN');
 
   apiStore.createRessource('games', actualGame.value)
   .then(res => {

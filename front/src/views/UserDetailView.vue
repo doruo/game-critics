@@ -4,7 +4,6 @@ import type { User } from '../types.ts';
 import { apiStore } from '@/util/apiStore.ts';
 import { useRoute } from 'vue-router';
 import CriticList from '@/components/CriticList.vue';
-import {user1} from "@/mock.ts";
 
   const route = useRoute();
 
@@ -14,9 +13,6 @@ import {user1} from "@/mock.ts";
   apiStore.getById('users', route.params.id as string)
   .then((data) => user.value = data as User)
   .catch(() => user.value = 'failed'); 
-//TODO à remettre
-
-  // user.value = user1.value;
 
 </script>
 
