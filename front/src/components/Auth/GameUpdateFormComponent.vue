@@ -87,135 +87,68 @@ function updateGame() : void {
 
 </script>
 <template>
-  <form
-    @submit.prevent="updateGame"
-    class="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-md space-y-6"
-  >
-    <h2 class="text-2xl font-bold text-center">Update game</h2>
+  <form @submit.prevent="updateGame">
+    <h2>Update game</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label class="font-medium">Name</label>
-        <input v-model="actualGame.name" class="input" />
-      </div>
+    <label>Name</label>
+    <input v-model="actualGame.name">
 
-      <div>
-        <label class="font-medium">Publisher</label>
-        <input v-model="actualGame.publisher" class="input" />
-      </div>
-    </div>
+    <label>Publisher</label>
+    <input v-model="actualGame.publisher">
 
-    <div>
-      <label class="font-medium">Description</label>
-      <textarea v-model="actualGame.description" class="input h-28"></textarea>
-    </div>
+    <label>Description</label>
+    <textarea v-model="actualGame.description" />
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label class="font-medium">Release date</label>
-        <input type="date" v-model="actualGame.releaseDate" class="input" />
-      </div>
+    <label>Release date</label>
+    <input type="date" v-model="actualGame.releaseDate">
 
-      <div>
-        <label class="font-medium">Developper</label>
-        <input v-model="actualGame.developper" class="input" />
-      </div>
-    </div>
+    <label>developper</label>
+    <input v-model="actualGame.developper">
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div>
-        <label class="font-medium">Game mode</label>
-        <input v-model="actualGame.gameMode" class="input" />
-      </div>
+    <label>Game mode</label>
+    <input v-model="actualGame.gameMode">
 
-      <div>
-        <label class="font-medium">Target age</label>
-        <input type="number" v-model.number="actualGame.targetAge" class="input" />
-      </div>
+    <label>Target age</label>
+    <input type="number" v-model.number="actualGame.targetAge">
 
-      <div>
-        <label class="font-medium">Price</label>
-        <input type="number" v-model.number="actualGame.price" class="input" />
-      </div>
-    </div>
+    <label>Genre</label>
+    <input v-model="actualGame.genre">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label class="font-medium">Genre</label>
-        <input v-model="actualGame.genre" class="input" />
-      </div>
+    <label>licence</label>
+    <input v-model="actualGame.licence">
 
-      <div>
-        <label class="font-medium">Licence</label>
-        <input v-model="actualGame.licence" class="input" />
-      </div>
-    </div>
+    <label>Price</label>
+    <input type="number" v-model.number="actualGame.price">
 
-    <div>
-      <p class="font-semibold mb-2">Plateforms</p>
-      <ul class="space-y-2">
-        <li
-          v-for="(_, index) in actualGame.plateform"
-          :key="index"
-          class="flex gap-2"
-        >
-          <input v-model="actualGame.plateform[index]" class="input flex-1" />
-          <button
-            type="button"
-            @click="removeplateform(index)"
-            class="btn-danger"
-          >
-            ✖
-          </button>
-        </li>
-      </ul>
+    <p><b>plateforms</b></p>
+    <ul>
+      <li v-for="(_, index) in actualGame.plateform" :key="index">
+        <input v-model="actualGame.plateform[index]">
+        <button type="button" @click="removeplateform(index)">✖</button>
+      </li>
+      <li>
+        <button type="button" @click="actualGame.plateform.push('')">
+          Add plateform
+        </button>
+      </li>
+    </ul>
 
-      <button
-        type="button"
-        @click="actualGame.plateform.push('')"
-        class="btn-secondary mt-2"
-      >
-        + Add plateform
-      </button>
-    </div>
+    <p><b>Images</b></p>
+    <ul>
+      <li v-for="(_, index) in actualGame.images" :key="index">
+        <input v-model="actualGame.images[index]">
+        <button type="button" @click="removeImage(index)">✖</button>
+      </li>
+      <li>
+        <button type="button" @click="actualGame.images.push('')">
+          Add image
+        </button>
+      </li>
+    </ul>
 
-    <div>
-      <p class="font-semibold mb-2">Images</p>
-      <ul class="space-y-2">
-        <li
-          v-for="(_, index) in actualGame.images"
-          :key="index"
-          class="flex gap-2"
-        >
-          <input v-model="actualGame.images[index]" class="input flex-1" />
-          <button
-            type="button"
-            @click="removeImage(index)"
-            class="btn-danger"
-          >
-            ✖
-          </button>
-        </li>
-      </ul>
+    <label>Pochette</label>
+    <input v-model="actualGame.pochette">
 
-      <button
-        type="button"
-        @click="actualGame.images.push('')"
-        class="btn-secondary mt-2"
-      >
-        + Add image
-      </button>
-    </div>
-
-    <div>
-      <label class="font-medium">Pochette</label>
-      <input v-model="actualGame.pochette" class="input" />
-    </div>
-
-    <div class="text-center pt-4">
-      <button type="submit" class="btn-primary px-8">
-        Update
-      </button>
-    </div>
+    <button type="submit">Update</button>
   </form>
 </template>

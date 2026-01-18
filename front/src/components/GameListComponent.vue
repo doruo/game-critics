@@ -13,8 +13,9 @@ const selectedGame: Ref<Game | null> = ref(null);
 const gameFormDisplayed = ref(false);
 const route = useRoute();
 let page: Ref<number> = ref(1)
+let string: Ref<string> = ref('')
 
- const errorUser : Ref<'' | 'failed' | 'loading'> = ref('loading')
+const errorUser : Ref<'' | 'failed' | 'loading'> = ref('loading')
 
 const props = defineProps<{
   adminMode?: 'pending' | 'validated',
@@ -27,7 +28,7 @@ const loadGames = async () => {
     .then((data) => gameList.value = data as Array<Game>)
     .catch(() => gameList.value = 'failed')
   } else {
-    const routeToUse = props.adminMode === 'pending' ? 'unvalidated' : 'games';
+    const routeToUse = props.adminMode === 'pending' ? 'unvalidatedGames' : 'games';
     apiStore.getAll(routeToUse)
     .then((data) => gameList.value = data as Array<Game>)
     .catch(() => gameList.value = 'failed')
