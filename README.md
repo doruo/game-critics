@@ -18,12 +18,11 @@ Matteo : 30%
 ## Déploiement & Dépôts
 
 ### URL des projets déployés
-- Front VueJS : [http://localhost/front/](http://localhost/front/)
-- API Platform : [http://localhost/api/public/api/](http://localhost/api/public/api/)
+- Front VueJS : [https://webinfo.iutmontp.univ-montp2.fr/~benhalimam/gamecritics/front/dist](https://webinfo.iutmontp.univ-montp2.fr/~benhalimam/gamecritics/front/dist)
+- API Platform : [https://webinfo.iutmontp.univ-montp2.fr/~benhalimam/gamecritics/api/public/api/](https://webinfo.iutmontp.univ-montp2.fr/~benhalimam/gamecritics/api/public/api/)
 
 ### Dépôts Git
-- Front VueJS : `<lien_du_repo_front>`
-- API Symfony : `<lien_du_repo_api>`
+[https://gitlabinfo.iutmontp.univ-montp2.fr/ferhanih-hayem-bodiguely-benhalimam/gamecritics/](https://gitlabinfo.iutmontp.univ-montp2.fr/ferhanih-hayem-bodiguely-benhalimam/gamecritics/)
 
 ---
 
