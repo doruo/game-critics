@@ -48,14 +48,15 @@ npm install
 Déploiement en local
 cd ~/gamecritics
 docker compose up -d
+```
 
-Base de données
+### Base de données
 
-Créer une base gamecritics dans phpMyAdmin.
+- Créer une base gamecritics dans phpMyAdmin.
 
-Importer le script SQL fourni à la racine du dépôt api via l’onglet SQL.
+- Importer le script SQL fourni à la racine du dépôt api via l’onglet SQL.
 
-Peupler la BD
+#### Peupler la BD
 
 Un script SQL est fourni pour ajouter des utilisateurs, jeux et critiques de test.
 
@@ -67,43 +68,43 @@ Exemple d’utilisateurs :
 | Utilisateur basique | user | Motdepasse1     |
 | Utilisateur basique | userPDP | Motdepasse1     |
 
-Présentation du thème
+### Présentation du thème
 
-Objet critiqué : jeux vidéo.
+#### Objet critiqué : jeux vidéo.
 
 Informations affichées pour un jeu : nom, description, studio, éditeur, genre, mode de jeu, âge recommandé, plateformes, prix, images, note moyenne.
 
-Critiques :
+#### Critiques :
 
-Note générale (0-20)
+- Note générale (0-20)
 
-Critique des graphismes
+- Critique des graphismes
 
-Critique de la bande-son
+- Critique de la bande-son
 
-Critique du scénario
+- Critique du scénario
 
 Chaque utilisateur peut créer, modifier ou supprimer ses propres critiques.
 
 Les administrateurs peuvent valider les jeux et gérer les utilisateurs.
 
-Authentification
+### Authentification
 
 Authentification via JWT.
 
-Routes principales :
+#### Routes principales :
 
-Connexion : /auth → retourne le JWT
+- Connexion : /auth → retourne le JWT
 
-Déconnexion : /token/invalidate
+- Déconnexion : /token/invalidate
 
-Refresh token : /token/refresh
+- Refresh token : /token/refresh
 
 Les tokens sont hashés en base de données pour plus de sécurité.
 
-API - Routes principales
-Users
-Users :
+### API - Routes principales
+
+#### Users :
 | Route                            | Méthode | Description                          | Sécurité               |
 | -------------------------------- | ------- | ------------------------------------ | ---------------------- |
 | `/users`                         | GET     | Liste des utilisateurs               | Admin                  |
@@ -120,7 +121,7 @@ Users :
 | `/users/{userId}/critics/{id}`   | DELETE  | Supprimer critique                   | Auteur ou Admin        |
 | `/users/{id}/favoritesCritics`   | GET     | Critiques favorites de l’utilisateur | User connecté          |
 
-Games : 
+#### Games : 
 | Route               | Méthode | Description                 | Sécurité                       |
 | ------------------- | ------- | --------------------------- | ------------------------------ |
 | `/games`            | GET     | Liste tous les jeux validés | Public                         |
@@ -131,7 +132,7 @@ Games :
 | `/unvalidatedGames` | GET     | Liste des jeux non validés  | Admin                          |
 
 
-Critics:
+#### Critics:
 | Route                      | Méthode | Description                        |
 | -------------------------- | ------- | ---------------------------------- |
 | `/games/{id}/critics`      | GET     | Liste critiques d’un jeu           |
