@@ -4,24 +4,24 @@ Site de critiques de jeux vidéos.
 
 Permet aux utilisateurs de consulter des critiques de jeux, noter les jeux et gérer leurs jeux favoris.
 
-Répartition du travail
+## Répartition du travail
 
-Hicham : 20%
-Marc : 20%
-Yann : 30%
-Matteo : 30%
-
-
+- Hicham : 20%
+- Marc : 20%
+- Yann : 30%
+- Matteo : 30%
 
 ---
 
 ## Déploiement & Dépôts
 
 ### URL des projets déployés
+
 - Front VueJS : [https://webinfo.iutmontp.univ-montp2.fr/~benhalimam/gamecritics/front/dist](https://webinfo.iutmontp.univ-montp2.fr/~benhalimam/gamecritics/front/dist)
 - API Platform : [https://webinfo.iutmontp.univ-montp2.fr/~benhalimam/gamecritics/api/public/api/](https://webinfo.iutmontp.univ-montp2.fr/~benhalimam/gamecritics/api/public/api/)
 
 ### Dépôts Git
+
 [https://gitlabinfo.iutmontp.univ-montp2.fr/ferhanih-hayem-bodiguely-benhalimam/gamecritics/](https://gitlabinfo.iutmontp.univ-montp2.fr/ferhanih-hayem-bodiguely-benhalimam/gamecritics/)
 
 ---
@@ -45,7 +45,7 @@ composer install
 cd ../front
 npm install
 
-Déploiement en local
+# Déploiement en local
 cd ~/gamecritics
 docker compose up -d
 ```
@@ -68,13 +68,25 @@ Exemple d’utilisateurs :
 | Utilisateur basique | user | Motdepasse1     |
 | Utilisateur basique | userPDP | Motdepasse1     |
 
-### Présentation du thème
+## Présentation du thème
 
-#### Objet critiqué : jeux vidéo.
+### Objet critiqué : jeux vidéo.
 
-Informations affichées pour un jeu : nom, description, studio, éditeur, genre, mode de jeu, âge recommandé, plateformes, prix, images, note moyenne.
+Informations affichées pour un jeu : 
 
-#### Critiques :
+- Nom
+- Description
+- Studio
+- Editeur
+- Genre
+- Mode de jeu
+- Age recommandé
+- Plateformes
+- Prix
+- Images
+- Note moyenne
+
+### Critiques :
 
 - Note générale (0-20)
 
@@ -88,23 +100,23 @@ Chaque utilisateur peut créer, modifier ou supprimer ses propres critiques.
 
 Les administrateurs peuvent valider les jeux et gérer les utilisateurs.
 
-### Authentification
+## Authentification
 
 Authentification via JWT.
 
-#### Routes principales :
+### Routes principales :
 
-- Connexion : /auth → retourne le JWT
+- Connexion : `/auth` -> retourne le JWT
 
-- Déconnexion : /token/invalidate
+- Déconnexion : `/token/invalidate`
 
-- Refresh token : /token/refresh
+- Refresh token : `/token/refresh`
 
 Les tokens sont hashés en base de données pour plus de sécurité.
 
-### API - Routes principales
+## API - Routes principales
 
-#### Users :
+### Users :
 | Route                            | Méthode | Description                          | Sécurité               |
 | -------------------------------- | ------- | ------------------------------------ | ---------------------- |
 | `/users`                         | GET     | Liste des utilisateurs               | Admin                  |
@@ -121,7 +133,7 @@ Les tokens sont hashés en base de données pour plus de sécurité.
 | `/users/{userId}/critics/{id}`   | DELETE  | Supprimer critique                   | Auteur ou Admin        |
 | `/users/{id}/favoritesCritics`   | GET     | Critiques favorites de l’utilisateur | User connecté          |
 
-#### Games : 
+### Games : 
 | Route               | Méthode | Description                 | Sécurité                       |
 | ------------------- | ------- | --------------------------- | ------------------------------ |
 | `/games`            | GET     | Liste tous les jeux validés | Public                         |
@@ -132,7 +144,7 @@ Les tokens sont hashés en base de données pour plus de sécurité.
 | `/unvalidatedGames` | GET     | Liste des jeux non validés  | Admin                          |
 
 
-#### Critics:
+### Critics:
 | Route                      | Méthode | Description                        |
 | -------------------------- | ------- | ---------------------------------- |
 | `/games/{id}/critics`      | GET     | Liste critiques d’un jeu           |
